@@ -361,7 +361,7 @@
                     "accordion_row_WyAjHK": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "CARE & MAINTENANCE",
+                        "heading": "CARE INSTRUCTION",
                         "open_by_default": false,
                         "icon": "none",
                         "width": 20
@@ -370,7 +370,7 @@
                         "text_UfENHV": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>To maintain the beauty and integrity of your purchase, we recommend treating it with care. Simple maintenance practices, such as gentle washing and proper storage, can effectively preserve the longevity of your favorites. We encourage you to refer to the care instructions included with each item, designed to help you keep your purchase in top condition.</p>",
+                            "text": "<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
@@ -469,99 +469,60 @@
         "padding-block-end": 20
       }
     },
-    "media_with_content_kpQCTG": {
-      "type": "media-with-content",
+    "faq": {
+      "type": "faq",
+      "name": "Frequently Asked Questions",
+      "settings": {
+        "icon": "arrow",
+        "dividers": true,
+        "type_preset": "h5",
+        "inherit_color_scheme": true,
+        "color_scheme": "",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0
+      },
       "blocks": {
-        "media": {
-          "type": "_media-without-appearance",
-          "static": true,
+        "accordion_row_1": {
+          "type": "faq-item",
           "settings": {
-            "media_type": "image",
-            "video_loop": true,
-            "video_autoplay": false,
-            "image_position": "cover",
-            "video_position": "cover"
-          },
-          "blocks": {}
+            "heading": "Top-Quality Rain Coats for Dogs: Stylish and Durable",
+            "content": "Our rain coats combine fashion and function, keeping your dog dry and comfortable in any weather. Designed for durability and style, they’re perfect for daily walks and outdoor adventures."
+          }
         },
-        "content": {
-          "type": "_content-without-appearance",
-          "static": true,
+        "accordion_row_2": {
+          "type": "faq-item",
           "settings": {
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 24
-          },
-          "blocks": {
-            "text_jfYyLY": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>Embracing small joys</h2>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h3",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 20,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_nnymP7": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Each item is designed to blend harmoniously with your living space while adding a unique touch. We aspire to bring balance and enrichment to everyday life.</p>",
-                "width": "fit-content",
-                "max_width": "narrow",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 20,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_jfYyLY",
-            "text_nnymP7"
-          ]
+            "heading": "Keeping Your Pet Companion Covered in Comfort and Style: A PoezenStudio Tale",
+            "content": "Every PoezenStudio rain coat is crafted to provide maximum comfort and a stylish look, so your furry friend can enjoy the outdoors no matter the weather."
+          }
+        },
+        "accordion_row_3": {
+          "type": "faq-item",
+          "settings": {
+            "heading": "The PoezenStudio Advantage: Rain or Shine, Your Pup Stays Comfortable",
+            "content": "Our unique materials and thoughtful design ensure your dog stays dry, cozy, and happy, whether it’s a light drizzle or a heavy downpour."
+          }
+        },
+        "accordion_row_4": {
+          "type": "faq-item",
+          "settings": {
+            "heading": "Function Meets Fashion: From Downpours to Drizzles, We've Got You Covered",
+            "content": "With a range of sizes and colors, our rain coats are as practical as they are stylish—making sure your pup is always ready for the weather and the spotlight."
+          }
         }
       },
-      "name": "t:names.media_with_text",
-      "settings": {
-        "media_position": "right",
-        "media_width": "medium",
-        "media_height": "60svh",
-        "section_width": "full-width",
-        "extend_media": true,
-        "color_scheme": "scheme-2",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
+      "block_order": [
+        "accordion_row_1",
+        "accordion_row_2",
+        "accordion_row_3",
+        "accordion_row_4"
+      ]
     },
     "product-recommendations": {
       "type": "product-recommendations",
@@ -748,7 +709,7 @@
   },
   "order": [
     "main",
-    "media_with_content_kpQCTG",
+    "faq",
     "product-recommendations"
   ]
 }
