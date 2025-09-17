@@ -1,13 +1,11 @@
-
-
 <div
   class="footer-utilities spacing-style"
   style="{% render 'spacing-style', settings: block.settings %} --border-width: {{ block.settings.divider_thickness }}px;"
   {{ block.shopify_attributes }}
 >
   <div class="footer-utilities__group footer-utilities__group--left">
-    {% content_for 'block', type: '_footer-copyright', id: 'copyright' %}
     {% content_for 'block', type: '_footer-policy-list', id: 'policy_list' %}
+    {% content_for 'block', type: '_footer-copyright', id: 'copyright' %}
   </div>
 
   <div class="footer-utilities__group footer-utilities__group--right">
@@ -20,7 +18,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--gap-lg);
     text-wrap: nowrap;
     border-top: var(--border-width) solid var(--color-border);
@@ -31,7 +29,6 @@
       justify-content: space-between;
       gap: var(--gap-md);
       align-items: center;
-      text-align: left;
     }
   }
 
@@ -43,9 +40,9 @@
     width: 100%;
     display: flex;
     flex: 1 1 max-content;
-    text-align: center;
+    text-align: left;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     gap: var(--gap-md);
 
@@ -53,7 +50,6 @@
       flex-direction: row;
       align-items: baseline;
       gap: var(--gap-2xs) var(--gap-xl);
-      text-align: left;
     }
   }
 

@@ -32,7 +32,7 @@
             "custom_width": 100,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
-            "height": "300px",
+            "height": "auto",
             "custom_height": 100,
             "inherit_color_scheme": false,
             "color_scheme": "scheme-footer",
@@ -134,28 +134,24 @@
           "name": "t:names.footer_utilities",
           "settings": {
             "divider_thickness": 1,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "flex-start",
             "padding-block-start": 12,
-            "padding-block-end": 0
+            "padding-block-end": 12,
+            "mobile_spacing": 16
           },
           "blocks": {
-            "copyright": {
-              "type": "_footer-copyright",
-              "static": true,
-              "settings": {
-                "show_powered_by": true,
-                "font_size": "0.75rem",
-                "case": "none"
-              },
-              "blocks": {}
-            },
             "policy_list": {
               "type": "_footer-policy-list",
               "static": true,
               "settings": {
                 "font_size": "0.75rem",
-                "case": "none"
-              },
-              "blocks": {}
+                "case": "none",
+                "spacing": 8,
+                "justify_content": "flex-start"
+              }
             },
             "social_icons": {
               "type": "_footer-social-icons",
@@ -205,9 +201,17 @@
                 "social_link_9eWHLy",
                 "social_link_r9Bcfb"
               ]
+            },
+            "copyright": {
+              "type": "_footer-copyright",
+              "static": true,
+              "settings": {
+                "show_powered_by": true,
+                "font_size": "0.75rem",
+                "case": "none"
+              }
             }
-          },
-          "block_order": []
+          }
         }
       },
       "block_order": [
