@@ -34,18 +34,14 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>Welcome to our store! We're dedicated to providing you with the finest quality clothing and exceptional customer service.<p/>",
-                    "text_style": "body",
-                    "heading_preset": "paragraph",
+                    "text": "<p>PoezenStudio is a pet lover's paradise, offering a wide range of high-quality products for dogs and cats that combine style with functionality.</p>",
+                    "text_style": "paragraph",
+                    "max_width": "325px",
+                    "min-hight": "60px",
+                    "heading_preset": "h5",
                     "inherit_color_scheme": true,
-                    "color_scheme": "",
-                    "alignment": "left",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
+                    "alignment": "left"
+                  }
                 },
                 "info_menu": {
                   "type": "menu",
