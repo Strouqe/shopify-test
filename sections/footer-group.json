@@ -166,41 +166,36 @@
                   "type": "_social-link",
                   "name": "Facebook",
                   "settings": {
-                    "link": "http://facebook.com/"
-                  },
-                  "blocks": {}
+                    "link": "https://www.facebook.com/poezenstudio"
+                  }
                 },
                 "social_link_MkYhVa": {
                   "type": "_social-link",
                   "name": "Instagram",
                   "settings": {
-                    "link": "http://instagram.com/"
-                  },
-                  "blocks": {}
+                    "link": "https://www.instagram.com/poezenstudio"
+                  }
                 },
                 "social_link_DFWGmQ": {
                   "type": "_social-link",
                   "name": "TikTok",
                   "settings": {
-                    "link": "https://tiktok.com/"
-                  },
-                  "blocks": {}
+                    "link": "https://www.tiktok.com/@poezenstudio"
+                  }
                 },
                 "social_link_9eWHLy": {
                   "type": "_social-link",
                   "name": "X / Twitter",
                   "settings": {
-                    "link": "https://x.com/"
-                  },
-                  "blocks": {}
+                    "link": "https://twitter.com/poezenstudio"
+                  }
                 },
                 "social_link_r9Bcfb": {
                   "type": "_social-link",
                   "name": "Youtube",
                   "settings": {
-                    "link": "https://www.youtube.com/"
-                  },
-                  "blocks": {}
+                    "link": "https://www.youtube.com/poezenstudio"
+                  }
                 }
               },
               "block_order": [
