@@ -15,120 +15,67 @@
       "type": "footer",
       "blocks": {
         "group_bA6rnT": {
-          "type": "group",
-          "name": "t:names.group",
-          "settings": {
-            "link": "",
-            "open_in_new_tab": false,
-            "content_direction": "row",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "flex-start",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 54,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "placeholder": "",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "menu_bHXMX6": {
-              "type": "menu",
-              "name": "t:names.menu",
+              "type": "group",
+              "name": "t:names.group",
               "settings": {
-                "menu": "footer",
-                "heading": "Shop",
-                "menu_spacing": 12,
-                "show_as_accordion": false,
-                "accordion_icon": "caret",
-                "accordion_dividers": false,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "heading_preset": "h5",
-                "link_preset": "paragraph",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "menu_fkPhQz": {
-              "type": "menu",
-              "name": "t:names.menu",
-              "settings": {
-                "menu": "",
-                "heading": "About us",
-                "menu_spacing": 12,
-                "show_as_accordion": false,
-                "accordion_icon": "caret",
-                "accordion_dividers": false,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "heading_preset": "h5",
-                "link_preset": "paragraph",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "email_signup_zwcqXK": {
-              "type": "email-signup",
-              "name": "t:names.email_signup",
-              "settings": {
+                "content_direction": "row",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "space-between",
+                "vertical_alignment": "flex-start",
+                "gap": 54,
                 "width": "fill",
-                "custom_width": 100,
+                "height": "300px",
                 "inherit_color_scheme": false,
-                "heading": "Get your seat at the table",
-                "heading_preset": "h5",
-                "color_scheme": "scheme-1",
-                "border_style": "all",
-                "border_width": 2,
-                "border_radius": 0,
-                "input_type_preset": "h5",
-                "style_class": "button",
-                "display_type": "text",
-                "label": "SUBSCRIBE",
-                "integrated_button": false,
-                "button_type_preset": "h5",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "color_scheme": "scheme-footer",
+                "background_color": "#000000"
               },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "menu_bHXMX6",
-            "menu_fkPhQz",
-            "email_signup_zwcqXK"
-          ]
-        },
+              "blocks": {
+                "text_description": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p>PoezenStudio is a pet lover's paradise, offering a wide range of high-quality products for dogs and cats that combine style with functionality.</p>",
+                    "text_style": "paragraph",
+                    "max_width": "325px",
+                    "min-hight": "60px",
+                    "heading_preset": "h5",
+                    "inherit_color_scheme": true,
+                    "alignment": "left"
+                  }
+                },
+                "info_menu": {
+                  "type": "menu",
+                  "name": "t:names.menu",
+                  "settings": {
+                    "menu": "footer-info",
+                    "heading": "Information",
+                    "menu_spacing": 12,
+                    "show_as_accordion": false,
+                    "inherit_color_scheme": true,
+                    "heading_preset": "h5",
+                    "link_preset": "paragraph"
+                  }
+                },
+                "products_menu": {
+                  "type": "menu",
+                  "name": "t:names.menu",
+                  "settings": {
+                    "menu": "footer-products",
+                    "heading": "Products",
+                    "menu_spacing": 12,
+                    "show_as_accordion": false,
+                    "inherit_color_scheme": true,
+                    "heading_preset": "h5",
+                    "link_preset": "paragraph"
+                  }
+                }
+              },
+              "block_order": [
+                "text_description",
+                "info_menu",
+                "products_menu"
+              ]
+            },
         "footer_utilities_zVWazC": {
           "type": "footer-utilities",
           "name": "t:names.footer_utilities",
@@ -221,22 +168,22 @@
       ],
       "name": "t:names.footer",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "center",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-start",
-        "gap": 64,
-        "section_width": "page-width",
-        "section_height": "",
-        "color_scheme": "scheme-1",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "padding-block-start": 32,
-        "padding-block-end": 16
+      "content_direction": "column",
+      "vertical_on_mobile": true,
+      "horizontal_alignment": "center",
+      "vertical_alignment": "center",
+      "align_baseline": false,
+      "horizontal_alignment_flex_direction_column": "center",
+      "vertical_alignment_flex_direction_column": "flex-start",
+      "gap": 64,
+      "section_width": "page-width",
+      "section_height": "",
+      "color_scheme": "scheme-footer",
+      "background_media": "none",
+      "video_position": "cover",
+      "background_image_position": "cover",
+      "padding-block-start": 32,
+      "padding-block-end": 16
       }
     }
   },

@@ -303,7 +303,7 @@
             "label": "t:settings.hover_borders",
             "default": "#1A1A1A",
             "alpha": true
-          }
+          },
         ],
         "role": {
           "text": "foreground",
