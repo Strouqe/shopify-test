@@ -37,10 +37,26 @@
             "padding-inline-end": 0
           },
           "blocks": {}
+        },
+        "button_zNFgFh": {
+          "type": "button",
+          "name": "t:names.button",
+          "settings": {
+            "label": "Shop now",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button",
+            "width": "fit-content",
+            "custom_width": 0,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "text_CXHmij"
+        "text_CXHmij",
+        "button_zNFgFh"
       ],
       "name": "Hero",
       "settings": {
@@ -55,7 +71,7 @@
         "vertical_alignment": "center",
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "flex-end",
+        "vertical_alignment_flex_direction_column": "center",
         "gap": 100,
         "section_width": "page-width",
         "section_height": "large",
