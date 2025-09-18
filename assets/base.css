@@ -21,6 +21,7 @@ body {
   --hover-transition-timing: ease-out;
   --surface-transition-duration: 0.3s;
   --surface-transition-timing: var(--ease-out-quad);
+  
 }
 
 html {
@@ -4263,4 +4264,12 @@ text-component {
   .h6.h6 select {
     font-size: max(1rem, 100%);
   }
+}
+@font-face {
+  font-family: 'Helvetica Neue Custom';
+  src: local('Helvetica Neue'),
+       local('HelveticaNeue');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
