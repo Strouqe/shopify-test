@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "hero_irjTFL": {
       "type": "hero",
@@ -15,10 +16,10 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<h1><em>Enrich </em>the<em> </em><br/>everyday</h1>",
+            "text": "<h1>poezen</h1>",
             "width": "100%",
-            "max_width": "narrow",
-            "alignment": "left",
+            "max_width": "normal",
+            "alignment": "center",
             "type_preset": "h1",
             "font": "var(--font-tertiary--family)",
             "font_size": "var(--font-size--heading-xl)",
@@ -233,6 +234,7 @@
           "static": true,
           "settings": {
             "media_type": "image",
+            "link": "",
             "video_loop": true,
             "video_autoplay": false,
             "image_position": "cover",
@@ -313,6 +315,7 @@
       },
       "name": "t:names.featured_product",
       "settings": {
+        "product": "",
         "layout": "media-left",
         "color_scheme": "scheme-2",
         "padding-block-start": 0,
@@ -328,6 +331,7 @@
           "static": true,
           "settings": {
             "media_type": "image",
+            "link": "",
             "video_loop": true,
             "video_autoplay": false,
             "image_position": "cover",
@@ -408,6 +412,7 @@
       },
       "name": "t:names.featured_product",
       "settings": {
+        "product": "",
         "layout": "media-right",
         "color_scheme": "scheme-2",
         "padding-block-start": 0,
@@ -519,6 +524,7 @@
               "type": "_product-card-group",
               "name": "t:names.group",
               "settings": {
+                "link": "",
                 "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -705,6 +711,7 @@
       },
       "name": "t:names.collections_grid",
       "settings": {
+        "collection_list": [],
         "layout_type": "grid",
         "carousel_on_mobile": true,
         "columns": 3,
