@@ -527,11 +527,11 @@
             "text_xWkRfE": {
               "type": "text",
               "settings": {
-                "text": "<h3>Bestsellers</h3>",
+                "text": "<p>Where design meets devotion.</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "h3",
+                "type_preset": "h4",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -553,7 +553,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                "text": "<p>At Poezen Studio, we believe that beauty is found in the everyday — in the way you walk together, share a moment, or simply pause. Our accessories are crafted to honour that connection, with quality that whispers, not shouts.</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
@@ -675,11 +675,11 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                "text": "<p>A bond worth celebrating.</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "h4",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -692,7 +692,7 @@
                 "corner_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
-                "padding-inline-start": 0,
+                "padding-inline-start": 30,
                 "padding-inline-end": 0
               },
               "blocks": {}
@@ -701,7 +701,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                "text": "<p>Every collar, every clasp, every detail — created with love and care. We honour the relationship between you and your companion through timeless design and refined simplicity, where quality becomes a language of its own.</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
