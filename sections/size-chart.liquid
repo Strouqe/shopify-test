@@ -1,5 +1,5 @@
 <div id="popup-overlay" class="popup-overlay">
-  <div class="popup-content" style="--popup-width: {{ section.settings.popup_width }}px">
+  <div class="popup-content">
     <button type="button" id="close-popup" class="popup-close">&times;</button>
     <div class="popup-body">
       {% content_for 'blocks' %}
@@ -17,31 +17,38 @@
           <tbody>
             <tr>
               <td>S</td>
-              <td>40</td>
-              <td>50</td>
-              <td>30</td>
-              <td>Small Dog</td>
+              <td>29-33</td>
+              <td>43-48</td>
+              <td>28-31</td>
+              <td>Boston Terrier, Shih Tzu, Pug, Poodle, Chinese Crested, Yorkie, Pekingese Spitz, Maltese, Miniature Pinscher</td>
             </tr>
             <tr>
               <td>M</td>
-              <td>45</td>
-              <td>55</td>
-              <td>32</td>
-              <td>Medium Dog</td>
+              <td>34-36</td>
+              <td>49-54</td>
+              <td>32-34</td>
+              <td>Boston Terrier, Shih Tzu, Pug, Cocker Spaniel, Miniature Schnauzer, Dachshund</td>
             </tr>
             <tr>
               <td>L</td>
-              <td>50</td>
-              <td>60</td>
-              <td>35</td>
-              <td>Large Dog</td>
+              <td>37-41</td>
+              <td>55-60</td>
+              <td>35-40</td>
+              <td>Cocker Spaniel, Bull Terrier, Fox Terrier, French Bulldog, Beagle, Biewer-Yorkie, Poodle.</td>
             </tr>
             <tr>
               <td>XL</td>
-              <td>55</td>
-              <td>65</td>
-              <td>38</td>
-              <td>Extra Large Dog</td>
+              <td>42-50</td>
+              <td>61-70</td>
+              <td>46-50</td>
+              <td>Welsh Corgi, French Bulldog, Cocker Spaniel, Bull Terrier, Beagle</td>
+            </tr>
+            <tr>
+              <td>2XL</td>
+              <td>51-55</td>
+              <td>71-80</td>
+              <td>46-50</td>
+              <td>Labrador, Golden Retriever, German Shepherd, Husky.</td>
             </tr>
           </tbody>
         </table>
@@ -69,10 +76,10 @@
   padding: 2rem;
   border-radius: 4px;
   position: relative;
-  width: 90%;
-  max-width: var(--popup-width, 600px);
+  display: flex;
+  width: 1200px !important;
   max-height: 90vh;
-  overflow-y: auto;
+
 }
 
 .popup-close {
@@ -105,6 +112,11 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
+  table-layout: fixed;
+}
+
+.size-chart-table thead {
+  background-color: black;
 }
 
 .size-chart-table th,
@@ -112,15 +124,41 @@
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid var(--color-border);
+  white-space: normal;
+}
+
+.size-chart-table th:not(:last-child),
+.size-chart-table td:not(:last-child) {
+  text-align: center;
 }
 
 .size-chart-table th {
+  color: white;
   font-weight: 600;
-  background-color: var(--color-background-subtle);
 }
 
-.size-chart-table tbody tr:hover {
-  background-color: var(--color-background-hover);
+.size-chart-table th:nth-child(1),
+.size-chart-table th:nth-child(2),
+.size-chart-table th:nth-child(3),
+.size-chart-table th:nth-child(4),
+.size-chart-table td:nth-child(1),
+.size-chart-table td:nth-child(2),
+.size-chart-table td:nth-child(3),
+.size-chart-table td:nth-child(4) {
+  width: 140px;
+}
+
+.size-chart-table th:nth-child(5),
+.size-chart-table td:nth-child(5) {
+  width: 450px;
+}
+
+.size-chart-table td:first-child {
+  font-weight: bold;
+}
+
+.size-chart-table tbody tr:nth-child(even) {
+  background-color: #f0f0f0;
 }
 {% endstylesheet %}
 
@@ -204,22 +242,7 @@ window.addEventListener('DOMContentLoaded', () => {
     {
       "type": "group"
     }
-  ],
-  "settings": [
-    {
-      "type": "header",
-      "content": "t:content.appearance"
-    },
-    {
-      "type": "range",
-      "id": "popup_width",
-      "label": "t:settings.width",
-      "min": 400,
-      "max": 1200,
-      "step": 50,
-      "unit": "px",
-      "default": 600
-    }
   ]
+
 }
 {% endschema %}
