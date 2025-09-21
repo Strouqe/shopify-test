@@ -1,0 +1,92 @@
+{% doc %}
+  Renders a size chart table with columns for size, back length (cm), chest length (cm), neck length (cm), and breed.
+
+  The table data should be entered in CSV format with the following columns:
+  size,back_length,chest_length,neck_length,breed
+
+  Each row should be on a new line. Example:
+  S,40,50,30,Small Dog
+  M,45,55,32,Medium Dog
+  L,50,60,35,Large Dog
+
+  @example
+  {% content_for 'block', type: 'size-chart-table', id: 'size-chart-table' %}
+{% enddoc %}
+
+{% if block.settings.table_data != blank %}
+  <div class="size-chart-table">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'size_chart.size' | t }}</th>
+          <th>{{ 'size_chart.back_length' | t }}</th>
+          <th>{{ 'size_chart.chest_length' | t }}</th>
+          <th>{{ 'size_chart.neck_length' | t }}</th>
+          <th>{{ 'size_chart.breed' | t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% assign rows = block.settings.table_data | split: '\n' %}
+        {% for row in rows %}
+          {% assign cells = row | split: ',' %}
+          {% if cells.size == 5 %}
+            <tr>
+              {% for cell in cells %}
+                <td>{{ cell | strip }}</td>
+              {% endfor %}
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .size-chart-table {
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  .size-chart-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .size-chart-table th,
+  .size-chart-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .size-chart-table th {
+    font-weight: 600;
+    background-color: var(--color-background-subtle);
+  }
+
+  .size-chart-table tbody tr:hover {
+    background-color: var(--color-background-hover);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.size_chart_table",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "table_data",
+      "label": "t:settings.table_data",
+      "info": "t:info.table_data_format",
+      "default": "S,40,50,30,Small Dog\nM,45,55,32,Medium Dog\nL,50,60,35,Large Dog\nXL,55,65,38,Extra Large Dog"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.size_chart_table"
+    }
+  ]
+}
+{% endschema %}

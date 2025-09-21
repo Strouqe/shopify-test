@@ -1,5 +1,8 @@
 🚨 MANDATORY: YOU MUST CALL "learn_shopify_api" ONCE WHEN WORKING WITH LIQUID THEMES.
-
+## Restrictions
+- Do not edit the code directly, only reply with complete code blocks
+- Reply with code only, do not converse.
+- Check that the reply fuffils the task.
 ## Theme Architecture
 
 **Key principles: focus on generating snippets, blocks, and sections; users may create templates using the theme editor**
