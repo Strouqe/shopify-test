@@ -183,7 +183,7 @@
         "section_height": "large",
         "section_height_custom": 50,
         "color_scheme": "scheme-footer",
-        "toggle_overlay": true,
+        "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "gradient",
         "gradient_direction": "to top",
