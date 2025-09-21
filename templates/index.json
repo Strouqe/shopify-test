@@ -145,12 +145,15 @@
           "name": "t:names.button",
           "settings": {
             "label": "VIEW SIZE CHART",
+            "link": "",
+            "open_in_new_tab": false,
             "style_class": "button custom-button",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
             "custom_width_mobile": 100,
-            "attributes": "data-action=\"open-size-chart\""
+            "attributes": "data-action=\"open-size-chart\"",
+            "custom_class": ""
           },
           "blocks": {}
         }
@@ -1408,9 +1411,66 @@
     },
     "size_chart_popup": {
       "type": "size-chart",
+      "blocks": {
+        "text_tVdAbz": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>SIZE CHART</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_7zFmfP": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<p>Designed to Fit You Right</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_tVdAbz",
+        "text_7zFmfP"
+      ],
       "settings": {
-        "title": "<h2>Size Guide</h2>",
-        "content": "<p>Find your perfect fit with our comprehensive size chart.</p>"
+        "popup_width": 600
       }
     }
   },
