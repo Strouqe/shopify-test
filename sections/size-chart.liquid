@@ -53,6 +53,41 @@
           </tbody>
         </table>
       </div>
+      <h3 class="size-chart-subheading">To get the right size for your dog you need to have a tape and measure across following parts:</h3>
+      <div class="measurement-images">
+        <div class="measurement-item">
+          {% if section.settings.neck_image %}
+            {{ section.settings.neck_image | image_url: width: 200 | image_tag: alt: 'Around the Neck' }}
+          {% else %}
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+          {% endif %}
+          <p>AROUND THE NECK</p>
+        </div>
+        <div class="measurement-item">
+          {% if section.settings.back_image %}
+            {{ section.settings.back_image | image_url: width: 200 | image_tag: alt: 'The Back' }}
+          {% else %}
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+          {% endif %}
+          <p>THE BACK</p>
+        </div>
+        <div class="measurement-item">
+          {% if section.settings.chest_image %}
+            {{ section.settings.chest_image | image_url: width: 200 | image_tag: alt: 'The Chest' }}
+          {% else %}
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+          {% endif %}
+          <p>THE CHEST</p>
+        </div>
+        <div class="measurement-item">
+          {% if section.settings.legs_image %}
+            {{ section.settings.legs_image | image_url: width: 200 | image_tag: alt: 'The Legs' }}
+          {% else %}
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+          {% endif %}
+          <p>THE LEGS</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -160,6 +195,46 @@
 .size-chart-table tbody tr:nth-child(even) {
   background-color: #f0f0f0;
 }
+
+.size-chart-subheading {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: uppercase;
+  leading-trim: none;
+  margin: 1rem 0;
+}
+
+.measurement-images {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.measurement-item {
+  text-align: center;
+  flex: 1;
+  max-width: 150px;
+}
+
+.measurement-item img {
+  width: 100%;
+  height: auto;
+  max-width: 120px;
+}
+
+.measurement-item p {
+  margin-top: 0.5rem;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+}
 {% endstylesheet %}
 
 {% javascript %}
@@ -226,6 +301,28 @@ window.addEventListener('DOMContentLoaded', () => {
 {
   "name": "t:names.custom_section",
   "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "neck_image",
+      "label": "Neck Measurement Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Back Measurement Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "chest_image",
+      "label": "Chest Measurement Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "legs_image",
+      "label": "Legs Measurement Image"
+    }
+  ],
   "blocks": [
     {
       "type": "@theme"
@@ -243,6 +340,5 @@ window.addEventListener('DOMContentLoaded', () => {
       "type": "group"
     }
   ]
-
 }
 {% endschema %}
