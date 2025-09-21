@@ -1,24 +1,154 @@
-{% render 'size-chart-popup',
-  title: section.settings.title,
-  content: section.settings.content
-%}
+<div id="popup-overlay" class="popup-overlay">
+  <div class="popup-content" style="--popup-width: {{ section.settings.popup_width }}px">
+    <button type="button" id="close-popup" class="popup-close">&times;</button>
+    <div class="popup-body">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: var(--color-background);
+  padding: 2rem;
+  border-radius: 4px;
+  position: relative;
+  width: 90%;
+  max-width: var(--popup-width, 600px);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.popup-close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--color-foreground);
+  z-index: 1001;
+}
+
+.popup-close:hover {
+  opacity: 0.7;
+}
+
+.popup-body {
+  color: var(--color-foreground);
+}
+{% endstylesheet %}
+
+{% javascript %}
+class SizeChartPopup {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-action="open-size-chart"]');
+      if (trigger) {
+        e.preventDefault();
+        this.openPopup();
+      }
+    });
+
+    const closeBtn = document.getElementById('close-popup');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closePopup();
+      });
+    }
+
+    const overlay = document.getElementById('popup-overlay');
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target.id === 'popup-overlay') {
+          this.closePopup();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closePopup();
+      }
+    });
+  }
+
+  openPopup() {
+    const popup = document.getElementById('popup-overlay');
+    if (popup) {
+      popup.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closePopup() {
+    const popup = document.getElementById('popup-overlay');
+    if (popup) {
+      popup.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  new SizeChartPopup();
+});
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "t:names.custom_section",
   "tag": "section",
-  "settings": [
+  "blocks": [
     {
-      "type": "richtext",
-      "id": "title",
-      "label": "t:settings.title",
-      "default": "<h2>Size Chart1</h2>"
+      "type": "@theme"
     },
     {
-      "type": "richtext", 
-      "id": "content",
-      "label": "t:settings.content",
-      "default": "<p>Size chart content goes here.</p>"
+      "type": "text"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "spacer"
+    },
+    {
+      "type": "group"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "range",
+      "id": "popup_width",
+      "label": "t:settings.width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 600
     }
   ]
 }
