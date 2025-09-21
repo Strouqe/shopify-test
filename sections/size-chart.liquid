@@ -1,0 +1,25 @@
+{% render 'size-chart-popup',
+  title: section.settings.title,
+  content: section.settings.content
+%}
+
+{% schema %}
+{
+  "name": "t:names.custom_section",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "t:settings.title",
+      "default": "<h2>Size Chart1</h2>"
+    },
+    {
+      "type": "richtext", 
+      "id": "content",
+      "label": "t:settings.content",
+      "default": "<p>Size chart content goes here.</p>"
+    }
+  ]
+}
+{% endschema %}

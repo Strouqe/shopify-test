@@ -1405,6 +1405,13 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "size_chart_popup": {
+      "type": "size-chart",
+      "settings": {
+        "title": "<h2>Size Guide</h2>",
+        "content": "<p>Find your perfect fit with our comprehensive size chart.</p>"
+      }
     }
   },
   "order": [
@@ -1416,6 +1423,7 @@
     "section_tzPpMh",
     "hero_GxnVkb",
     "product_list_nQbyNK",
-    "collection_list_bGtkjG"
+    "collection_list_bGtkjG",
+    "size_chart_popup"
   ]
 }

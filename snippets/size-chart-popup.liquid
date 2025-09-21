@@ -1,8 +1,13 @@
+
 <div id="popup-overlay" class="popup-overlay">
   <div class="popup-content">
     <button type="button" id="close-popup" class="popup-close">&times;</button>
-    <h2>Size Chart</h2>
-    <p>Size chart content goes here.</p>
+    <div class="popup-title">
+      {{ title }}
+    </div>
+    <div class="popup-body">
+      {{ content }}
+    </div>
   </div>
 </div>
 
@@ -40,6 +45,19 @@
   border: none;
   cursor: pointer;
   padding: 0.5rem;
+  color: var(--color-foreground);
+}
+
+.popup-close:hover {
+  opacity: 0.7;
+}
+
+.popup-title {
+  margin-bottom: 1rem;
+}
+
+.popup-body {
+  color: var(--color-foreground);
 }
 {% endstylesheet %}
 
@@ -58,15 +76,21 @@ class SizeChartPopup {
       }
     });
 
-    document.getElementById('close-popup').addEventListener('click', () => {
-      this.closePopup();
-    });
-
-    document.getElementById('popup-overlay').addEventListener('click', (e) => {
-      if (e.target.id === 'popup-overlay') {
+    const closeBtn = document.getElementById('close-popup');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
         this.closePopup();
-      }
-    });
+      });
+    }
+
+    const overlay = document.getElementById('popup-overlay');
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target.id === 'popup-overlay') {
+          this.closePopup();
+        }
+      });
+    }
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -77,14 +101,18 @@ class SizeChartPopup {
 
   openPopup() {
     const popup = document.getElementById('popup-overlay');
-    popup.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (popup) {
+      popup.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   closePopup() {
     const popup = document.getElementById('popup-overlay');
-    popup.style.display = 'none';
-    document.body.style.overflow = '';
+    if (popup) {
+      popup.style.display = 'none';
+      document.body.style.overflow = '';
+    }
   }
 }
 
