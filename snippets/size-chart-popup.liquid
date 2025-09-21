@@ -1,0 +1,94 @@
+<div id="popup-overlay" class="popup-overlay">
+  <div class="popup-content">
+    <button type="button" id="close-popup" class="popup-close">&times;</button>
+    <h2>Size Chart</h2>
+    <p>Size chart content goes here.</p>
+  </div>
+</div>
+
+{% stylesheet %}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: var(--color-background);
+  padding: 2rem;
+  border-radius: 4px;
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.popup-close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+{% endstylesheet %}
+
+{% javascript %}
+class SizeChartPopup {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-action="open-size-chart"]');
+      if (trigger) {
+        e.preventDefault();
+        this.openPopup();
+      }
+    });
+
+    document.getElementById('close-popup').addEventListener('click', () => {
+      this.closePopup();
+    });
+
+    document.getElementById('popup-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'popup-overlay') {
+        this.closePopup();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closePopup();
+      }
+    });
+  }
+
+  openPopup() {
+    const popup = document.getElementById('popup-overlay');
+    popup.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  closePopup() {
+    const popup = document.getElementById('popup-overlay');
+    popup.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  new SizeChartPopup();
+});
+{% endjavascript %}

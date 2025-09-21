@@ -1,0 +1,44 @@
+{%- doc -%}
+  A flexible button component that supports both links and custom actions.
+
+  @param {string} [link] - URL for navigation (optional)
+  @param {object} [block] - The block containing settings
+  @param {string} [attributes] - Custom HTML attributes (data-* attributes, etc.)
+  @param {string} [custom_class] - Additional CSS classes
+
+  @example
+  {% render 'custom-button',
+    block: block,
+    link: '/collections/all'
+  %}
+
+  {% render 'custom-button',
+    block: block,
+    attributes: 'data-action="open-size-chart"'
+  %}
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+<button class="
+    size-style
+    {{ block_settings.style_class }}
+    {{ block_settings.style_class }}--{{ block.id }}
+    {{ custom_class }}
+    {% if attributes != blank %}interactive{% endif %}
+  "
+  style="{% render 'size-style', settings: block_settings %}"
+  {%- if block_settings.open_in_new_tab -%}
+    target="_blank"
+    rel="noopener noreferrer"
+  {%- endif -%}
+  {{ attributes }}
+  {{ block.shopify_attributes }}
+>
+  {{ block_settings.label }}
+</button>
+
+{% stylesheet %}
+
+  
+{% endstylesheet %}

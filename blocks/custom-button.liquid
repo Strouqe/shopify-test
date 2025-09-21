@@ -1,0 +1,127 @@
+{%- doc -%}
+  Custom button block that supports both links and custom actions.
+{%- enddoc -%}
+
+{% render 'custom-button',
+  block: block,
+  link: block.settings.link,
+  attributes: block.settings.attributes,
+  custom_class: block.settings.custom_class
+%}
+
+{% schema %}
+{
+  "name": "t:names.custom_button",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:labels.label",
+      "default": "Button"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:labels.link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:labels.open_in_new_tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:labels.style",
+      "options": [
+        {
+          "value": "button",
+          "label": "t:options.button_style.solid"
+        },
+        {
+          "value": "button-secondary",
+          "label": "t:options.button_style.outline"
+        },
+        {
+          "value": "link",
+          "label": "t:options.button_style.link"
+        }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:labels.width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.width.auto"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.width.full"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.width.custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "t:labels.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:labels.width_mobile",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.width.auto"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.width.full"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.width.custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "t:labels.custom_width_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "attributes",
+      "label": "t:labels.custom_attributes",
+      "info": "t:info.custom_attributes"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "t:labels.custom_class",
+      "info": "t:info.custom_class"
+    }
+  ]
+}
+{% endschema %}
