@@ -957,6 +957,125 @@
     },
     "hero_GxnVkb": {
       "type": "hero",
+      "blocks": {
+        "group_Gk6RLT": {
+          "type": "group",
+          "settings": {
+            "link": "",
+            "open_in_new_tab": false,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-end",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "custom",
+            "custom_height": 80,
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-4",
+            "background_media": "image",
+            "video_position": "cover",
+            "background_image": "shopify://shop_images/ecff50ca3b4805f3c48d09c3e2ce2a586aeae08f.jpg",
+            "background_image_position": "cover",
+            "border": "solid",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "hero-apparel-1",
+            "toggle_overlay": true,
+            "overlay_color": "#00000047",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 40,
+            "padding-block-end": 40,
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
+          },
+          "blocks": {
+            "text_daLhM6": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>Where form meets feeling</p>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h4",
+                "font": "var(--font-body--family)",
+                "font_size": "1.5rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_4Rddyj": {
+              "type": "text",
+              "name": "t:names.text",
+              "settings": {
+                "text": "<p>Crafted with care, our accessories are more than design — they’re a quiet tribute to connection.</p>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_wmtYzQ": {
+              "type": "button",
+              "name": "t:names.button",
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "custom",
+                "custom_width": 20,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_daLhM6",
+            "text_4Rddyj",
+            "button_wmtYzQ"
+          ]
+        }
+      },
+      "block_order": [
+        "group_Gk6RLT"
+      ],
       "custom_css": [
         ".hero__media-wrapper {display: none;}",
         ",.hero__container {background: #ffffff !important;}"
@@ -965,7 +1084,6 @@
       "settings": {
         "media_type_1": "image",
         "media_type_2": "image",
-        "image_2": "shopify://shop_images/ecff50ca3b4805f3c48d09c3e2ce2a586aeae08f.jpg",
         "link": "",
         "open_in_new_tab": false,
         "content_direction": "column",
