@@ -339,7 +339,7 @@
       },
       "scheme-footer": {
         "settings": {
-          "background": "#0000000d",
+          "background": "#ffffff",
           "foreground_heading": "#ffffff",
           "foreground": "#ffffff",
           "primary": "#ffffff",
