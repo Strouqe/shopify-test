@@ -888,15 +888,15 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p><strong>“We believe in creating pieces that celebrate connection — between you, your companion, and the world around you. With a focus on refined detail, sustainable materials, and emotional resonance, our work is made to last, not just in form, but in meaning”</strong></p>",
+            "text": "<p>“We believe in creating pieces that celebrate connection — between you, your companion, and the world around you. With a focus on refined detail, sustainable materials, and emotional resonance, our work is made to last, not just in form, but in meaning”</p>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "center",
             "type_preset": "custom",
-            "font": "var(--font-body--family)",
+            "font": "var(--font-subheading--family)",
             "font_size": "1.25rem",
             "line_height": "tight",
-            "letter_spacing": "normal",
+            "letter_spacing": "tight",
             "case": "uppercase",
             "wrap": "pretty",
             "color": "var(--color-foreground)",
@@ -905,8 +905,8 @@
             "corner_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 100,
-            "padding-inline-end": 100
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
           "blocks": {}
         },
@@ -929,6 +929,9 @@
       "block_order": [
         "text_rpVeDA",
         "button_C6cTLY"
+      ],
+      "custom_css": [
+        ".text-block{font-weight: 500;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
