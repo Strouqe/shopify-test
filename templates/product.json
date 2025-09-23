@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -70,6 +71,7 @@
               "type": "group",
               "name": "t:names.group",
               "settings": {
+                "link": "",
                 "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -109,6 +111,7 @@
                   "type": "group",
                   "name": "Header",
                   "settings": {
+                    "link": "",
                     "open_in_new_tab": false,
                     "content_direction": "column",
                     "vertical_on_mobile": true,
@@ -173,6 +176,7 @@
                       "type": "group",
                       "name": "Price & Rating",
                       "settings": {
+                        "link": "",
                         "open_in_new_tab": false,
                         "content_direction": "row",
                         "vertical_on_mobile": true,
@@ -471,22 +475,6 @@
     },
     "faq": {
       "type": "faq",
-      "name": "Frequently Asked Questions",
-      "settings": {
-        "icon": "arrow",
-        "dividers": true,
-        "type_preset": "h5",
-        "inherit_color_scheme": true,
-        "color_scheme": "",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-inline-start": 0,
-        "padding-inline-end": 0
-      },
       "blocks": {
         "accordion_row_1": {
           "type": "faq-item",
@@ -522,7 +510,18 @@
         "accordion_row_2",
         "accordion_row_3",
         "accordion_row_4"
-      ]
+      ],
+      "custom_css": [
+        ".faq__heading {font-size: 24px;}",
+        ".faq-item {text-align: left;}"
+      ],
+      "name": "Frequently Asked Questions",
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "icon": "arrow",
+        "color_scheme": "",
+        "padding": 0
+      }
     },
     "product-recommendations": {
       "type": "product-recommendations",
@@ -590,6 +589,7 @@
             "group": {
               "type": "_product-card-group",
               "settings": {
+                "link": "",
                 "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
