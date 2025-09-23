@@ -913,7 +913,7 @@
             "label": "DISCOVER MORE",
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
-            "style_class": "button-secondary",
+            "style_class": "link",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
@@ -957,6 +957,10 @@
     },
     "hero_GxnVkb": {
       "type": "hero",
+      "custom_css": [
+        ".hero__media-wrapper {display: none;}",
+        ",.hero__container {background: #ffffff !important;}"
+      ],
       "name": "t:names.hero_bottom_aligned",
       "settings": {
         "media_type_1": "image",
