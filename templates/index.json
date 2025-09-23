@@ -211,7 +211,7 @@
       ],
       "custom_css": [
         ".hero__media-wrapper {display: none;}",
-        ",.hero__container {background: #ffffff !important;}"
+        ",.hero__container {padding-top: 50px; background: #ffffff !important;}"
       ],
       "name": "Size Chart Block",
       "settings": {
@@ -238,7 +238,7 @@
         "gradient_direction": "to top",
         "blurred_reflection": false,
         "reflection_opacity": 75,
-        "padding-block-start": 40,
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
@@ -639,6 +639,9 @@
         "group_cKaBa6",
         "group_AiQqVk"
       ],
+      "custom_css": [
+        ".section--full-width {padding-left: 30px; padding-right: 30px;}"
+      ],
       "name": "t:names.split_showcase",
       "settings": {
         "content_direction": "row",
@@ -846,6 +849,7 @@
         "group_hrQCAd"
       ],
       "custom_css": [
+        ".section--full-width {padding-left: 30px; padding-right: 30px;}",
         "@media screen and (max-width: 750px) {.layout-panel-flex--row {flex-direction: column-reverse !important; }}"
       ],
       "name": "t:names.split_showcase",
