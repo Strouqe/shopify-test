@@ -846,7 +846,7 @@
         "group_hrQCAd"
       ],
       "custom_css": [
-        ".layout-panel-flex--row { flex-direction: column-reverse !important; }"
+        "@media screen and (max-width: 750px) { .layout-panel-flex--row  { flex-direction: column-reverse !important; } }"
       ],
       "name": "t:names.split_showcase",
       "settings": {
