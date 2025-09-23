@@ -931,7 +931,7 @@
         "button_C6cTLY"
       ],
       "custom_css": [
-        ".text-block{font-weight: 500;}"
+        ".text-block {font-weight: 500;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
