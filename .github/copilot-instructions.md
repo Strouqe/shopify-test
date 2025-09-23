@@ -2,7 +2,8 @@
 ## Restrictions
 - Do not edit the code directly, only reply with complete code blocks
 - Reply with code only, do not converse.
-- Check that the reply fuffils the task.
+- Check that the reply fulfills the task.
+- Never make changes that were not asked.
 ## Theme Architecture
 
 **Key principles: focus on generating snippets, blocks, and sections; users may create templates using the theme editor**
