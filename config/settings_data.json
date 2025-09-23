@@ -36,6 +36,7 @@
     "type_size_h6": "12",
     "type_case_h6": "none",
     "page_width": "wide",
+    "transition_to_main_product": false,
     "card_hover_effect": "scale",
     "badge_position": "top-right",
     "badge_corner_radius": 2,
