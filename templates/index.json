@@ -239,7 +239,7 @@
         "blurred_reflection": false,
         "reflection_opacity": 75,
         "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-end": 0
       }
     },
     "product_list_x9Yaab": {
@@ -459,8 +459,8 @@
         "horizontal_alignment": "center",
         "gap": 28,
         "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 100,
+        "padding-block-end": 0
       }
     },
     "section_qyreWR": {
@@ -664,7 +664,7 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 0,
+        "padding-block-start": 100,
         "padding-block-end": 0
       }
     },
@@ -846,7 +846,7 @@
         "group_hrQCAd"
       ],
       "custom_css": [
-        "@media screen and (max-width: 750px) { .layout-panel-flex--row  { flex-direction: column-reverse !important; } }"
+        "@media screen and (max-width: 750px) {.layout-panel-flex--row {flex-direction: column-reverse !important; }}"
       ],
       "name": "t:names.split_showcase",
       "settings": {
