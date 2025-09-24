@@ -211,7 +211,8 @@
       ],
       "custom_css": [
         ".hero__media-wrapper {display: none;}",
-        ",.hero__container {padding-top: 40px; background: #ffffff !important;}"
+        ",.hero__container {padding-top: 10px; background: #ffffff !important;}",
+        "@media screen and (max-width: 768px) { .group-block__media-wrapper .background-image-container img { transform: scale(1.2); object-position: -15% 50%; } }"
       ],
       "name": "Size Chart Block",
       "settings": {
