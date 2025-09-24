@@ -1,12 +1,7 @@
 {%- comment -%}
   SECTION: quick-view-section.liquid
-  This is the editable content for the Quick View modal.
-  It is added to the product template but hidden, and fetched dynamically.
+  This section defines the globally editable layout for the quick view modal.
 {%- endcomment -%}
-
-{%- if request.design_mode -%}
-  <h2 style="text-align: center; padding: 2rem 0;">Quick View Section (only visible in editor)</h2>
-{%- endif -%}
 
 <div class="quick-view-section__grid">
   <div class="quick-view-section__media-column">
@@ -100,7 +95,6 @@
 {% schema %}
 {
   "name": "Quick View",
-  "tag": "section",
   "class": "section-quick-view",
   "settings": [],
   "blocks": [
@@ -108,6 +102,17 @@
     { "type": "title", "name": "Title", "limit": 1 },
     { "type": "price", "name": "Price", "limit": 1 },
     { "type": "form", "name": "Buy buttons", "limit": 1 }
+  ],
+  "presets": [
+    {
+      "name": "Quick View",
+      "blocks": [
+        { "type": "image" },
+        { "type": "title" },
+        { "type": "price" },
+        { "type": "form" }
+      ]
+    }
   ]
 }
 {% endschema %}
