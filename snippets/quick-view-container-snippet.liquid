@@ -14,6 +14,13 @@
   </div>
 </div>
 
+<style>
+  /* Hide the quick view section on the actual product page */
+  .section-quick-view {
+    display: none;
+  }
+</style>
+
 <script>
   class QuickViewFeature {
     constructor() {
@@ -64,10 +71,16 @@
     fetchProduct(productHandle) {
       this.productContent.innerHTML = '<p>Loading...</p>';
       
-      fetch(`/products/${productHandle}?view=quick-view`)
+      fetch(`/products/${productHandle}?section_id=quick-view-section`)
         .then(response => response.text())
         .then(text => {
-          this.productContent.innerHTML = text;
+          const html = new DOMParser().parseFromString(text, 'text/html');
+          const sectionContent = html.querySelector('#shopify-section-quick-view-section');
+          if (sectionContent) {
+            this.productContent.innerHTML = sectionContent.innerHTML;
+          } else {
+            this.productContent.innerHTML = '<p>Error: Could not find section content in the response.</p>';
+          }
         })
         .catch(error => {
           console.error('Quick View Fetch Error:', error);
