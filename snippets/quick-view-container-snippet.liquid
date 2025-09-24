@@ -64,33 +64,15 @@
     fetchProduct(productHandle) {
       this.productContent.innerHTML = '<p>Loading...</p>';
       
-      fetch(`/products/${productHandle}?section_id=quick-view-section`)
+      fetch(`/products/${productHandle}?view=quick-view`)
         .then(response => response.text())
         .then(text => {
-          const html = new DOMParser().parseFromString(text, 'text/html');
-          const sectionContent = html.querySelector('.section-quick-view');
-          if (sectionContent) {
-            this.productContent.innerHTML = sectionContent.innerHTML;
-            this.executeScripts(this.productContent);
-          } else {
-            this.productContent.innerHTML = '<p>Error: Could not find section content in the response. Make sure the "Quick View" section has been added in the Theme Editor.</p>';
-          }
+          this.productContent.innerHTML = text;
         })
         .catch(error => {
           console.error('Quick View Fetch Error:', error);
           this.productContent.innerHTML = '<p>Error fetching product.</p>';
         });
-    }
-
-    executeScripts(container) {
-      container.querySelectorAll('script').forEach(script => {
-        const newScript = document.createElement('script');
-        script.getAttributeNames().forEach(attr => newScript.setAttribute(attr, script.getAttribute(attr)));
-        if (script.innerHTML) {
-          newScript.appendChild(document.createTextNode(script.innerHTML));
-        }
-        script.parentNode.replaceChild(newScript, script);
-      });
     }
 
     showPreviousProduct() {
