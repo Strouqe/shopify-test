@@ -1,44 +1,48 @@
 {% layout none %}
 
-<div class="quick-view__product-grid">
+<div class="quick-view__grid">
   <div class="quick-view__media-column">
-    {% if product.featured_media %}
+    {%- if product.featured_media -%}
       <img src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.featured_media.alt | escape }}" loading="lazy">
-    {% else %}
+    {%- else -%}
       {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-    {% endif %}
+    {%- endif -%}
   </div>
 
   <div class="quick-view__info-column">
     <h1 class="quick-view__title">{{ product.title }}</h1>
-
-    <div class="quick-view__price">
-      {% render 'price', product: product, use_variant: true, show_badges: true %}
+    
+    <div class="price">
+      <span class="price__regular">
+        {{ product.price | money }}
+      </span>
     </div>
 
     {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
       {%- unless product.has_only_default_variant -%}
-        <div class="quick-view__variants">
-          {% render 'product-variant-picker', product: product, form: 'quick-view-form', section_id: 'quick-view' %}
+        <div class="product-form__input">
+          {%- for option in product.options_with_values -%}
+            <label for="Option-quick-view-{{ forloop.index0 }}">{{ option.name }}</label>
+            <select id="Option-quick-view-{{ forloop.index0 }}" name="options[{{ option.name | escape }}]">
+              {%- for value in option.values -%}
+                <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                  {{ value }}
+                </option>
+              {%- endfor -%}
+            </select>
+          {%- endfor -%}
         </div>
       {%- endunless -%}
-
+      
       <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-
-      <div class="quick-view__quantity">
+      
+      <div>
         <label for="Quantity-quick-view">Quantity</label>
-        <quantity-selector>
-          <input type="number" name="quantity" id="Quantity-quick-view" value="1" min="1" class="quantity__input">
-        </quantity-selector>
+        <input type="number" name="quantity" id="Quantity-quick-view" value="1" min="1" class="quantity__input">
       </div>
 
-      <div class="quick-view__buy-buttons">
-        <button
-          type="submit"
-          name="add"
-          class="button"
-          {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
-        >
+      <div>
+        <button type="submit" name="add" class="button" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
           <span>
             {%- if product.selected_or_first_available_variant.available -%}
               Add to cart
@@ -53,52 +57,13 @@
 </div>
 
 <style>
-  #quick-view-modal .quick-view-modal__content {
-    width: 672px;
-    max-width: 90vw;
-    height: 500px;
-    max-height: 80vh;
-  }
-
-  .quick-view__product-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    width: 100%;
-    align-items: center; /* Vertically center content in grid cells */
-  }
-
-  @media screen and (min-width: 750px) {
-    .quick-view__product-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-  }
-
-  .quick-view__media-column,
-  .quick-view__info-column {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .quick-view__media img,
-  .quick-view__media .placeholder-svg {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .quick-view__title {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 28px;
-    letter-spacing: 0%;
-    margin: 0;
-  }
-
-  .quick-view__quantity .quantity__input {
-    width: 80px;
-  }
+  .quick-view__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .quick-view__info-column { display: flex; flex-direction: column; gap: 20px; }
+  .quick-view__media-column img, .quick-view__media-column .placeholder-svg { max-width: 100%; height: auto; }
+  .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 400; font-size: 24px; line-height: 28px; margin: 0; }
+  .quick-view__info-column .quantity__input { width: 80px; }
+  .price { font-size: 18px; }
+  .product-form__input { margin-bottom: 15px; }
+  .product-form__input label { display: block; margin-bottom: 5px; }
+  .product-form__input select { width: 100%; padding: 8px; margin-bottom: 10px; }
 </style>
