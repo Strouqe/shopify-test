@@ -1,5 +1,5 @@
 {%- comment -%}
-  SECTION: quick-view-section.liquid
+  SECTION: quick-view-modal-section.liquid
   This section defines the editable layout for the quick view modal.
   It is rendered dynamically and requires the 'product' object to be passed in.
 {%- endcomment -%}
@@ -102,38 +102,42 @@
 
 {% schema %}
 {
-  "name": "Quick View Section",
+  "name": "Quick View Modal",
   "tag": "section",
+  "class": "shopify-section--quick-view-modal",
   "settings": [],
   "blocks": [
     {
       "type": "image_block",
-      "name": "Image Block",
+      "name": "Image",
       "limit": 1
     },
     {
       "type": "title_block",
-      "name": "Title Block",
+      "name": "Title",
       "limit": 1
     },
     {
       "type": "price_block",
-      "name": "Price Block",
+      "name": "Price",
       "limit": 1
     },
     {
       "type": "form_block",
-      "name": "Form Block",
+      "name": "Buy buttons",
       "limit": 1
     }
   ],
-  "default": {
-    "blocks": [
-      { "type": "image_block" },
-      { "type": "title_block" },
-      { "type": "price_block" },
-      { "type": "form_block" }
-    ]
-  }
+  "presets": [
+    {
+      "name": "Quick View Modal",
+      "blocks": [
+        { "type": "image_block" },
+        { "type": "title_block" },
+        { "type": "price_block" },
+        { "type": "form_block" }
+      ]
+    }
+  ]
 }
 {% endschema %}

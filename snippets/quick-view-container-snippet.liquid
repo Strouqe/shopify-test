@@ -64,16 +64,16 @@
     fetchProduct(productHandle) {
       this.productContent.innerHTML = '<p>Loading...</p>';
       
-      fetch(`/products/${productHandle}?section_id=quick-view-section`)
+      fetch(`/products/${productHandle}?section_id=quick-view-modal-section`)
         .then(response => response.text())
         .then(text => {
           const html = new DOMParser().parseFromString(text, 'text/html');
-          const sectionContent = html.querySelector('.shopify-section');
+          const sectionContent = html.querySelector('.shopify-section--quick-view-modal');
           if (sectionContent) {
             this.productContent.innerHTML = sectionContent.innerHTML;
             this.executeScripts(this.productContent);
           } else {
-            this.productContent.innerHTML = '<p>Error loading content.</p>';
+            this.productContent.innerHTML = '<p>Error loading content. The section might be missing or have a different class name.</p>';
           }
         })
         .catch(error => {
