@@ -114,7 +114,7 @@
             "color_scheme": "",
             "background_media": "image",
             "video_position": "cover",
-            "background_image": "shopify://shop_images/084a8599dad33a6d945765cfc58e150671b0499d_ca32f014-94c4-41aa-bf74-498311898607.jpg",
+            "background_image": "shopify://shop_images/IMAGE_2025-09-25_00_50_07.jpg",
             "background_image_position": "cover",
             "border": "none",
             "border_width": 1,
@@ -165,7 +165,7 @@
                 "alignment": "left",
                 "type_preset": "custom",
                 "font": "var(--font-body--family)",
-                "font_size": "2rem",
+                "font_size": "1.5rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
@@ -212,7 +212,7 @@
       "custom_css": [
         ".hero__media-wrapper {display: none;}",
         ",.hero__container {padding-top: 10px; background: #ffffff !important;}",
-        "@media screen and (max-width: 768px) { .group-block__media-wrapper .background-image-container img { transform: scale(1.2); object-position: -15% 50%; } }"
+        "@media screen and (max-width: 768px) {.group-block__media-wrapper .background-image-container img {transform: scale(1.3); object-position: 50% 50%; }}"
       ],
       "name": "Size Chart Block",
       "settings": {
