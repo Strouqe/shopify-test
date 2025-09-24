@@ -67,8 +67,6 @@
       {% render 'quick-add-modal' %}
     {% endif %}
 
-    <quick-view></quick-view>
-    {% render 'quick-view-modal' %}
-    <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
+    {%- render 'quick-view-container-snippet' -%}
   </body>
 </html>

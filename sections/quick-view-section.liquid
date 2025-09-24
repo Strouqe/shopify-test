@@ -1,0 +1,139 @@
+{%- comment -%}
+  SECTION: quick-view-section.liquid
+  This section defines the editable layout for the quick view modal.
+  It is rendered dynamically and requires the 'product' object to be passed in.
+{%- endcomment -%}
+
+<div class="quick-view-section__grid">
+  <div class="quick-view-section__media-column">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'image_block' -%}
+        <div {{ block.shopify_attributes }}>
+          {%- if product.featured_media -%}
+            <img src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.featured_media.alt | escape }}" loading="lazy">
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="quick-view-section__info-column">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'title_block' -%}
+          <h1 class="quick-view-section__title" {{ block.shopify_attributes }}>
+            {{ product.title | default: 'Product Title' }}
+          </h1>
+
+        {%- when 'price_block' -%}
+          <div class="price" {{ block.shopify_attributes }}>
+            <span class="price__regular">
+              {{ product.price | money }}
+            </span>
+          </div>
+
+        {%- when 'form_block' -%}
+          <div {{ block.shopify_attributes }}>
+            {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+              {%- unless product.has_only_default_variant -%}
+                <variant-picker 
+                  data-product-id="{{ product.id }}" 
+                  data-url="{{ product.url }}" 
+                  data-section-id="{{ section.id }}"
+                >
+                  {%- for option in product.options_with_values -%}
+                    <div class="product-form__input">
+                      <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+                      <select id="Option-{{ section.id }}-{{ forloop.index0 }}" name="options[{{ option.name | escape }}]">
+                        {%- for value in option.values -%}
+                          <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                            {{ value }}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                    </div>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ product.variants | json }}
+                  </script>
+                </variant-picker>
+              {%- endunless -%}
+              
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              
+              <div>
+                <label for="Quantity-{{ section.id }}">Quantity</label>
+                <quantity-selector>
+                  <input type="number" name="quantity" id="Quantity-{{ section.id }}" value="1" min="1" class="quantity__input">
+                </quantity-selector>
+              </div>
+
+              <div>
+                <button type="submit" name="add" class="button" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+                  <span>
+                    {%- if product.selected_or_first_available_variant.available -%}
+                      Add to cart
+                    {%- else -%}
+                      Sold out
+                    {%- endif -%}
+                  </span>
+                </button>
+              </div>
+            {%- endform -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .quick-view-section__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .quick-view-section__info-column { display: flex; flex-direction: column; gap: 20px; }
+  .quick-view-section__media-column img, .quick-view-section__media-column .placeholder-svg { max-width: 100%; height: auto; }
+  .quick-view-section__title { font-family: 'Open Sans', sans-serif; font-weight: 400; font-size: 24px; line-height: 28px; margin: 0; }
+  .quick-view-section__info-column .quantity__input { width: 80px; }
+  .price { font-size: 18px; }
+  .product-form__input { margin-bottom: 15px; }
+  .product-form__input label { display: block; margin-bottom: 5px; }
+  .product-form__input select { width: 100%; padding: 8px; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Quick View Section",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "image_block",
+      "name": "Image Block",
+      "limit": 1
+    },
+    {
+      "type": "title_block",
+      "name": "Title Block",
+      "limit": 1
+    },
+    {
+      "type": "price_block",
+      "name": "Price Block",
+      "limit": 1
+    },
+    {
+      "type": "form_block",
+      "name": "Form Block",
+      "limit": 1
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "image_block" },
+      { "type": "title_block" },
+      { "type": "price_block" },
+      { "type": "form_block" }
+    ]
+  }
+}
+{% endschema %}
