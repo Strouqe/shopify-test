@@ -68,12 +68,12 @@
         .then(response => response.text())
         .then(text => {
           const html = new DOMParser().parseFromString(text, 'text/html');
-          const sectionContent = html.querySelector('.shopify-section--quick-view-modal');
+          const sectionContent = html.querySelector('.shopify-section'); // More robust selector
           if (sectionContent) {
             this.productContent.innerHTML = sectionContent.innerHTML;
             this.executeScripts(this.productContent);
           } else {
-            this.productContent.innerHTML = '<p>Error loading content. The section might be missing or have a different class name.</p>';
+            this.productContent.innerHTML = '<p>Error: Could not find section content in the response.</p>';
           }
         })
         .catch(error => {
