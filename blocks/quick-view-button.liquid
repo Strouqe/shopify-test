@@ -1,42 +1,133 @@
 {% doc %}
-  Renders a quick view button.
+  Renders a quick view button that opens a modal dialog.
+  The content of the dialog is composed of nested blocks.
 
   @example
   {% content_for 'block', type: 'quick-view-button', id: 'quick-view-button' %}
 {% enddoc %}
 
-{% render 'button',
-  label: block.settings.label,
-  link: block.settings.link,
-  open_in_new_tab: block.settings.open_in_new_tab,
-  style_class: block.settings.style_class,
-  width: block.settings.width,
-  custom_width: block.settings.custom_width,
-  width_mobile: block.settings.width_mobile,
-  custom_width_mobile: block.settings.custom_width_mobile
-%}
+<div {{ block.shopify_attributes }}>
+  {%- liquid
+    assign button_id = 'quick-view-button-' | append: block.id
+    assign modal_id = 'quick-view-modal-' | append: block.id
+  -%}
+
+  <button
+    type="button"
+    id="{{ button_id }}"
+    class="{{ block.settings.style_class | default: 'button' }}"
+    aria-controls="{{ modal_id }}"
+    aria-expanded="false"
+    data-dialog-id="{{ modal_id }}"
+  >
+    {{ block.settings.label | default: 'Quick View' }}
+  </button>
+
+  <dialog-element
+    class="dialog"
+    id="{{ modal_id }}"
+    aria-labelledby="{{ button_id }}"
+  >
+    <div class="dialog__content">
+      <div class="dialog__header">
+        <button
+          class="dialog__close"
+          aria-label="{{ 'general.accessibility.close' | t }}"
+          data-dialog-id="{{ modal_id }}"
+        >
+          {% render 'icon-close' %}
+        </button>
+      </div>
+      <div class="dialog__body">
+        {%- content_for 'blocks' -%}
+      </div>
+    </div>
+  </dialog-element>
+</div>
+
+{% javascript %}
+  if (!customElements.get('dialog-element')) {
+    class DialogElement extends HTMLElement {
+      constructor() {
+        super();
+        this.dialog = this;
+        this.dialogId = this.id;
+        this.openButtons = document.querySelectorAll(`[data-dialog-id="${this.dialogId}"]`);
+        this.closeButtons = this.querySelectorAll(`[data-dialog-id="${this.dialogId}"]`);
+
+        this.openButtons.forEach(button => button.addEventListener('click', this.open.bind(this)));
+        this.closeButtons.forEach(button => button.addEventListener('click', this.close.bind(this)));
+      }
+
+      open(event) {
+        event.preventDefault();
+        this.dialog.showModal();
+      }
+
+      close() {
+        this.dialog.close();
+      }
+    }
+    customElements.define('dialog-element', DialogElement);
+  }
+{% endjavascript %}
+
+{% stylesheet %}
+  dialog-element {
+    border: none;
+    padding: 0;
+    background: transparent;
+    max-width: 80vw;
+    max-height: 80vh;
+  }
+
+  dialog-element::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .dialog__content {
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    padding: 2rem;
+    border-radius: 0.5rem;
+    position: relative;
+  }
+
+  .dialog__header {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .dialog__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .dialog__close .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "Quick View Button",
-  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
   "settings": [
     {
       "type": "text",
       "id": "label",
       "label": "t:settings.label",
       "default": "Quick View"
-    },
-    {
-      "type": "url",
-      "id": "link",
-      "label": "t:settings.link"
-    },
-    {
-      "type": "checkbox",
-      "id": "open_in_new_tab",
-      "label": "t:settings.open_new_tab",
-      "default": false
     },
     {
       "type": "select",
@@ -57,70 +148,6 @@
         }
       ],
       "default": "button"
-    },
-    {
-      "type": "header",
-      "content": "t:content.size"
-    },
-    {
-      "type": "select",
-      "id": "width",
-      "label": "t:settings.width_desktop",
-      "options": [
-        {
-          "value": "fit-content",
-          "label": "t:options.fit_content"
-        },
-        {
-          "value": "custom",
-          "label": "t:options.custom"
-        }
-      ],
-      "default": "fit-content"
-    },
-    {
-      "type": "range",
-      "id": "custom_width",
-      "label": "t:settings.custom_width",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 100,
-      "visible_if": "{{ block.settings.width == \"custom\" }}"
-    },
-    {
-      "type": "select",
-      "id": "width_mobile",
-      "label": "t:settings.width_mobile",
-      "options": [
-        {
-          "value": "fit-content",
-          "label": "t:options.fit_content"
-        },
-        {
-          "value": "custom",
-          "label": "t:options.custom"
-        }
-      ],
-      "default": "fit-content"
-    },
-    {
-      "type": "range",
-      "id": "custom_width_mobile",
-      "label": "t:settings.custom_width",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 100,
-      "visible_if": "{{ block.settings.width_mobile == \"custom\" }}"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Quick View Button",
-      "category": "t:categories.basic"
     }
   ]
 }
