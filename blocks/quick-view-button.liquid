@@ -1,153 +1,216 @@
-{% doc %}
-  Renders a quick view button that opens a modal dialog.
-  The content of the dialog is composed of nested blocks.
-
-  @example
-  {% content_for 'block', type: 'quick-view-button', id: 'quick-view-button' %}
-{% enddoc %}
+{%- comment -%}
+  This is a placeholder for the LiquidDoc, which should be added once the
+  component's functionality is stable.
+{%- endcomment -%}
 
 <div {{ block.shopify_attributes }}>
   {%- liquid
-    assign button_id = 'quick-view-button-' | append: block.id
-    assign modal_id = 'quick-view-modal-' | append: block.id
+    assign button_id = 'popup-button-' | append: block.id
+    assign modal_id = 'popup-modal-' | append: block.id
+    assign product = product_card_product
   -%}
 
   <button
     type="button"
     id="{{ button_id }}"
-    class="{{ block.settings.style_class | default: 'button' }}"
+    class="button"
+    aria-haspopup="dialog"
     aria-controls="{{ modal_id }}"
     aria-expanded="false"
-    data-dialog-id="{{ modal_id }}"
   >
     {{ block.settings.label | default: 'Quick View' }}
   </button>
 
-  <dialog-element
-    class="dialog"
-    id="{{ modal_id }}"
-    aria-labelledby="{{ button_id }}"
-  >
-    <div class="dialog__content">
-      <div class="dialog__header">
-        <button
-          class="dialog__close"
-          aria-label="{{ 'general.accessibility.close' | t }}"
-          data-dialog-id="{{ modal_id }}"
-        >
-          {% render 'icon-close' %}
-        </button>
-      </div>
-      <div class="dialog__body">
-        {%- content_for 'blocks' -%}
+  <dialog id="{{ modal_id }}" class="popup-dialog">
+    <div class="popup-dialog__content">
+      <button type="button" class="popup-dialog__close" aria-label="Close">
+        &#x2715;
+      </button>
+      <div class="popup-dialog__body">
+        {%- if product -%}
+          <div class="quick-view__grid">
+            <div class="quick-view__media-column">
+              {%- if product.featured_media -%}
+                <img src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.featured_media.alt | escape }}" loading="lazy">
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+          
+            <div class="quick-view__info-column">
+              <h1 class="quick-view__title">{{ product.title }}</h1>
+              
+              <div class="price">
+                <span class="price__regular">
+                  {{ product.price | money }}
+                </span>
+              </div>
+          
+              <variant-picker-quick-view data-product-variants="{{ product.variants | json | escape }}">
+                {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  
+                  {%- unless product.has_only_default_variant -%}
+                    <div class="product-form__variants">
+                      {%- for option in product.options_with_values -%}
+                        <fieldset class="js product-form__input">
+                          <legend class="form__label">{{ option.name }}</legend>
+                          {%- for value in option.values -%}
+                            <input type="radio" id="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                                   name="{{ option.name }}"
+                                   value="{{ value | escape }}"
+                                   {% if option.selected_value == value %}checked{% endif %}>
+                            <label for="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}">
+                              {{ value }}
+                            </label>
+                          {%- endfor -%}
+                        </fieldset>
+                      {%- endfor -%}
+                    </div>
+                  {%- endunless -%}
+                  
+                  <div>
+                    <label for="Quantity-quick-view-{{ block.id }}">Quantity</label>
+                    <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
+                  </div>
+          
+                  <div>
+                    <button type="submit" name="add" class="button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                      <span>
+                        {%- if product.selected_or_first_available_variant.available -%}
+                          Add to cart
+                        {%- else -%}
+                          Sold out
+                        {%- endif -%}
+                      </span>
+                    </button>
+                  </div>
+                {%- endform -%}
+              </variant-picker-quick-view>
+            </div>
+          </div>
+        {%- endif -%}
       </div>
     </div>
-  </dialog-element>
+  </dialog>
 </div>
 
-{% javascript %}
-  if (!customElements.get('dialog-element')) {
-    class DialogElement extends HTMLElement {
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const openButton = document.getElementById('{{ button_id }}');
+    const dialog = document.getElementById('{{ modal_id }}');
+    
+    if (!openButton || !dialog) return;
+
+    const closeButton = dialog.querySelector('.popup-dialog__close');
+    if (!closeButton) return;
+
+    openButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      dialog.showModal();
+      openButton.setAttribute('aria-expanded', 'true');
+    });
+
+    const closeModal = () => {
+      dialog.close();
+      openButton.setAttribute('aria-expanded', 'false');
+    };
+
+    closeButton.addEventListener('click', closeModal);
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) {
+        closeModal();
+      }
+    });
+  });
+
+  if (!customElements.get('variant-picker-quick-view')) {
+    class VariantPickerQuickView extends HTMLElement {
       constructor() {
         super();
-        this.dialog = this;
-        this.dialogId = this.id;
-        this.openButtons = document.querySelectorAll(`[data-dialog-id="${this.dialogId}"]`);
-        this.closeButtons = this.querySelectorAll(`[data-dialog-id="${this.dialogId}"]`);
-
-        this.openButtons.forEach(button => button.addEventListener('click', this.open.bind(this)));
-        this.closeButtons.forEach(button => button.addEventListener('click', this.close.bind(this)));
+        this.addEventListener('change', this.onVariantChange.bind(this));
+        this.updateOptions();
+        this.updateMasterId();
       }
-
-      open(event) {
-        event.preventDefault();
-        this.dialog.showModal();
+  
+      onVariantChange() {
+        this.updateOptions();
+        this.updateMasterId();
+        this.updateButton();
       }
-
-      close() {
-        this.dialog.close();
+  
+      updateOptions() {
+        this.options = Array.from(this.querySelectorAll('input[type="radio"]:checked'), (input) => input.value);
+      }
+  
+      updateMasterId() {
+        this.currentVariant = this.getVariantData().find((variant) => {
+          return !variant.options.map((option, index) => {
+            return this.options[index] === option;
+          }).includes(false);
+        });
+        if (this.currentVariant) {
+          this.querySelector('input[name="id"]').value = this.currentVariant.id;
+        }
+      }
+  
+      updateButton() {
+        const button = this.querySelector('button[type="submit"]');
+        const buttonSpan = button.querySelector('span');
+        if (!this.currentVariant) {
+          button.setAttribute('disabled', true);
+          buttonSpan.textContent = 'Unavailable';
+        } else if (!this.currentVariant.available) {
+          button.setAttribute('disabled', true);
+          buttonSpan.textContent = 'Sold out';
+        } else {
+          button.removeAttribute('disabled');
+          buttonSpan.textContent = 'Add to cart';
+        }
+      }
+  
+      getVariantData() {
+        if (!this.variantData) {
+          this.variantData = JSON.parse(this.dataset.productVariants);
+        }
+        return this.variantData;
       }
     }
-    customElements.define('dialog-element', DialogElement);
+    customElements.define('variant-picker-quick-view', VariantPickerQuickView);
   }
-{% endjavascript %}
+</script>
 
 {% stylesheet %}
-  dialog-element {
-    border: none;
-    padding: 0;
-    background: transparent;
-    max-width: 80vw;
-    max-height: 80vh;
-  }
-
-  dialog-element::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  .dialog__content {
-    background: rgb(var(--color-background));
-    color: rgb(var(--color-foreground));
-    padding: 2rem;
-    border-radius: 0.5rem;
-    position: relative;
-  }
-
-  .dialog__header {
-    display: flex;
-    justify-content: flex-end;
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-  }
-
-  .dialog__close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-  }
-
-  .dialog__close .icon {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+  .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 800px; }
+  .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+  .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; }
+  .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: black; font-size: 1.5rem; line-height: 1; z-index: 10; }
+  .quick-view__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .quick-view__info-column { display: flex; flex-direction: column; gap: 20px; }
+  .quick-view__media-column img, .quick-view__media-column .placeholder-svg { max-width: 100%; height: auto; }
+  .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 400; font-size: 24px; line-height: 28px; margin: 0; }
+  .quick-view__info-column .quantity__input { width: 80px; }
+  .price { font-size: 18px; }
+  .product-form__variants { margin-bottom: 15px; }
+  .product-form__input { border: 0; padding: 0; margin: 0 0 1.5rem; }
+  .product-form__input legend { font-weight: 600; margin-bottom: 1rem; }
+  .product-form__input input[type="radio"] { clip: rect(0, 0, 0, 0); overflow: hidden; position: absolute; height: 1px; width: 1px; }
+  .product-form__input label { display: inline-block; margin: 0 0.5rem 0.5rem 0; padding: 1rem 1.5rem; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 1.4rem; line-height: 1; transition: border-color 0.2s; }
+  .product-form__input input[type="radio"]:checked + label { border-color: #333; box-shadow: 0 0 0 1px #333; }
+  .product-form__input input[type="radio"]:disabled + label { border-color: #eee; color: #ccc; cursor: not-allowed; }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "Quick View Button",
-  "blocks": [
-    {
-      "type": "@theme"
-    }
-  ],
+  "blocks": [],
   "settings": [
     {
       "type": "text",
       "id": "label",
-      "label": "t:settings.label",
+      "label": "Button Label",
       "default": "Quick View"
-    },
-    {
-      "type": "select",
-      "id": "style_class",
-      "label": "t:settings.style",
-      "options": [
-        {
-          "value": "button",
-          "label": "t:options.primary"
-        },
-        {
-          "value": "button-secondary",
-          "label": "t:options.secondary"
-        },
-        {
-          "value": "link",
-          "label": "t:options.link"
-        }
-      ],
-      "default": "button"
     }
   ]
 }
