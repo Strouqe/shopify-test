@@ -309,40 +309,10 @@
         "padding-block-start": 0,
         "padding-block-end": 48
       }
-    },
-    "quick_view_section_rwnMEU": {
-      "type": "quick-view-section",
-      "blocks": {
-        "image_LDcLhm": {
-          "type": "image",
-          "settings": {}
-        },
-        "title_y6XFbz": {
-          "type": "title",
-          "settings": {}
-        },
-        "price_wN8J9Q": {
-          "type": "price",
-          "settings": {}
-        },
-        "form_8XR9Kw": {
-          "type": "form",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "image_LDcLhm",
-        "title_y6XFbz",
-        "price_wN8J9Q",
-        "form_8XR9Kw"
-      ],
-      "name": "Quick View",
-      "settings": {}
     }
   },
   "order": [
     "section",
-    "main",
-    "quick_view_section_rwnMEU"
+    "main"
   ]
 }
