@@ -1,73 +1,70 @@
-
-
 {% liquid
-  assign product = closest.product
--%}
+  assign closest_product = closest.product | default: product
+  assign product_card_product = all_products[closest_product.handle]
 
-{% capture children %}
-  {% content_for 'blocks', closest.product: product %}
-{% endcapture %}
+  if product_card_product == empty
+    assign is_product_card_product_falsey = true
+  else
+    assign is_product_card_product_falsey = false
+  endif
+%}
 
-{% render 'product-card', children: children, product: product %}
+<div
+  class="
+    product-card
+    {% if block.settings.inherit_color_scheme == false %}
+      color-{{ block.settings.color_scheme }}
+    {% endif %}
+  "
+  style="
+    --product-card-gap: {{ block.settings.product_card_gap }}px;
+    {% render 'border-override', border: block.settings.border, width: block.settings.border_width, opacity: block.settings.border_opacity, radius: block.settings.border_radius %}
+    {% render 'spacing-padding', settings: block.settings %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="product-card__content"
+    data-product-handle="{{- product_card_product.handle -}}"
+    data-product-url="{{- product_card_product.url -}}"
+    data-product-title="{{- product_card_product.title | escape -}}"
+    data-product-first-variant-id="{{- product_card_product.first_available_variant.id -}}"
+    data-product-is-product-card-product-falsey="{{- is_product_card_product_falsey -}}"
+  >
+    {%- content_for 'blocks' -%}
+  </div>
+</div>
 
 {% schema %}
 {
   "name": "t:names.product_card",
   "blocks": [
     {
-      "type": "_product-card-group"
+      "type": "@theme"
     },
     {
-      "type": "text"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "buy-buttons"
-    },
-    {
-      "type": "price"
-    },
-    {
-      "type": "review"
-    },
-    {
-      "type": "swatches"
-    },
-    {
-      "type": "_product-card-gallery"
-    },
-    {
-      "type": "product-title"
-    },
-    {
-      "type": "custom-liquid"
-    },
-    {
-      "type": "@app"
+      "type": "quick-view-button"
     }
   ],
-  "tag": null,
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "t:content.resource_reference_product_card"
-    },
     {
       "type": "range",
       "id": "product_card_gap",
-      "label": "t:settings.vertical_gap",
+      "label": "t:settings.gap",
       "min": 0,
-      "max": 50,
+      "max": 32,
       "step": 1,
       "unit": "px",
-      "default": 16
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "t:content.colors"
     },
     {
       "type": "checkbox",
       "id": "inherit_color_scheme",
-      "label": "t:settings.inherit_color_scheme",
+      "label": "t:settings.inherit_section_color_scheme",
       "default": true
     },
     {
@@ -84,15 +81,23 @@
     {
       "type": "select",
       "id": "border",
-      "label": "t:settings.style",
+      "label": "t:settings.border",
       "options": [
         {
           "value": "none",
           "label": "t:options.none"
         },
         {
-          "value": "solid",
-          "label": "t:options.solid"
+          "value": "full",
+          "label": "t:options.full"
+        },
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
         }
       ],
       "default": "none"
@@ -100,32 +105,33 @@
     {
       "type": "range",
       "id": "border_width",
-      "min": 0,
-      "max": 100,
+      "label": "t:settings.width",
+      "min": 1,
+      "max": 5,
       "step": 1,
       "unit": "px",
-      "label": "t:settings.thickness",
       "default": 1,
       "visible_if": "{{ block.settings.border != 'none' }}"
     },
     {
       "type": "range",
       "id": "border_opacity",
+      "label": "t:settings.opacity",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
-      "label": "t:settings.opacity",
       "default": 100,
       "visible_if": "{{ block.settings.border != 'none' }}"
     },
     {
       "type": "range",
       "id": "border_radius",
-      "label": "t:settings.border_radius",
+      "label": "t:settings.corner_radius",
       "min": 0,
-      "max": 32,
+      "max": 24,
       "step": 1,
+      "unit": "px",
       "default": 0
     },
     {
@@ -137,7 +143,7 @@
       "id": "padding-block-start",
       "label": "t:settings.top",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 0
@@ -147,7 +153,7 @@
       "id": "padding-block-end",
       "label": "t:settings.bottom",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 0
@@ -157,7 +163,7 @@
       "id": "padding-inline-start",
       "label": "t:settings.left",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 0
@@ -167,7 +173,7 @@
       "id": "padding-inline-end",
       "label": "t:settings.right",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 0

@@ -18,43 +18,104 @@
       </span>
     </div>
 
-    {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-      {%- unless product.has_only_default_variant -%}
-        <div class="product-form__input">
-          {%- for option in product.options_with_values -%}
-            <label for="Option-quick-view-{{ forloop.index0 }}">{{ option.name }}</label>
-            <select id="Option-quick-view-{{ forloop.index0 }}" name="options[{{ option.name | escape }}]">
-              {%- for value in option.values -%}
-                <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
-                  {{ value }}
-                </option>
-              {%- endfor -%}
-            </select>
-          {%- endfor -%}
+    <variant-picker-quick-view data-product-variants="{{ product.variants | json | escape }}">
+      {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        {%- unless product.has_only_default_variant -%}
+          <div class="product-form__variants">
+            {%- for option in product.options_with_values -%}
+              <fieldset class="js product-form__input">
+                <legend class="form__label">{{ option.name }}</legend>
+                {%- for value in option.values -%}
+                  <input type="radio" id="quick-view-{{ option.name }}-{{ forloop.index0 }}"
+                         name="{{ option.name }}"
+                         value="{{ value | escape }}"
+                         {% if option.selected_value == value %}checked{% endif %}>
+                  <label for="quick-view-{{ option.name }}-{{ forloop.index0 }}">
+                    {{ value }}
+                  </label>
+                {%- endfor -%}
+              </fieldset>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+        
+        <div>
+          <label for="Quantity-quick-view">Quantity</label>
+          <input type="number" name="quantity" id="Quantity-quick-view" value="1" min="1" class="quantity__input">
         </div>
-      {%- endunless -%}
-      
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-      
-      <div>
-        <label for="Quantity-quick-view">Quantity</label>
-        <input type="number" name="quantity" id="Quantity-quick-view" value="1" min="1" class="quantity__input">
-      </div>
 
-      <div>
-        <button type="submit" name="add" class="button" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
-          <span>
-            {%- if product.selected_or_first_available_variant.available -%}
-              Add to cart
-            {%- else -%}
-              Sold out
-            {%- endif -%}
-          </span>
-        </button>
-      </div>
-    {%- endform -%}
+        <div>
+          <button type="submit" name="add" class="button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+            <span>
+              {%- if product.selected_or_first_available_variant.available -%}
+                Add to cart
+              {%- else -%}
+                Sold out
+              {%- endif -%}
+            </span>
+          </button>
+        </div>
+      {%- endform -%}
+    </variant-picker-quick-view>
   </div>
 </div>
+
+<script>
+  class VariantPickerQuickView extends HTMLElement {
+    constructor() {
+      super();
+      this.addEventListener('change', this.onVariantChange.bind(this));
+      this.updateOptions();
+      this.updateMasterId();
+    }
+
+    onVariantChange() {
+      this.updateOptions();
+      this.updateMasterId();
+      this.updateButton();
+    }
+
+    updateOptions() {
+      this.options = Array.from(this.querySelectorAll('input[type="radio"]:checked'), (input) => input.value);
+    }
+
+    updateMasterId() {
+      this.currentVariant = this.getVariantData().find((variant) => {
+        return !variant.options.map((option, index) => {
+          return this.options[index] === option;
+        }).includes(false);
+      });
+      this.querySelector('input[name="id"]').value = this.currentVariant.id;
+    }
+
+    updateButton() {
+      const button = this.querySelector('button[type="submit"]');
+      const buttonSpan = button.querySelector('span');
+      if (!this.currentVariant) {
+        button.setAttribute('disabled', true);
+        buttonSpan.textContent = 'Unavailable';
+      } else if (!this.currentVariant.available) {
+        button.setAttribute('disabled', true);
+        buttonSpan.textContent = 'Sold out';
+      } else {
+        button.removeAttribute('disabled');
+        buttonSpan.textContent = 'Add to cart';
+      }
+    }
+
+    getVariantData() {
+      if (!this.variantData) {
+        this.variantData = JSON.parse(this.dataset.productVariants);
+      }
+      return this.variantData;
+    }
+  }
+  if (!customElements.get('variant-picker-quick-view')) {
+    customElements.define('variant-picker-quick-view', VariantPickerQuickView);
+  }
+</script>
 
 <style>
   .quick-view__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
@@ -63,7 +124,30 @@
   .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 400; font-size: 24px; line-height: 28px; margin: 0; }
   .quick-view__info-column .quantity__input { width: 80px; }
   .price { font-size: 18px; }
-  .product-form__input { margin-bottom: 15px; }
-  .product-form__input label { display: block; margin-bottom: 5px; }
-  .product-form__input select { width: 100%; padding: 8px; margin-bottom: 10px; }
+  
+  /* Native Variant Picker Styles */
+  .product-form__variants { margin-bottom: 15px; }
+  .product-form__input { border: 0; padding: 0; margin: 0 0 1.5rem; }
+  .product-form__input legend { font-weight: 600; margin-bottom: 1rem; }
+  .product-form__input input[type="radio"] { clip: rect(0, 0, 0, 0); overflow: hidden; position: absolute; height: 1px; width: 1px; }
+  .product-form__input label {
+    display: inline-block;
+    margin: 0 0.5rem 0.5rem 0;
+    padding: 1rem 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.4rem;
+    line-height: 1;
+    transition: border-color 0.2s;
+  }
+  .product-form__input input[type="radio"]:checked + label {
+    border-color: #333;
+    box-shadow: 0 0 0 1px #333;
+  }
+  .product-form__input input[type="radio"]:disabled + label {
+    border-color: #eee;
+    color: #ccc;
+    cursor: not-allowed;
+  }
 </style>
