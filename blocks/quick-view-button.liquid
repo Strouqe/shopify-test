@@ -1,0 +1,34 @@
+{% doc %}
+  Renders a quick view button that opens a popup with product information.
+
+  @param {product} product - The product to display in the quick view.
+
+  @example
+  {% render 'quick-view-button', product: product %}
+{% enddoc %}
+
+<div {{ block.shopify_attributes }}>
+  {% render 'button',
+    id: 'quick-view-button',
+    label: block.settings.label,
+    onclick: 'console.log("Quick view clicked")'
+  %}
+</div>
+
+{% schema %}
+  {
+    "name": "Quick View Button",
+    "settings": [
+      {
+        "type": "product",
+        "id": "product",
+        "label": "Product"
+      }, {
+        "type": "text",
+        "id": "label",
+        "label": "Button label",
+        "default": "Quick view"
+      }
+    ]
+  }
+{% endschema %}
