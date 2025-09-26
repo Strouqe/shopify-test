@@ -58,7 +58,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>PoezenStudio is a pet lover's paradise, offering a wide range of high-quality products for dogs and cats that combine style with functionality.</p>",
+                "text": "<p>PoezenStudio is a pet lover's paradise, offering a wide range of high-quality products for dogs and cats that combine style with functionality.</p><p></p><p>For business inquiries: info@poezenstudio.com</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
