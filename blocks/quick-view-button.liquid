@@ -1,216 +1,1417 @@
-{%- comment -%}
-  This is a placeholder for the LiquidDoc, which should be added once the
-  component's functionality is stable.
-{%- endcomment -%}
+{% doc %}
+  Renders an accessible quick view modal for a product card.
 
-<div {{ block.shopify_attributes }}>
-  {%- liquid
-    assign button_id = 'popup-button-' | append: block.id
-    assign modal_id = 'popup-modal-' | append: block.id
-    assign product = product_card_product
-  -%}
+  Loads product data on demand, displays media, variant pickers, pricing, description,
+  and provides an add-to-cart form wired into the theme's product-form component.
 
-  <button
-    type="button"
-    id="{{ button_id }}"
-    class="button"
-    aria-haspopup="dialog"
-    aria-controls="{{ modal_id }}"
-    aria-expanded="false"
+  @param {object} product_card_product - Product object from the product card context
+{% enddoc %}
+
+{% liquid
+  assign product = product_card_product | default: product
+  assign product_form_id = 'QuickView-ProductForm-' | append: section.id | append: '-' | append: block.id
+  assign modal_id = 'QuickView-Dialog-' | append: block.id
+  assign button_id = 'QuickView-Trigger-' | append: block.id
+  assign placeholder_svg = 'product-1' | placeholder_svg_tag: 'quick-view__placeholder placeholder-svg'
+%}
+
+{% if product %}
+  <div
+    class="quick-view-block"
+    data-quick-view-block
+    data-product-id="{{ product.id }}"
+    data-section-id="{{ section.id }}"
+    data-money-format="{{ shop.money_format | json }}"
+    data-money-with-currency-format="{{ shop.money_with_currency_format | json }}"
+    data-show-vendor="{{ block.settings.show_vendor }}"
+    data-show-type="{{ block.settings.show_type }}"
+    data-show-description="{{ block.settings.show_description }}"
+    data-description-length="{{ block.settings.description_length }}"
+    data-media-position="{{ block.settings.media_position }}"
+    data-string-add="{{ 'products.product.add_to_cart' | t | escape }}"
+    data-string-sold-out="{{ 'products.product.sold_out' | t | escape }}"
+    data-string-unavailable="{{ 'products.product.unavailable' | t | escape }}"
+    data-string-add-success="{{ 'blocks.quick_view.add_success' | t: product_title: '%s' | escape }}"
+    data-string-add-error="{{ 'blocks.quick_view.add_error' | t | escape }}"
+    data-string-fetch-error="{{ 'blocks.quick_view.fetch_error' | t | escape }}"
+    data-string-loader="{{ 'blocks.quick_view.loader' | t | escape }}"
+    data-string-modal-label="{{ 'blocks.quick_view.modal_label' | t: product_title: '%s' | escape }}"
+    data-string-view-full="{{ 'blocks.quick_view.view_full_details' | t | escape }}"
+    data-string-in-stock="{{ 'content.inventory_in_stock' | t | escape }}"
+    data-string-out-of-stock="{{ 'content.inventory_out_of_stock' | t | escape }}"
+    data-string-slide-status="{{ 'accessibility.slide_status' | t: index: '%1', length: '%2' | escape }}"
+    data-string-thumbnail="{{ 'content.product_image' | t | escape }}"
   >
-    {{ block.settings.label | default: 'Quick View' }}
-  </button>
+    <button
+      id="{{ button_id }}"
+      type="button"
+      class="button quick-view-block__trigger{% if block.settings.enable_shake %} btn-shake{% endif %}"
+      data-quick-view-open
+      data-product-handle="{{ product.handle }}"
+      data-product-json-url="{{ routes.root_url | append: 'products/' | append: product.handle | append: '.js' }}"
+      data-product-url="{{ product.url }}"
+      aria-haspopup="dialog"
+      aria-controls="{{ modal_id }}"
+      aria-expanded="false"
+    >
+      {{ block.settings.label | default: 'blocks.quick_view.open' | t }}
+    </button>
 
-  <dialog id="{{ modal_id }}" class="popup-dialog">
-    <div class="popup-dialog__content">
-      <button type="button" class="popup-dialog__close" aria-label="Close">
-        &#x2715;
-      </button>
-      <div class="popup-dialog__body">
-        {%- if product -%}
-          <div class="quick-view__grid">
-            <div class="quick-view__media-column">
-              {%- if product.featured_media -%}
-                <img src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.featured_media.alt | escape }}" loading="lazy">
-              {%- else -%}
-                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-              {%- endif -%}
-            </div>
-          
-            <div class="quick-view__info-column">
-              <h1 class="quick-view__title">{{ product.title }}</h1>
-              
-              <div class="price">
-                <span class="price__regular">
-                  {{ product.price | money }}
-                </span>
+    <dialog
+      id="{{ modal_id }}"
+      class="quick-view-modal"
+      data-quick-view-modal
+      aria-modal="true"
+      aria-label="{{ 'blocks.quick_view.open' | t }}"
+    >
+      <div class="quick-view-modal__inner" data-quick-view-surface>
+        <button
+          type="button"
+          class="quick-view-modal__close"
+          data-quick-view-close
+          aria-label="{{ 'actions.close_dialog' | t }}"
+        >
+          &times;
+        </button>
+
+        <div class="quick-view-modal__loader" data-quick-view-loader role="status" aria-live="polite">
+          <span class="quick-view-modal__spinner" aria-hidden="true"></span>
+          <span class="quick-view-modal__loader-text" data-quick-view-loader-text>
+            {{ 'blocks.quick_view.loader' | t }}
+          </span>
+        </div>
+
+        <article class="quick-view" data-quick-view-body hidden>
+          <header class="quick-view__header">
+            <h2 id="{{ modal_id }}-title" class="quick-view__title" data-quick-view-title></h2>
+            <p class="quick-view__meta" data-quick-view-meta></p>
+          </header>
+
+          <div class="quick-view__layout" data-quick-view-layout>
+            <section class="quick-view__media" data-quick-view-media>
+              <div class="quick-view__media-main" data-quick-view-main-media></div>
+              <div class="quick-view__media-thumbnails" data-quick-view-thumbnails role="list"></div>
+            </section>
+
+            <section class="quick-view__info" data-quick-view-info>
+              <div class="quick-view__pricing">
+                <span class="quick-view__price" data-quick-view-price></span>
+                <span class="quick-view__compare-price" data-quick-view-compare-price></span>
               </div>
-          
-              <variant-picker-quick-view data-product-variants="{{ product.variants | json | escape }}">
-                {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                  
-                  {%- unless product.has_only_default_variant -%}
-                    <div class="product-form__variants">
-                      {%- for option in product.options_with_values -%}
-                        <fieldset class="js product-form__input">
-                          <legend class="form__label">{{ option.name }}</legend>
-                          {%- for value in option.values -%}
-                            <input type="radio" id="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}"
-                                   name="{{ option.name }}"
-                                   value="{{ value | escape }}"
-                                   {% if option.selected_value == value %}checked{% endif %}>
-                            <label for="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}">
-                              {{ value }}
-                            </label>
-                          {%- endfor -%}
-                        </fieldset>
-                      {%- endfor -%}
+              <div class="quick-view__inventory" data-quick-view-inventory></div>
+
+              <product-form-component
+                class="quick-view__form-component"
+                data-section-id="{{ section.id }}"
+                data-product-id="{{ product.id }}"
+                data-quantity-default="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
+                on:submit="/handleSubmit"
+              >
+                <div
+                  class="visually-hidden"
+                  aria-live="assertive"
+                  role="status"
+                  aria-atomic="true"
+                  ref="liveRegion"
+                ></div>
+                {%- form 'product', product, id: product_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form', class: 'quick-view__form shopify-product-form' -%}
+                  <input
+                    type="hidden"
+                    name="id"
+                    ref="variantId"
+                    value="{{ product.selected_or_first_available_variant.id }}"
+                    {% unless product.selected_or_first_available_variant.available %}
+                      disabled
+                    {% endunless %}
+                  >
+                  <div class="quick-view__options" data-quick-view-options></div>
+
+                  <div class="quick-view__quantity" data-quick-view-quantity>
+                    <label class="quick-view__quantity-label form__label" for="{{ modal_id }}-quantity">
+                      {{ 'content.quantity' | t }}
+                    </label>
+                    <div class="quick-view__quantity-controls">
+                      <button
+                        type="button"
+                        class="quick-view__quantity-button"
+                        data-quantity-decrease
+                        aria-label="{{ 'accessibility.decrease_quantity' | t }}"
+                      >
+                        &minus;
+                      </button>
+                      <input
+                        type="number"
+                        id="{{ modal_id }}-quantity"
+                        class="quick-view__quantity-input"
+                        name="quantity"
+                        inputmode="numeric"
+                        min="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
+                        step="{% if product.selected_or_first_available_variant.quantity_rule.increment %}{{ product.selected_or_first_available_variant.quantity_rule.increment }}{% else %}1{% endif %}"
+                        value="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
+                      >
+                      <button
+                        type="button"
+                        class="quick-view__quantity-button"
+                        data-quantity-increase
+                        aria-label="{{ 'accessibility.increase_quantity' | t }}"
+                      >
+                        &plus;
+                      </button>
                     </div>
-                  {%- endunless -%}
-                  
-                  <div>
-                    <label for="Quantity-quick-view-{{ block.id }}">Quantity</label>
-                    <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
                   </div>
-          
-                  <div>
-                    <button type="submit" name="add" class="button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-                      <span>
-                        {%- if product.selected_or_first_available_variant.available -%}
-                          Add to cart
-                        {%- else -%}
-                          Sold out
-                        {%- endif -%}
-                      </span>
-                    </button>
+
+                  <div class="quick-view__cta">
+                    {% render 'add-to-cart-button',
+                      add_to_cart_text: 'products.product.add_to_cart' | t,
+                      class: 'quick-view__add-to-cart button',
+                      can_add_to_cart: product.selected_or_first_available_variant.available,
+                      icon_only_on_mobile: false,
+                      id: product_form_id | append: '-Submit',
+                      product: product
+                    %}
                   </div>
+
+                  <p class="quick-view__form-error hidden" ref="addToCartTextError" aria-live="assertive"></p>
+                  <div class="quick-view__accelerated-checkout" ref="acceleratedCheckoutButtonContainer" hidden></div>
                 {%- endform -%}
-              </variant-picker-quick-view>
-            </div>
+              </product-form-component>
+
+              <div class="quick-view__message" data-quick-view-message role="status" aria-live="polite"></div>
+
+              <div class="quick-view__description" data-quick-view-description>
+                <h3 class="quick-view__section-heading">
+                  {{ 'blocks.quick_view.description_heading' | t }}
+                </h3>
+                <div class="quick-view__description-body" data-quick-view-description-body></div>
+              </div>
+
+              <a class="quick-view__view-product link" data-quick-view-link href="{{ product.url }}">
+                <span>{{ 'blocks.quick_view.view_full_details' | t }}</span>
+              </a>
+            </section>
           </div>
-        {%- endif -%}
+        </article>
+
+        <div class="quick-view-modal__error" data-quick-view-error hidden role="alert">
+          <span data-quick-view-error-message></span>
+        </div>
       </div>
-    </div>
-  </dialog>
-</div>
+    </dialog>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const openButton = document.getElementById('{{ button_id }}');
-    const dialog = document.getElementById('{{ modal_id }}');
-    
-    if (!openButton || !dialog) return;
+    <template data-quick-view-placeholder>
+      {{ placeholder_svg }}
+    </template>
+  </div>
+{% endif %}
 
-    const closeButton = dialog.querySelector('.popup-dialog__close');
-    if (!closeButton) return;
+{% javascript %}
+  (() => {
+    const initFlag = '__quickViewInstance';
 
-    openButton.addEventListener('click', (event) => {
-      event.preventDefault();
-      dialog.showModal();
-      openButton.setAttribute('aria-expanded', 'true');
-    });
-
-    const closeModal = () => {
-      dialog.close();
-      openButton.setAttribute('aria-expanded', 'false');
+    const toBool = (value) => value === 'true' || value === '1';
+    const toNumber = (value, fallback = 0) => {
+      const parsed = parseInt(value, 10);
+      return Number.isFinite(parsed) ? parsed : fallback;
     };
+    const parseJSON = (value) => {
+      if (!value) return null;
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        return value;
+      }
+    };
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    closeButton.addEventListener('click', closeModal);
+    class VesselQuickView {
+      constructor(root) {
+        this.root = root;
+        this.button = root.querySelector('[data-quick-view-open]');
+        this.dialog = root.querySelector('[data-quick-view-modal]');
+        this.loader = this.dialog?.querySelector('[data-quick-view-loader]');
+        this.loaderText = this.dialog?.querySelector('[data-quick-view-loader-text]');
+        this.body = this.dialog?.querySelector('[data-quick-view-body]');
+        this.layout = this.dialog?.querySelector('[data-quick-view-layout]');
+        this.titleEl = this.dialog?.querySelector('[data-quick-view-title]');
+        this.metaEl = this.dialog?.querySelector('[data-quick-view-meta]');
+        this.mediaMain = this.dialog?.querySelector('[data-quick-view-main-media]');
+        this.thumbnails = this.dialog?.querySelector('[data-quick-view-thumbnails]');
+        this.info = this.dialog?.querySelector('[data-quick-view-info]');
+        this.priceEl = this.dialog?.querySelector('[data-quick-view-price]');
+        this.compareEl = this.dialog?.querySelector('[data-quick-view-compare-price]');
+        this.inventoryEl = this.dialog?.querySelector('[data-quick-view-inventory]');
+        this.optionsContainer = this.dialog?.querySelector('[data-quick-view-options]');
+        this.descriptionSection = this.dialog?.querySelector('[data-quick-view-description]');
+        this.descriptionBody = this.dialog?.querySelector('[data-quick-view-description-body]');
+        this.viewProductLink = this.dialog?.querySelector('[data-quick-view-link]');
+        this.messageEl = this.dialog?.querySelector('[data-quick-view-message]');
+        this.errorContainer = this.dialog?.querySelector('[data-quick-view-error]');
+        this.errorMessage = this.errorContainer?.querySelector('[data-quick-view-error-message]');
+        this.placeholderTemplate = this.root.querySelector('[data-quick-view-placeholder]');
+        this.productFormComponent = this.dialog?.querySelector('product-form-component');
+        this.form = this.productFormComponent?.querySelector('form');
+        this.quantityWrapper = this.form?.querySelector('[data-quick-view-quantity]');
+        this.quantityInput = this.quantityWrapper?.querySelector('input[name="quantity"]');
+        this.quantityIncrease = this.quantityWrapper?.querySelector('[data-quantity-increase]');
+        this.quantityDecrease = this.quantityWrapper?.querySelector('[data-quantity-decrease]');
 
-    dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) {
-        closeModal();
-      }
-    });
-  });
+        this.settings = this.parseSettings();
+        this.strings = this.parseStrings();
+        this.moneyFormat = parseJSON(this.root.dataset.moneyFormat) || this.root.dataset.moneyFormat;
+        this.moneyWithCurrencyFormat =
+          parseJSON(this.root.dataset.moneyWithCurrencyFormat) || this.root.dataset.moneyWithCurrencyFormat;
 
-  if (!customElements.get('variant-picker-quick-view')) {
-    class VariantPickerQuickView extends HTMLElement {
-      constructor() {
-        super();
-        this.addEventListener('change', this.onVariantChange.bind(this));
-        this.updateOptions();
-        this.updateMasterId();
+        this.productData = null;
+        this.productPromise = null;
+        this.mediaSources = [];
+        this.selectedOptions = [];
+        this.optionInputs = [];
+        this.currentVariant = null;
+        this.currentImageIndex = 0;
+
+        this.ensureFormRefs();
+        this.registerEvents();
+        this.applyMediaPosition();
       }
-  
-      onVariantChange() {
-        this.updateOptions();
-        this.updateMasterId();
-        this.updateButton();
+
+      parseSettings() {
+        return {
+          showVendor: toBool(this.root.dataset.showVendor || 'false'),
+          showType: toBool(this.root.dataset.showType || 'false'),
+          showDescription: this.root.dataset.showDescription !== 'false',
+          descriptionLength: toNumber(this.root.dataset.descriptionLength, 0),
+          mediaPosition: this.root.dataset.mediaPosition === 'right' ? 'right' : 'left',
+        };
       }
-  
-      updateOptions() {
-        this.options = Array.from(this.querySelectorAll('input[type="radio"]:checked'), (input) => input.value);
+
+      parseStrings() {
+        return {
+          add: this.root.dataset.stringAdd || 'Add to cart',
+          soldOut: this.root.dataset.stringSoldOut || 'Sold out',
+          unavailable: this.root.dataset.stringUnavailable || 'Unavailable',
+          addSuccessTemplate: this.root.dataset.stringAddSuccess || '%s was added to your cart.',
+          addError: this.root.dataset.stringAddError || 'There was a problem adding this product to your cart.',
+          fetchError: this.root.dataset.stringFetchError || 'We couldn’t load this product right now.',
+          loader: this.root.dataset.stringLoader || 'Loading product details…',
+          modalLabelTemplate: this.root.dataset.stringModalLabel || 'Quick view for %s',
+          viewFull: this.root.dataset.stringViewFull || 'View full product details',
+          inStock: this.root.dataset.stringInStock || '',
+          outOfStock: this.root.dataset.stringOutOfStock || '',
+          slideStatus: this.root.dataset.stringSlideStatus || 'Slide %1 of %2',
+          thumbnail: this.root.dataset.stringThumbnail || 'Product image',
+        };
       }
-  
-      updateMasterId() {
-        this.currentVariant = this.getVariantData().find((variant) => {
-          return !variant.options.map((option, index) => {
-            return this.options[index] === option;
-          }).includes(false);
+
+      ensureFormRefs() {
+        if (!this.productFormComponent) return;
+        const { refs } = this.productFormComponent;
+        this.variantIdInput = refs?.variantId || this.form?.querySelector('input[name="id"]');
+        this.addToCartContainer = refs?.addToCartButtonContainer;
+        this.addToCartButton =
+          this.addToCartContainer?.refs?.addToCartButton || this.form?.querySelector('[ref="addToCartButton"]');
+        this.addToCartTextEl = this.addToCartButton?.querySelector('.add-to-cart-text__content');
+      }
+
+      registerEvents() {
+        this.button?.addEventListener('click', (event) => {
+          event.preventDefault();
+          this.open();
         });
-        if (this.currentVariant) {
-          this.querySelector('input[name="id"]').value = this.currentVariant.id;
+
+        this.dialog?.addEventListener('cancel', (event) => {
+          event.preventDefault();
+          this.close();
+        });
+
+        this.dialog?.addEventListener('close', () => {
+          this.button?.setAttribute('aria-expanded', 'false');
+          this.clearMessage();
+        });
+
+        this.dialog?.addEventListener('click', (event) => {
+          if (event.target === this.dialog) {
+            this.close();
+          }
+        });
+
+        if (this.quantityIncrease) {
+          this.quantityIncrease.addEventListener('click', () => this.adjustQuantity(1));
+        }
+
+        if (this.quantityDecrease) {
+          this.quantityDecrease.addEventListener('click', () => this.adjustQuantity(-1));
+        }
+
+        if (this.quantityInput) {
+          this.quantityInput.addEventListener('input', () => this.syncQuantity());
+        }
+
+        if (this.productFormComponent) {
+          this.productFormComponent.addEventListener('cart:update', (event) => this.handleCartUpdate(event));
+          this.productFormComponent.addEventListener('cart:error', (event) => this.handleCartError(event));
         }
       }
-  
-      updateButton() {
-        const button = this.querySelector('button[type="submit"]');
-        const buttonSpan = button.querySelector('span');
-        if (!this.currentVariant) {
-          button.setAttribute('disabled', true);
-          buttonSpan.textContent = 'Unavailable';
-        } else if (!this.currentVariant.available) {
-          button.setAttribute('disabled', true);
-          buttonSpan.textContent = 'Sold out';
+
+      open() {
+        if (!this.dialog) return;
+        this.button?.setAttribute('aria-expanded', 'true');
+        this.dialog.showModal?.() ?? this.dialog.setAttribute('open', 'true');
+        this.resetState();
+        this.loadProduct();
+      }
+
+      close() {
+        if (!this.dialog) return;
+        if (this.dialog.open) {
+          this.dialog.close();
         } else {
-          button.removeAttribute('disabled');
-          buttonSpan.textContent = 'Add to cart';
+          this.dialog.removeAttribute('open');
         }
       }
-  
-      getVariantData() {
-        if (!this.variantData) {
-          this.variantData = JSON.parse(this.dataset.productVariants);
+
+      resetState() {
+        this.clearMessage();
+        this.clearError();
+        this.setLoading(true);
+        this.ensureFormRefs();
+      }
+
+      loadProduct() {
+        if (this.productData) {
+          this.populateProduct(this.productData);
+          this.setLoading(false);
+          return;
         }
-        return this.variantData;
+
+        if (this.productPromise) return;
+
+        const url = this.button?.dataset.productJsonUrl;
+        if (!url) {
+          this.setError(this.strings.fetchError);
+          this.setLoading(false);
+          return;
+        }
+
+        this.setLoading(true);
+        this.productPromise = fetch(url, { credentials: 'same-origin' })
+          .then((response) => {
+            if (!response.ok) throw new Error(`Failed to fetch quick view data: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            this.productData = data;
+            this.populateProduct(data);
+          })
+          .catch((error) => {
+            console.error(error);
+            this.setError(this.strings.fetchError);
+          })
+          .finally(() => {
+            this.setLoading(false);
+          });
+      }
+
+      populateProduct(data) {
+        if (!data) return;
+
+        this.clearError();
+        this.ensureFormRefs();
+        this.applyMediaPosition();
+
+        const modalLabel = this.strings.modalLabelTemplate.replace('%s', data.title);
+        this.dialog?.setAttribute('aria-label', modalLabel);
+        if (this.titleEl) this.titleEl.textContent = data.title;
+        if (this.viewProductLink) this.viewProductLink.textContent = this.strings.viewFull;
+
+        if (this.viewProductLink) {
+          const fallbackUrl = `${(window.Shopify?.routes?.root || '/') + 'products/' + data.handle}`;
+          this.viewProductLink.href = this.button?.dataset.productUrl || fallbackUrl;
+        }
+
+        const metaParts = [];
+        if (this.settings.showVendor && data.vendor) metaParts.push(data.vendor);
+        if (this.settings.showType && data.type) metaParts.push(data.type);
+        if (this.metaEl) {
+          this.metaEl.textContent = metaParts.join(' • ');
+          this.metaEl.hidden = metaParts.length === 0;
+        }
+
+        this.variantData = Array.isArray(data.variants) ? data.variants : [];
+        this.optionData = Array.isArray(data.options) ? data.options : [];
+        this.mediaSources = Array.isArray(data.images)
+          ? data.images.map((url) => ({ url, alt: data.title }))
+          : [];
+
+        const initialVariant =
+          this.variantData.find((variant) => variant.available) || this.variantData[0] || null;
+
+        this.currentVariant = initialVariant;
+        this.selectedOptions = initialVariant ? [...initialVariant.options] : [];
+
+        this.renderMedia(initialVariant);
+        this.renderOptions();
+        this.updateDescription(data);
+        this.updateVariant(initialVariant);
+
+        if (this.body) {
+          this.body.hidden = false;
+        }
+      }
+
+      renderMedia(variant) {
+        if (!this.mediaMain || !this.thumbnails) return;
+
+        if (!this.mediaSources.length) {
+          this.mediaMain.innerHTML = this.placeholderTemplate?.innerHTML || '';
+          this.thumbnails.innerHTML = '';
+          this.thumbnails.hidden = true;
+          return;
+        }
+
+        this.thumbnails.innerHTML = '';
+        this.mediaSources.forEach((source, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'quick-view__thumbnail';
+          button.dataset.index = String(index);
+          const labelText = this.strings.slideStatus
+            .replace('%1', index + 1)
+            .replace('%2', this.mediaSources.length);
+          const inner = document.createElement('span');
+          inner.className = 'visually-hidden';
+          inner.textContent = labelText;
+          const img = document.createElement('img');
+          img.src = this.imageUrlForSize(source.url, 180);
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.alt = `${this.strings.thumbnail} ${index + 1}`;
+          button.appendChild(img);
+          button.appendChild(inner);
+          button.addEventListener('click', () => this.updateMainMedia(index));
+          this.thumbnails.appendChild(button);
+        });
+
+        this.thumbnails.hidden = this.mediaSources.length <= 1;
+
+        if (variant?.featured_image?.src) {
+          const variantIndex = this.findImageIndex(variant.featured_image.src);
+          if (variantIndex > -1) {
+            this.updateMainMedia(variantIndex, variant.featured_image.alt || this.productData?.title);
+            return;
+          }
+        }
+
+        this.updateMainMedia(0, this.productData?.title);
+      }
+
+      renderOptions() {
+        if (!this.optionsContainer) return;
+
+        const hasMeaningfulOptions =
+          this.optionData.length > 0 &&
+          !(this.optionData.length === 1 &&
+            this.optionData[0].name == 'Title' &&
+            this.optionData[0].values.length === 1);
+
+        this.optionsContainer.innerHTML = '';
+        this.optionInputs = [];
+
+        if (!hasMeaningfulOptions) {
+          this.optionsContainer.hidden = true;
+          return;
+        }
+
+        this.optionsContainer.hidden = false;
+
+        this.optionData.forEach((option, optionIndex) => {
+          const fieldset = document.createElement('fieldset');
+          fieldset.className = 'quick-view__option-group';
+          fieldset.dataset.optionIndex = String(optionIndex);
+
+          const legend = document.createElement('legend');
+          legend.className = 'quick-view__option-legend';
+          legend.textContent = option.name;
+          fieldset.appendChild(legend);
+
+          const list = document.createElement('div');
+          list.className = 'quick-view__option-values';
+
+          option.values.forEach((value) => {
+            const id = `${this.dialog?.id || 'QuickView'}-option-${optionIndex}-${this.slugify(value)}`;
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = `option-${optionIndex}`;
+            input.id = id;
+            input.value = value;
+            input.className = 'quick-view__option-input visually-hidden';
+            input.dataset.optionIndex = String(optionIndex);
+
+            if (this.selectedOptions[optionIndex] === value) {
+              input.checked = true;
+            }
+
+            const label = document.createElement('label');
+            label.className = 'quick-view__option-label';
+            label.setAttribute('for', id);
+            label.textContent = value;
+
+            input.addEventListener('change', () => {
+              this.selectedOptions[optionIndex] = value;
+              this.syncOptionInputs();
+              this.updateVariant();
+            });
+
+            this.optionInputs.push({ input, label, optionIndex, value });
+
+            list.appendChild(input);
+            list.appendChild(label);
+          });
+
+          fieldset.appendChild(list);
+          this.optionsContainer.appendChild(fieldset);
+        });
+
+        this.syncOptionInputs();
+      }
+
+      updateVariant(forcedVariant) {
+        if (!this.variantData) return;
+
+        if (forcedVariant) {
+          this.currentVariant = forcedVariant;
+        } else {
+          const matching = this.findVariantByOptions(this.selectedOptions);
+          this.currentVariant = matching || null;
+        }
+
+        this.syncOptionInputs();
+        this.updateOptionAvailability();
+        this.updatePrice(this.currentVariant);
+        this.updateInventory(this.currentVariant);
+        this.updateQuantityBounds(this.currentVariant);
+        this.updateAddToCartButton(this.currentVariant);
+        this.updateVariantMedia(this.currentVariant);
+      }
+
+      updatePrice(variant) {
+        if (!this.priceEl || !this.compareEl) return;
+
+        if (!variant) {
+          this.priceEl.textContent = this.strings.unavailable;
+          this.compareEl.textContent = '';
+          this.compareEl.hidden = true;
+          return;
+        }
+
+        const price = this.formatMoney(variant.price, this.moneyFormat);
+        this.priceEl.textContent = price;
+
+        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+          this.compareEl.textContent = this.formatMoney(variant.compare_at_price, this.moneyFormat);
+          this.compareEl.hidden = false;
+        } else {
+          this.compareEl.textContent = '';
+          this.compareEl.hidden = true;
+        }
+      }
+
+      updateInventory(variant) {
+        if (!this.inventoryEl) return;
+
+        if (!variant) {
+          this.inventoryEl.textContent = '';
+          this.inventoryEl.hidden = true;
+          return;
+        }
+
+        if (!variant.available) {
+          this.inventoryEl.textContent = this.strings.outOfStock;
+          this.inventoryEl.hidden = !this.strings.outOfStock;
+          return;
+        }
+
+        this.inventoryEl.textContent = this.strings.inStock;
+        this.inventoryEl.hidden = !this.strings.inStock;
+      }
+
+      updateQuantityBounds(variant) {
+        if (!this.quantityInput) return;
+
+        const min = variant?.quantity_rule?.min || 1;
+        const max = variant?.quantity_rule?.max || '';
+        const step = variant?.quantity_rule?.increment || 1;
+
+        this.quantityInput.min = String(min);
+        this.quantityInput.step = String(step);
+        if (max) {
+          this.quantityInput.max = String(max);
+        } else {
+          this.quantityInput.removeAttribute('max');
+        }
+
+        if (!this.quantityInput.value || Number(this.quantityInput.value) < min) {
+          this.quantityInput.value = String(min);
+        }
+
+        this.syncQuantity();
+      }
+
+      updateVariantMedia(variant) {
+        if (!variant) return;
+
+        if (variant.featured_image?.src) {
+          const index = this.findImageIndex(variant.featured_image.src);
+          if (index > -1) {
+            this.updateMainMedia(index, variant.featured_image.alt || this.productData?.title);
+          }
+        }
+
+        const mediaUrl = variant.featured_image?.src || '';
+        if (this.addToCartContainer && mediaUrl) {
+          this.addToCartContainer.setAttribute('data-product-variant-media', this.imageUrlForSize(mediaUrl, 100));
+        }
+      }
+
+      updateAddToCartButton(variant) {
+        if (!this.addToCartButton || !this.variantIdInput) return;
+
+        if (!variant) {
+          this.variantIdInput.value = '';
+          this.variantIdInput.setAttribute('disabled', 'true');
+          this.setAddToCartState(false, this.strings.unavailable);
+          return;
+        }
+
+        this.variantIdInput.value = variant.id;
+        this.variantIdInput.removeAttribute('disabled');
+
+        if (variant.available) {
+          this.setAddToCartState(true, this.strings.add);
+        } else {
+          this.setAddToCartState(false, this.strings.soldOut);
+        }
+      }
+
+      setAddToCartState(isAvailable, text) {
+        if (this.addToCartContainer?.disable && this.addToCartContainer?.enable) {
+          if (isAvailable) {
+            this.addToCartContainer.enable();
+          } else {
+            this.addToCartContainer.disable();
+          }
+        } else if (this.addToCartButton) {
+          this.addToCartButton.disabled = !isAvailable;
+        }
+
+        if (this.addToCartTextEl) {
+          this.addToCartTextEl.textContent = text;
+        }
+      }
+
+      syncOptionInputs() {
+        this.optionInputs.forEach(({ input, label, optionIndex, value }) => {
+          const isSelected = this.selectedOptions[optionIndex] === value;
+          input.checked = isSelected;
+          label.dataset.selected = String(isSelected);
+        });
+      }
+
+      updateOptionAvailability() {
+        this.optionInputs.forEach(({ input, label, optionIndex, value }) => {
+          const hypothetical = [...this.selectedOptions];
+          hypothetical[optionIndex] = value;
+          const variant = this.findVariantByOptions(hypothetical);
+
+          input.disabled = !variant;
+          label.dataset.unavailable = String(!variant || !variant.available);
+        });
+      }
+
+      adjustQuantity(delta) {
+        if (!this.quantityInput) return;
+        const min = Number(this.quantityInput.min) || 1;
+        const step = Number(this.quantityInput.step) || 1;
+        const max = this.quantityInput.hasAttribute('max') ? Number(this.quantityInput.max) : Infinity;
+
+        const current = Number(this.quantityInput.value) || min;
+        let next = current + delta * step;
+        next = Math.max(min, Math.min(max, next));
+        this.quantityInput.value = String(next);
+        this.syncQuantity();
+      }
+
+      syncQuantity() {
+        if (!this.quantityInput) return;
+
+        const min = Number(this.quantityInput.min) || 1;
+        const max = this.quantityInput.hasAttribute('max') ? Number(this.quantityInput.max) : Infinity;
+        let value = Number(this.quantityInput.value);
+
+        if (!Number.isFinite(value)) value = min;
+        value = Math.max(min, Math.min(max, value));
+        this.quantityInput.value = String(value);
+
+        if (this.quantityDecrease) {
+          this.quantityDecrease.disabled = value <= min;
+        }
+
+        if (this.quantityIncrease) {
+          this.quantityIncrease.disabled = value >= max;
+        }
+      }
+
+      handleCartUpdate(event) {
+        if (!event || event.target !== this.productFormComponent) return;
+        const variantTitle = this.currentVariant?.name || this.productData?.title || '';
+        const message = this.strings.addSuccessTemplate.replace('%s', variantTitle);
+        this.showMessage(message, 'success');
+
+        if (!prefersReducedMotion) {
+          setTimeout(() => {
+            this.clearMessage();
+          }, 5000);
+        }
+      }
+
+      handleCartError(event) {
+        if (!event || event.target !== this.productFormComponent) return;
+        this.showMessage(this.strings.addError, 'error');
+      }
+
+      showMessage(message, tone = 'info') {
+        if (!this.messageEl) return;
+        this.messageEl.textContent = message;
+        this.messageEl.dataset.tone = tone;
+        this.messageEl.hidden = false;
+      }
+
+      clearMessage() {
+        if (!this.messageEl) return;
+        this.messageEl.textContent = '';
+        this.messageEl.hidden = true;
+        this.messageEl.removeAttribute('data-tone');
+      }
+
+      setLoading(isLoading) {
+        if (!this.loader) return;
+        this.loader.hidden = !isLoading;
+        if (this.body && isLoading) {
+          this.body.hidden = true;
+        }
+      }
+
+      setError(message) {
+        if (!this.errorContainer || !this.errorMessage) return;
+        this.errorMessage.textContent = message;
+        this.errorContainer.hidden = false;
+        if (this.body) {
+          this.body.hidden = true;
+        }
+      }
+
+      clearError() {
+        if (!this.errorContainer || !this.errorMessage) return;
+        this.errorMessage.textContent = '';
+        this.errorContainer.hidden = true;
+      }
+
+      applyMediaPosition() {
+        if (!this.body) return;
+        this.body.classList.toggle('quick-view--media-right', this.settings.mediaPosition === 'right');
+        this.body.classList.toggle('quick-view--media-left', this.settings.mediaPosition !== 'right');
+      }
+
+      updateMainMedia(index, altText) {
+        if (!this.mediaMain || !this.mediaSources[index]) return;
+        this.currentImageIndex = index;
+        const source = this.mediaSources[index];
+
+        const img = document.createElement('img');
+        img.src = this.imageUrlForSize(source.url, 960);
+        img.srcset = [
+          `${this.imageUrlForSize(source.url, 480)} 480w`,
+          `${this.imageUrlForSize(source.url, 720)} 720w`,
+          `${this.imageUrlForSize(source.url, 960)} 960w`,
+          `${this.imageUrlForSize(source.url, 1200)} 1200w`,
+        ].join(', ');
+        img.sizes = '(max-width: 900px) 100vw, 50vw';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = altText || source.alt || '';
+
+        this.mediaMain.innerHTML = '';
+        this.mediaMain.appendChild(img);
+
+        this.highlightThumbnail(index);
+      }
+
+      highlightThumbnail(index) {
+        if (!this.thumbnails) return;
+        this.thumbnails.querySelectorAll('.quick-view__thumbnail').forEach((button, idx) => {
+          button.classList.toggle('is-active', idx === index);
+          button.setAttribute('aria-current', idx === index ? 'true' : 'false');
+        });
+      }
+
+      updateDescription(data) {
+        if (!this.descriptionSection || !this.descriptionBody) return;
+
+        const description = data?.description || '';
+        const showDescription = this.settings.showDescription && description.trim() !== '';
+
+        this.descriptionSection.hidden = !showDescription;
+        if (!showDescription) return;
+
+        if (this.settings.descriptionLength > 0) {
+          const plain = this.stripHtml(description);
+          const limit = this.settings.descriptionLength;
+          const truncated = plain.length > limit ? `${plain.slice(0, limit).trimEnd()}…` : plain;
+          this.descriptionBody.textContent = truncated;
+        } else {
+          this.descriptionBody.innerHTML = description;
+        }
+      }
+
+      findVariantByOptions(options) {
+        if (!options || !this.variantData) return null;
+        return this.variantData.find((variant) =>
+          variant.options.every((value, index) => value === options[index])
+        );
+      }
+
+      findImageIndex(src) {
+        if (!src || !this.mediaSources.length) return -1;
+        const normal = this.normalizeImageUrl(src);
+        return this.mediaSources.findIndex((item) => this.normalizeImageUrl(item.url) === normal);
+      }
+
+      imageUrlForSize(url, size) {
+        if (!url) return '';
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}width=${size}`;
+      }
+
+      normalizeImageUrl(url) {
+        return url ? url.split('?')[0] : '';
+      }
+
+      slugify(value) {
+        return value
+          .toString()
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+
+      formatMoney(amount, format) {
+        if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
+          return Shopify.formatMoney(amount, format || this.moneyFormat);
+        }
+
+        const value = (amount / 100).toFixed(2);
+        return format ? format.replace('{{amount}}', value) : value;
+      }
+
+      stripHtml(html) {
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        return temp.textContent || temp.innerText || '';
       }
     }
-    customElements.define('variant-picker-quick-view', VariantPickerQuickView);
-  }
-</script>
+
+    const initInstance = (root) => {
+      if (!root || root[initFlag]) return root?.[initFlag];
+      const instance = new VesselQuickView(root);
+      root[initFlag] = instance;
+      return instance;
+    };
+
+    const initAll = (scope = document) => {
+      scope.querySelectorAll('[data-quick-view-block]').forEach((root) => initInstance(root));
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initAll());
+    } else {
+      initAll();
+    }
+
+    document.addEventListener('shopify:section:load', (event) => initAll(event.target));
+    document.addEventListener('shopify:section:reorder', (event) => initAll(event.target));
+    document.addEventListener('shopify:block:select', (event) => {
+      if (!document.documentElement.classList.contains('shopify-design-mode')) return;
+      const root =
+        event.target.querySelector('[data-quick-view-block]') || event.target.closest('[data-quick-view-block]');
+      const instance = initInstance(root);
+      instance?.open();
+    });
+    document.addEventListener('shopify:block:deselect', (event) => {
+      if (!document.documentElement.classList.contains('shopify-design-mode')) return;
+      const root =
+        event.target.querySelector('[data-quick-view-block]') || event.target.closest('[data-quick-view-block]');
+      const instance = root?.[initFlag];
+      instance?.close();
+    });
+  })();
+{% endjavascript %}
 
 {% stylesheet %}
-  .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 800px; }
-  .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; }
-  .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: black; font-size: 1.5rem; line-height: 1; z-index: 10; }
-  .quick-view__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
-  .quick-view__info-column { display: flex; flex-direction: column; gap: 20px; }
-  .quick-view__media-column img, .quick-view__media-column .placeholder-svg { max-width: 100%; height: auto; }
-  .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 400; font-size: 24px; line-height: 28px; margin: 0; }
-  .quick-view__info-column .quantity__input { width: 80px; }
-  .price { font-size: 18px; }
-  .product-form__variants { margin-bottom: 15px; }
-  .product-form__input { border: 0; padding: 0; margin: 0 0 1.5rem; }
-  .product-form__input legend { font-weight: 600; margin-bottom: 1rem; }
-  .product-form__input input[type="radio"] { clip: rect(0, 0, 0, 0); overflow: hidden; position: absolute; height: 1px; width: 1px; }
-  .product-form__input label { display: inline-block; margin: 0 0.5rem 0.5rem 0; padding: 1rem 1.5rem; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 1.4rem; line-height: 1; transition: border-color 0.2s; }
-  .product-form__input input[type="radio"]:checked + label { border-color: #333; box-shadow: 0 0 0 1px #333; }
-  .product-form__input input[type="radio"]:disabled + label { border-color: #eee; color: #ccc; cursor: not-allowed; }
+  .quick-view-block {
+    position: relative;
+    width: 100%;
+  }
+
+  .quick-view-block__trigger {
+    width: 100%;
+  }
+
+  .quick-view-modal {
+    border: none;
+    padding: 0;
+    width: min(960px, calc(100% - 2.4rem));
+    max-width: 960px;
+    background: transparent;
+  }
+
+  .quick-view-modal::backdrop {
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .quick-view-modal__inner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    background: var(--color-background, #ffffff);
+    color: var(--color-foreground, #111827);
+    max-height: calc(100vh - 3rem);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quick-view-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.06);
+    color: inherit;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+  }
+
+  .quick-view-modal__close:hover {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .quick-view-modal__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(2rem, 4vw, 3rem);
+  }
+
+  .quick-view-modal__spinner {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border: 3px solid currentColor;
+    border-top-color: transparent;
+    animation: quick-view-spin 0.8s linear infinite;
+  }
+
+  .quick-view-modal__error {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  .quick-view {
+    padding: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .quick-view__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: start;
+  }
+
+  .quick-view--media-right .quick-view__media {
+    order: 2;
+  }
+
+  .quick-view--media-right .quick-view__info {
+    order: 1;
+  }
+
+  @media screen and (max-width: 900px) {
+    .quick-view__layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .quick-view-modal__inner {
+      max-height: none;
+    }
+
+    .quick-view-modal {
+      width: min(100%, calc(100% - 1.6rem));
+    }
+  }
+
+  .quick-view__header {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .quick-view__title {
+    margin: 0;
+    font-size: clamp(2.2rem, 3vw, 2.8rem);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .quick-view__meta {
+    margin: 0;
+    font-size: 1.4rem;
+    color: rgba(17, 24, 39, 0.7);
+  }
+
+  .quick-view__media-main {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: rgba(241, 245, 249, 0.8);
+    min-height: 320px;
+    display: grid;
+    place-items: center;
+  }
+
+  .quick-view__media-main img,
+  .quick-view__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .quick-view__media-thumbnails {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .quick-view__thumbnail {
+    position: relative;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    border-radius: 0.75rem;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    cursor: pointer;
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+  }
+
+  .quick-view__thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .quick-view__thumbnail.is-active {
+    border-color: var(--color-foreground, #111827);
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.08);
+  }
+
+  .quick-view__info {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .quick-view__pricing {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .quick-view__price {
+    font-size: clamp(1.8rem, 2.4vw, 2.2rem);
+    font-weight: 600;
+  }
+
+  .quick-view__compare-price {
+    font-size: clamp(1.4rem, 2vw, 1.6rem);
+    color: rgba(17, 24, 39, 0.6);
+    text-decoration: line-through;
+  }
+
+  .quick-view__inventory {
+    font-size: 1.3rem;
+    color: rgba(17, 24, 39, 0.65);
+  }
+
+  .quick-view__option-group {
+    margin: 0 0 1.5rem;
+    border: none;
+    padding: 0;
+  }
+
+  .quick-view__option-legend {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+
+  .quick-view__option-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .quick-view__option-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .quick-view__option-label[data-selected='true'] {
+    border-color: var(--color-foreground, #111827);
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.08);
+  }
+
+  .quick-view__option-label[data-unavailable='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .quick-view__quantity {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .quick-view__quantity-controls {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    border-radius: 999px;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  .quick-view__quantity-button {
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  .quick-view__quantity-button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .quick-view__quantity-input {
+    width: 3.5rem;
+    border: none;
+    text-align: center;
+    font-size: 1.4rem;
+    background: transparent;
+  }
+
+  .quick-view__cta .button {
+    width: 100%;
+  }
+
+  .quick-view__message {
+    font-size: 1.4rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    background: rgba(59, 130, 246, 0.08);
+    color: rgba(17, 24, 39, 0.85);
+  }
+
+  .quick-view__message[data-tone='success'] {
+    background: rgba(16, 185, 129, 0.12);
+    color: rgba(5, 122, 85, 0.95);
+  }
+
+  .quick-view__message[data-tone='error'] {
+    background: rgba(248, 113, 113, 0.12);
+    color: rgba(185, 28, 28, 0.95);
+  }
+
+  .quick-view__message[hidden] {
+    display: none;
+  }
+
+  .quick-view__form-error {
+    margin: 0;
+    color: rgba(185, 28, 28, 0.95);
+    font-size: 1.3rem;
+  }
+
+  .quick-view__description {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .quick-view__section-heading {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .quick-view__description-body {
+    font-size: 1.4rem;
+    color: rgba(17, 24, 39, 0.72);
+    line-height: 1.6;
+  }
+
+  .quick-view__view-product {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  .quick-view__view-product:hover {
+    text-decoration: none;
+  }
+
+  @keyframes quick-view-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .quick-view-modal__spinner {
+      animation: none;
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .btn-shake:hover {
+      animation: quick-view-shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+  }
+
+  @keyframes quick-view-shake {
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Quick View Button",
-  "blocks": [],
+  "name": "t:blocks.quick_view.name",
   "settings": [
     {
       "type": "text",
       "id": "label",
-      "label": "Button Label",
-      "default": "Quick View"
+      "label": "t:blocks.quick_view.settings.label",
+      "default": "Quick view"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shake",
+      "label": "t:blocks.quick_view.settings.enable_shake",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:blocks.quick_view.settings.show_vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_type",
+      "label": "t:blocks.quick_view.settings.show_type",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:blocks.quick_view.settings.show_description",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "description_length",
+      "label": "t:blocks.quick_view.settings.description_length",
+      "min": 0,
+      "max": 600,
+      "step": 10,
+      "unit": "t:blocks.quick_view.settings.characters",
+      "default": 220
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "t:blocks.quick_view.settings.media_position",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:blocks.quick_view.settings.media_position_left"
+        },
+        {
+          "value": "right",
+          "label": "t:blocks.quick_view.settings.media_position_right"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.quick_view.presets.default"
     }
   ]
 }
