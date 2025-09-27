@@ -1,13 +1,28 @@
 {%- comment -%}
-  This is a placeholder for the LiquidDoc, which should be added once the
-  component's functionality is stable.
+  File: blocks/quick-view-button.liquid
 {%- endcomment -%}
 
 <div {{ block.shopify_attributes }}>
   {%- liquid
+    assign product_object = closest.product
+    if product_object == blank
+      assign product_object = product_card_product
+    endif
+    if product_object == blank
+      assign product_object = product
+    endif
+
+    assign has_product = false
+    if product_object and product_object != blank
+      assign has_product = true
+    endif
+
     assign button_id = 'popup-button-' | append: block.id
     assign modal_id = 'popup-modal-' | append: block.id
-    assign product = product_card_product
+    assign button_title = block.settings.label | default: 'Quick View'
+    if has_product and product_object.title != blank
+      assign button_title = product_object.title
+    endif
   -%}
 
   <button
@@ -17,6 +32,8 @@
     aria-haspopup="dialog"
     aria-controls="{{ modal_id }}"
     aria-expanded="false"
+    title="{{ button_title | escape }}"
+    {% unless has_product %}disabled aria-disabled="true"{% endunless %}
   >
     {{ block.settings.label | default: 'Quick View' }}
   </button>
@@ -27,47 +44,47 @@
         &#x2715;
       </button>
       <div class="popup-dialog__body">
-        {%- if product -%}
+        {%- if has_product -%}
           <div class="quick-view__grid">
             <div class="quick-view__media-column">
-              {%- if product.featured_media -%}
-                <img src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.featured_media.alt | escape }}" loading="lazy">
+              {%- if product_object.featured_media -%}
+                <img src="{{ product_object.featured_media | image_url: width: 800 }}" alt="{{ product_object.featured_media.alt | escape }}" loading="lazy">
               {%- else -%}
                 {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
             </div>
           
             <div class="quick-view__info-column">
-              <div class="quick-view__vendor">{{ product.vendor }}</div>
-              <h1 class="quick-view__title">{{ product.title }}</h1>
+              <div class="quick-view__vendor">{{ product_object.vendor }}</div>
+              <h1 class="quick-view__title">{{ product_object.title }}</h1>
               
               <div class="price
-                {%- if product.price_varies %} price--varies{% endif -%}
-                {%- if product.compare_at_price > product.price %} price--on-sale{% endif -%}
-                {%- if product.price == 0 %} price--free{% endif -%}">
+                {%- if product_object.price_varies %} price--varies{% endif -%}
+                {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
+                {%- if product_object.price == 0 %} price--free{% endif -%}">
 
                 <div class="price__container">
-                  {%- if product.compare_at_price > product.price -%}
+                  {%- if product_object.compare_at_price > product_object.price -%}
                     <div class="price__compare-at">
-                      <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-                      <s>{{ product.compare_at_price | money }}</s>
+                      <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+                      <s>{{ product_object.compare_at_price | money }}</s>
                     </div>
                   {%- endif -%}
               
                   <div class="price__current">
-                    <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
-                    <span>{{ product.price | money }}</span>
+                    <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
+                    <span>{{ product_object.price | money }}</span>
                   </div>
                 </div>
               </div>
           
-              <variant-picker-quick-view data-product-variants="{{ product.variants | json | escape }}">
-                {%- form 'product', product, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <variant-picker-quick-view data-product-variants="{{ product_object.variants | json | escape }}">
+                {%- form 'product', product_object, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                  <input type="hidden" name="id" value="{{ product_object.selected_or_first_available_variant.id }}">
                   
-                  {%- unless product.has_only_default_variant -%}
+                  {%- unless product_object.has_only_default_variant -%}
                     <div class="product-form__variants">
-                      {%- for option in product.options_with_values -%}
+                      {%- for option in product_object.options_with_values -%}
                         <fieldset class="js product-form__input">
                           <legend class="form__label">{{ option.name }}</legend>
                           {%- for value in option.values -%}
@@ -85,17 +102,17 @@
                   {%- endunless -%}
                   
                   <div>
-                    <label for="Quantity-quick-view-{{ block.id }}">Quantity</label>
+                    <label for="Quantity-quick-view-{{ block.id }}">{{ 'content.quantity' | t }}</label>
                     <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
                   </div>
           
                   <div>
-                    <button type="submit" name="add" class="button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                    <button type="submit" name="add" class="button" {% unless product_object.selected_or_first_available_variant.available %}disabled{% endunless %}>
                       <span>
-                        {%- if product.selected_or_first_available_variant.available -%}
-                          Add to cart
+                        {%- if product_object.selected_or_first_available_variant.available -%}
+                          {{ 'products.product.add_to_cart' | t }}
                         {%- else -%}
-                          Sold out
+                          {{ 'products.product.sold_out' | t }}
                         {%- endif -%}
                       </span>
                     </button>
@@ -103,6 +120,10 @@
                 {%- endform -%}
               </variant-picker-quick-view>
             </div>
+          </div>
+        {%- else -%}
+          <div class="quick-view__empty-state">
+            {{ 'products.product.unavailable' | t }}
           </div>
         {%- endif -%}
       </div>
@@ -115,7 +136,7 @@
     const openButton = document.getElementById('{{ button_id }}');
     const dialog = document.getElementById('{{ modal_id }}');
     
-    if (!openButton || !dialog) return;
+    if (!openButton || !dialog || openButton.disabled) return;
 
     const closeButton = dialog.querySelector('.popup-dialog__close');
     if (!closeButton) return;
@@ -175,13 +196,13 @@
         const buttonSpan = button.querySelector('span');
         if (!this.currentVariant) {
           button.setAttribute('disabled', true);
-          buttonSpan.textContent = 'Unavailable';
+          buttonSpan.textContent = '{{ "products.product.unavailable" | t }}';
         } else if (!this.currentVariant.available) {
           button.setAttribute('disabled', true);
-          buttonSpan.textContent = 'Sold out';
+          buttonSpan.textContent = '{{ "products.product.sold_out" | t }}';
         } else {
           button.removeAttribute('disabled');
-          buttonSpan.textContent = 'Add to cart';
+          buttonSpan.textContent = '{{ "products.product.add_to_cart" | t }}';
         }
       }
   
@@ -197,7 +218,6 @@
 </script>
 
 <style>
-
   .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 800px; }
   .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
   .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; }
@@ -220,8 +240,8 @@
   .product-form__input input[type="radio"]:checked + label { border-color: #333; box-shadow: 0 0 0 1px #333; }
   .product-form__input input[type="radio"]:disabled + label { border-color: #eee; color: #ccc; cursor: not-allowed; }
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
+  .quick-view__empty-state { padding: 1.5rem; text-align: center; }
 </style>
-
 
 {% schema %}
 {
