@@ -1,10 +1,9 @@
 {%- comment -%}
-Acknowledgement: Reapplying prior quick-view styling while preserving requested variant width constraint.
-Plan:
-1. Restore the full quick-view block markup and scripting used before unintended modifications.
-2. Keep all original styling except enforce the variant button width at exactly 55px without extra styling.
-3. Leave image dimensions untouched so media sizing stays as originally provided.
+  File: blocks/quick-view-button.liquid
+  Acknowledgement: Focused on rendering a single scaled image beside product info with no mobile gallery.
+  Plan: 1) Limit rendered media to the primary asset only. 2) Keep image, title, and price in a no-wrap row container. 3) Place variant picker, quantity, and add-to-cart in a dedicated lower row.
 {%- endcomment -%}
+
 <div {{ block.shopify_attributes }}>
   {%- liquid
     assign product_object = closest.product
@@ -49,60 +48,53 @@ Plan:
       <div class="popup-dialog__body">
         {%- if has_product -%}
           <div class="quick-view__grid">
-            <div class="quick-view__media-column">
-              {%- if product_object.media and product_object.media.size > 0 -%}
-                <div class="quick-view__image-display" data-quick-view-images>
-                  {%- for media in product_object.media -%}
-                    {%- assign media_alt = media.alt | default: product_object.title -%}
-                    {{ media | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'quick-view__image' | replace: 'alt=""', 'alt="' | append: media_alt | append: '"' }}
-                  {%- endfor -%}
-                </div>
-                {%- if product_object.media.size > 1 -%}
-                  <div class="quick-view__thumbnails">
-                    {%- for media in product_object.media -%}
-                      {%- assign thumb_alt = media.alt | default: product_object.title -%}
-                      <button type="button" class="quick-view__thumbnail" data-quick-view-thumbnail="{{ forloop.index0 }}">
-                        {{ media | image_url: width: 200 | image_tag: loading: 'lazy', class: 'quick-view__thumbnail-image' | replace: 'alt=""', 'alt="' | append: thumb_alt | append: '"' }}
-                      </button>
-                    {%- endfor -%}
+            <div class="quick-view__row quick-view__row--upper">
+              <div class="quick-view__media-column">
+                {%- liquid
+                  assign primary_media = product_object.featured_media
+                  if primary_media == blank and product_object.media and product_object.media.size > 0
+                    assign primary_media = product_object.media.first
+                  endif
+                -%}
+                {%- if primary_media -%}
+                  {%- assign media_alt = primary_media.alt | default: product_object.title -%}
+                  <div class="quick-view__image-display" data-quick-view-images>
+                    {{ primary_media | image_url: width: 600 | image_tag: loading: 'lazy', class: 'quick-view__image is-active', alt: media_alt }}
+                  </div>
+                {%- else -%}
+                  <div class="quick-view__image-display quick-view__image-display--empty" data-quick-view-images>
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg quick-view__placeholder' }}
                   </div>
                 {%- endif -%}
-              {%- elsif product_object.featured_media -%}
-                {%- assign fallback_alt = product_object.featured_media.alt | default: product_object.title -%}
-                <div class="quick-view__image-display" data-quick-view-images>
-                  {{ product_object.featured_media | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'quick-view__image' | replace: 'alt=""', 'alt="' | append: fallback_alt | append: '"' }}
-                </div>
-              {%- else -%}
-                <div class="quick-view__image-display quick-view__image-display--empty" data-quick-view-images>
-                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg quick-view__placeholder' }}
-                </div>
-              {%- endif -%}
-            </div>
+              </div>
 
-            <div class="quick-view__info-column">
-              <div class="quick-view__vendor">{{ product_object.vendor }}</div>
-              <h1 class="quick-view__title">{{ product_object.title }}</h1>
+              <div class="quick-view__info-column">
+                <div class="quick-view__vendor">{{ product_object.vendor }}</div>
+                <h1 class="quick-view__title">{{ product_object.title }}</h1>
 
-              <div class="price
-                {%- if product_object.price_varies %} price--varies{% endif -%}
-                {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
-                {%- if product_object.price == 0 %} price--free{% endif -%}">
+                <div class="price
+                  {%- if product_object.price_varies %} price--varies{% endif -%}
+                  {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
+                  {%- if product_object.price == 0 %} price--free{% endif -%}">
 
-                <div class="price__container">
-                  {%- if product_object.compare_at_price > product_object.price -%}
-                    <div class="price__compare-at">
-                      <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                      <s>{{ product_object.compare_at_price | money }}</s>
+                  <div class="price__container">
+                    {%- if product_object.compare_at_price > product_object.price -%}
+                      <div class="price__compare-at">
+                        <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+                        <s>{{ product_object.compare_at_price | money }}</s>
+                      </div>
+                    {%- endif -%}
+
+                    <div class="price__current">
+                      <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
+                      <span>{{ product_object.price | money }}</span>
                     </div>
-                  {%- endif -%}
-
-                  <div class="price__current">
-                    <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                    <span>{{ product_object.price | money }}</span>
                   </div>
                 </div>
               </div>
+            </div>
 
+            <div class="quick-view__row quick-view__row--lower">
               <variant-picker-quick-view data-product-variants="{{ product_object.variants | json | escape }}">
                 {%- form 'product', product_object, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
                   <input type="hidden" name="id" value="{{ product_object.selected_or_first_available_variant.id }}">
@@ -426,35 +418,35 @@ Plan:
   .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
   .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
   .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: inherit; font-size: 1.5rem; line-height: 1; z-index: 10; }
-  .quick-view__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: start; }
-  .quick-view__media-column { display: flex; flex-direction: column; gap: 1.2rem; }
-  .quick-view__image-display { position: relative; overflow: hidden; background-color: #f6f6f6; cursor: pointer; min-height: 320px; display: flex; }
+  .quick-view__grid { display: flex; flex-direction: column; gap: 2.4rem; }
+  .quick-view__row { width: 100%; }
+  .quick-view__row--upper { display: flex; align-items: flex-start; gap: 2.4rem; flex-wrap: nowrap; }
+  .quick-view__row--lower { display: flex; flex-direction: column; gap: 1.5rem; align-items: stretch; }
+  .quick-view__media-column { display: flex; flex-direction: column; gap: 0.6rem; flex: 0 0 auto; }
+  .quick-view__image-display { position: relative; overflow: hidden; background-color: transparent; cursor: default; display: flex; align-items: center; justify-content: center; width: 120px; flex: 0 0 120px; }
   .quick-view__image-display--empty { cursor: default; }
-  .quick-view__image { width: 100%; height: 100%; object-fit: cover; display: none; transition: opacity 0.3s ease; }
-  .quick-view__image.is-active { display: block; }
-  .quick-view__thumbnails { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; }
-  .quick-view__thumbnail { border: 1px solid rgba(0, 0, 0, 0.15); background: white; padding: 0; cursor: pointer; display: flex; overflow: hidden; transition: border-color 0.2s ease, transform 0.2s ease; }
-  .quick-view__thumbnail:hover { border-color: rgba(0, 0, 0, 0.35); transform: translateY(-1px); }
-  .quick-view__thumbnail.is-active { border-color: rgba(0, 0, 0, 0.55); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35); }
-  .quick-view__thumbnail[aria-pressed="true"] { border-color: rgba(0, 0, 0, 0.55); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35); }
-  .quick-view__thumbnail-image { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .quick-view__placeholder { width: 100%; height: 100%; }
+  .quick-view__image { width: 100%; height: auto; object-fit: contain; display: block; transition: opacity 0.3s ease; }
+  .quick-view__thumbnails,
+  .quick-view__thumbnail,
+  .quick-view__thumbnail:hover,
+  .quick-view__thumbnail.is-active,
+  .quick-view__thumbnail[aria-pressed="true"] { display: none !important; }
+  .quick-view__placeholder { width: 100%; height: auto; }
   .quick-view__image-helper { font-size: 1.2rem; color: rgba(0, 0, 0, 0.55); text-align: center; }
-  .quick-view__info-column { display: flex; flex-direction: column; gap: 20px; }
-  .quick-view__media-column img { max-width: 100%; height: auto; }
-  .quick-view__vendor { font-size: 14px; text-transform: uppercase; color: #666; margin-bottom: -10px; letter-spacing: 0.15em; }
+  .quick-view__info-column { display: flex; flex-direction: column; gap: 0.75rem; flex: 1 1 auto; min-width: 0; }
+  .quick-view__vendor { font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 0.15em; }
   .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 500; font-size: 28px; line-height: 1.2; margin: 0; }
   .quick-view__info-column .quantity__input { width: 90px; }
   .price { font-size: 18px; }
   .price--on-sale .price__current { color: #d12727; }
   .price__compare-at { opacity: 0.6; }
-  .price__container { display: flex; gap: 10px; align-items: center; }
+  .price__container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .product-form__variants { display: flex; flex-direction: column; gap: 1.5rem; }
   .product-form__input { border: 0; padding: 0; margin: 0; }
   .product-form__input legend { font-weight: 600; margin-bottom: 0.75rem; font-size: 1.4rem; }
   .product-form__swatch-group { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .product-form__input input[type="radio"] { clip: rect(0, 0, 0, 0); overflow: hidden; position: absolute; height: 1px; width: 1px; }
-  .quick-view__variant-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 1.6rem; border: none; background: var(--button-background, #111); color: var(--button-foreground, #fff); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease; text-transform: none; letter-spacing: 0.02em; width: 55px; min-width: 55px; max-width: 55px; }
+  .quick-view__variant-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem; border: none; background: var(--button-background, #111); color: var(--button-foreground, #fff); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease; width: 55px; min-width: 55px; max-width: 55px; text-transform: none; letter-spacing: 0.02em; }
   .quick-view__variant-button:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); }
   .quick-view__variant-button.is-active { box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); transform: translateY(-2px); }
   .quick-view__variant-button.is-disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); box-shadow: none; }
@@ -464,7 +456,7 @@ Plan:
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
   .quick-view__empty-state { padding: 1.5rem; text-align: center; }
 
-  .quick-view__nav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 1rem; }
+  .quick-view__nav { display: flex; justify-content: space-between; alignments center; margin-top: auto; gap: 1rem; }
   .quick-view__nav-button { border: 1px solid rgba(0, 0, 0, 0.2); background: rgba(0, 0, 0, 0.05); color: inherit; padding: 0.6rem 1.2rem; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; min-width: 3rem; }
   .quick-view__nav-button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.35); }
   .quick-view__nav-button[disabled] { opacity: 0.4; cursor: not-allowed; }
@@ -472,18 +464,20 @@ Plan:
   @media (max-width: 768px) {
     .popup-dialog { width: 95vw; }
     .popup-dialog__content { padding: 1.5rem; gap: 1.25rem; }
-    .quick-view__grid { grid-template-columns: 1fr; gap: 2.4rem; }
-    .quick-view__image-display { min-height: 260px; }
-    .quick-view__thumbnails { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 0.6rem; }
+    .quick-view__grid { gap: 2rem; }
+    .quick-view__row--upper { gap: 1.6rem; }
     .quick-view__title { font-size: 24px; }
-    .quick-view__variant-button { padding: 0.75rem 1.4rem; font-size: 1.2rem; }
+    .quick-view__variant-button { font-size: 1.2rem; }
     .quick-view__quantity { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .quick-view__row--lower { gap: 1.25rem; }
     .quick-view__nav { justify-content: center; }
     .quick-view__image-helper { font-size: 1.1rem; }
   }
 
   @media (max-width: 480px) {
-    .product-form__swatch-group { gap: 0.6rem; }
+    .quick-view__grid { gap: 1.6rem; }
+    .quick-view__row--upper { gap: 1.2rem; }
+    .quick-view__image-display { width: 96px; flex: 0 0 96px; }
     .quick-view__nav-button { padding: 0.5rem 1rem; font-size: 1.3rem; }
   }
 </style>
