@@ -127,14 +127,6 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "quick_view_button_JyjVa7": {
-              "type": "quick-view-button",
-              "name": "Quick View Button",
-              "settings": {
-                "label": "Quick View"
-              },
-              "blocks": {}
-            },
             "card-gallery": {
               "type": "_product-card-gallery",
               "settings": {
@@ -257,6 +249,14 @@
                 "swatches"
               ]
             },
+            "quick_view_button_JyjVa7": {
+              "type": "quick-view-button",
+              "name": "Quick View Button",
+              "settings": {
+                "label": "Quick View"
+              },
+              "blocks": {}
+            },
             "buy_buttons_JAjyHA": {
               "type": "buy-buttons",
               "name": "t:names.product_buy_buttons",
@@ -297,9 +297,9 @@
             }
           },
           "block_order": [
-            "quick_view_button_JyjVa7",
             "card-gallery",
             "group",
+            "quick_view_button_JyjVa7",
             "buy_buttons_JAjyHA"
           ]
         }
