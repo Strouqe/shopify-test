@@ -25,6 +25,12 @@
     if has_product and product_object.title != blank
       assign button_title = product_object.title
     endif
+
+    assign media_list = product_object.media
+    assign primary_media = product_object.featured_media
+    if primary_media == blank and media_list and media_list.size > 0
+      assign primary_media = media_list.first
+    endif
   -%}
 
   <button
@@ -48,98 +54,116 @@
       <div class="popup-dialog__body">
         {%- if has_product -%}
           <div class="quick-view__grid">
-            <div class="quick-view__row quick-view__row--upper">
-              <div class="quick-view__media-column">
-                {%- liquid
-                  assign primary_media = product_object.featured_media
-                  if primary_media == blank and product_object.media and product_object.media.size > 0
-                    assign primary_media = product_object.media.first
-                  endif
-                -%}
-                {%- if primary_media -%}
-                  {%- assign media_alt = primary_media.alt | default: product_object.title -%}
-                  <div class="quick-view__image-display" data-quick-view-images>
-                    {{ primary_media | image_url: width: 600 | image_tag: loading: 'lazy', class: 'quick-view__image is-active', alt: media_alt }}
-                  </div>
-                {%- else -%}
-                  <div class="quick-view__image-display quick-view__image-display--empty" data-quick-view-images>
-                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg quick-view__placeholder' }}
+            {%- if media_list and media_list.size > 0 -%}
+              <div class="quick-view__media-gallery">
+                <div class="quick-view__image-display" data-quick-view-images>
+                  {%- for media in media_list -%}
+                    {%- assign media_alt = media.alt | default: product_object.title -%}
+                    {%- assign image_class = 'quick-view__image' -%}
+                    {%- if forloop.first -%}
+                      {%- assign image_class = image_class | append: ' is-active' -%}
+                    {%- endif -%}
+                    {{ media | image_url: width: 1200 | image_tag: loading: 'lazy', class: image_class, alt: media_alt }}
+                  {%- endfor -%}
+                </div>
+
+                {%- if media_list.size > 1 -%}
+                  <div class="quick-view__thumbnails" data-quick-view-thumbnails>
+                    {%- for media in media_list -%}
+                      {%- assign thumb_alt = media.alt | default: product_object.title -%}
+                      <button type="button" class="quick-view__thumbnail{% if forloop.first %} is-active{% endif %}" data-quick-view-thumbnail="{{ forloop.index0 }}">
+                        {{ media | image_url: width: 200 | image_tag: loading: 'lazy', class: 'quick-view__thumbnail-image', alt: thumb_alt }}
+                      </button>
+                    {%- endfor -%}
                   </div>
                 {%- endif -%}
               </div>
+            {%- endif -%}
 
-              <div class="quick-view__info-column">
-                <div class="quick-view__vendor">{{ product_object.vendor }}</div>
-                <h1 class="quick-view__title">{{ product_object.title }}</h1>
+            <div class="quick-view__content">
+              <div class="quick-view__header">
+                <div class="quick-view__media-single">
+                  {%- if primary_media -%}
+                    {%- assign single_alt = primary_media.alt | default: product_object.title -%}
+                    {{ primary_media | image_url: width: 600 | image_tag: loading: 'lazy', class: 'quick-view__single-image', alt: single_alt }}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg quick-view__placeholder' }}
+                  {%- endif -%}
+                </div>
 
-                <div class="price
-                  {%- if product_object.price_varies %} price--varies{% endif -%}
-                  {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
-                  {%- if product_object.price == 0 %} price--free{% endif -%}">
+                <div class="quick-view__info-column">
+                  <div class="quick-view__vendor">{{ product_object.vendor }}</div>
+                  <h1 class="quick-view__title">{{ product_object.title }}</h1>
 
-                  <div class="price__container">
-                    {%- if product_object.compare_at_price > product_object.price -%}
-                      <div class="price__compare-at">
-                        <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                        <s>{{ product_object.compare_at_price | money }}</s>
+                  <div class="price
+                    {%- if product_object.price_varies %} price--varies{% endif -%}
+                    {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
+                    {%- if product_object.price == 0 %} price--free{% endif -%}">
+
+                    <div class="price__container">
+                      {%- if product_object.compare_at_price > product_object.price -%}
+                        <div class="price__compare-at">
+                          <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+                          <s>{{ product_object.compare_at_price | money }}</s>
+                        </div>
+                      {%- endif -%}
+
+                      <div class="price__current">
+                        <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
+                        <span>{{ product_object.price | money }}</span>
                       </div>
-                    {%- endif -%}
-
-                    <div class="price__current">
-                      <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                      <span>{{ product_object.price | money }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="quick-view__row quick-view__row--lower">
-              <variant-picker-quick-view data-product-variants="{{ product_object.variants | json | escape }}">
-                {%- form 'product', product_object, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-                  <input type="hidden" name="id" value="{{ product_object.selected_or_first_available_variant.id }}">
+              <div class="quick-view__form">
+                <variant-picker-quick-view data-product-variants="{{ product_object.variants | json | escape }}">
+                  {%- form 'product', product_object, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                    <input type="hidden" name="id" value="{{ product_object.selected_or_first_available_variant.id }}">
 
-                  {%- unless product_object.has_only_default_variant -%}
-                    <div class="product-form__variants">
-                      {%- for option in product_object.options_with_values -%}
-                        <fieldset class="product-form__input">
-                          <legend class="form__label">{{ option.name }}</legend>
-                          <div class="product-form__swatch-group">
-                            {%- for value in option.values -%}
-                              <input type="radio"
-                                     id="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}"
-                                     name="{{ option.name }}"
-                                     value="{{ value | escape }}"
-                                     {% if option.selected_value == value %}checked{% endif %}>
-                              <label for="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}"
-                                     class="button quick-view__variant-button">
-                                <span>{{ value }}</span>
-                              </label>
-                            {%- endfor -%}
-                          </div>
-                        </fieldset>
-                      {%- endfor -%}
+                    {%- unless product_object.has_only_default_variant -%}
+                      <div class="product-form__variants">
+                        {%- for option in product_object.options_with_values -%}
+                          <fieldset class="product-form__input">
+                            <legend class="form__label">{{ option.name }}</legend>
+                            <div class="product-form__swatch-group">
+                              {%- for value in option.values -%}
+                                <input type="radio"
+                                       id="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                                       name="{{ option.name }}"
+                                       value="{{ value | escape }}"
+                                       {% if option.selected_value == value %}checked{% endif %}>
+                                <label for="quick-view-{{ block.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                                       class="button quick-view__variant-button">
+                                  <span>{{ value }}</span>
+                                </label>
+                              {%- endfor -%}
+                            </div>
+                          </fieldset>
+                        {%- endfor -%}
+                      </div>
+                    {%- endunless -%}
+
+                    <div class="quick-view__quantity">
+                      <label for="Quantity-quick-view-{{ block.id }}">{{ 'content.quantity' | t }}</label>
+                      <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
                     </div>
-                  {%- endunless -%}
 
-                  <div class="quick-view__quantity">
-                    <label for="Quantity-quick-view-{{ block.id }}">{{ 'content.quantity' | t }}</label>
-                    <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
-                  </div>
-
-                  <div>
-                    <button type="submit" name="add" class="button quick-view__submit" {% unless product_object.selected_or_first_available_variant.available %}disabled{% endunless %}>
-                      <span>
-                        {%- if product_object.selected_or_first_available_variant.available -%}
-                          {{ 'products.product.add_to_cart' | t }}
-                        {%- else -%}
-                          {{ 'products.product.sold_out' | t }}
-                        {%- endif -%}
-                      </span>
-                    </button>
-                  </div>
-                {%- endform -%}
-              </variant-picker-quick-view>
+                    <div>
+                      <button type="submit" name="add" class="button quick-view__submit" {% unless product_object.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                        <span>
+                          {%- if product_object.selected_or_first_available_variant.available -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                      </button>
+                    </div>
+                  {%- endform -%}
+                </variant-picker-quick-view>
+              </div>
             </div>
           </div>
         {%- else -%}
@@ -416,68 +440,84 @@
 <style>
   .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 860px; }
   .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
+  .popup-dialog__content { background: white; color: inherit; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
   .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: inherit; font-size: 1.5rem; line-height: 1; z-index: 10; }
-  .quick-view__grid { display: flex; flex-direction: column; gap: 2.4rem; }
-  .quick-view__row { width: 100%; }
-  .quick-view__row--upper { display: flex; align-items: flex-start; gap: 2.4rem; flex-wrap: nowrap; }
-  .quick-view__row--lower { display: flex; flex-direction: column; gap: 1.5rem; align-items: stretch; }
-  .quick-view__media-column { display: flex; flex-direction: column; gap: 0.6rem; flex: 0 0 auto; }
-  .quick-view__image-display { position: relative; overflow: hidden; background-color: transparent; cursor: default; display: flex; align-items: center; justify-content: center; width: 120px; flex: 0 0 120px; }
+
+  .quick-view__grid { display: flex; gap: 3rem; align-items: stretch; }
+  .quick-view__media-gallery { flex: 0 0 auto; display: flex; flex-direction: column; gap: 1.2rem; max-width: 320px; align-items: center; }
+  .quick-view__image-display { position: relative; width: 100%; background-color: transparent; border: 1px solid rgba(0, 0, 0, 0.08); padding: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .quick-view__image-display--empty { cursor: default; }
-  .quick-view__image { width: 100%; height: auto; object-fit: contain; display: block; transition: opacity 0.3s ease; }
-  .quick-view__thumbnails,
-  .quick-view__thumbnail,
-  .quick-view__thumbnail:hover,
+  .quick-view__image { width: 100%; height: auto; object-fit: contain; display: none; transition: opacity 0.3s ease; }
+  .quick-view__image.is-active { display: block; }
+  .quick-view__thumbnails { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; }
+  .quick-view__thumbnail { border: 1px solid rgba(0, 0, 0, 0.15); background: white; padding: 0; cursor: pointer; display: flex; overflow: hidden; transition: border-color 0.2s ease, transform 0.2s ease; }
+  .quick-view__thumbnail:hover { border-color: rgba(0, 0, 0, 0.35); transform: translateY(-1px); }
   .quick-view__thumbnail.is-active,
-  .quick-view__thumbnail[aria-pressed="true"] { display: none !important; }
-  .quick-view__placeholder { width: 100%; height: auto; }
-  .quick-view__image-helper { font-size: 1.2rem; color: rgba(0, 0, 0, 0.55); text-align: center; }
+  .quick-view__thumbnail[aria-pressed="true"] { border-color: rgba(0, 0, 0, 0.55); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35); }
+  .quick-view__thumbnail-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .quick-view__content { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2.4rem; }
+  .quick-view__header { display: flex; align-items: flex-start; gap: 1.6rem; flex-wrap: nowrap; }
+  .quick-view__media-single { display: none; flex: 0 0 auto; width: 96px; align-items: center; justify-content: center; }
+  .quick-view__single-image { width: 100%; height: auto; object-fit: contain; display: block; }
   .quick-view__info-column { display: flex; flex-direction: column; gap: 0.75rem; flex: 1 1 auto; min-width: 0; }
   .quick-view__vendor { font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 0.15em; }
   .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 500; font-size: 28px; line-height: 1.2; margin: 0; }
-  .quick-view__info-column .quantity__input { width: 90px; }
+
   .price { font-size: 18px; }
   .price--on-sale .price__current { color: #d12727; }
   .price__compare-at { opacity: 0.6; }
   .price__container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .quick-view__form { display: flex; flex-direction: column; gap: 1.5rem; }
   .product-form__variants { display: flex; flex-direction: column; gap: 1.5rem; }
   .product-form__input { border: 0; padding: 0; margin: 0; }
   .product-form__input legend { font-weight: 600; margin-bottom: 0.75rem; font-size: 1.4rem; }
   .product-form__swatch-group { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .product-form__input input[type="radio"] { clip: rect(0, 0, 0, 0); overflow: hidden; position: absolute; height: 1px; width: 1px; }
-  .quick-view__variant-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem; border: none; background: var(--button-background, #111); color: var(--button-foreground, #fff); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease; width: 55px; min-width: 55px; max-width: 55px; text-transform: none; letter-spacing: 0.02em; }
+
+  .quick-view__variant-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1.4rem; border: none; background: var(--button-background, #111); color: var(--button-foreground, #fff); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease; min-width: 5.5rem; width: auto; text-transform: none; letter-spacing: 0.02em; }
   .quick-view__variant-button:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); }
   .quick-view__variant-button.is-active { box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); transform: translateY(-2px); }
   .quick-view__variant-button.is-disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); box-shadow: none; }
+
   .quick-view__quantity { display: flex; align-items: center; gap: 1rem; }
   .quick-view__quantity label { font-weight: 500; }
+  .quantity__input { width: 90px; }
   .quick-view__submit { width: 100%; }
+
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
   .quick-view__empty-state { padding: 1.5rem; text-align: center; }
 
-  .quick-view__nav { display: flex; justify-content: space-between; alignments center; margin-top: auto; gap: 1rem; }
+  .quick-view__nav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 1rem; }
   .quick-view__nav-button { border: 1px solid rgba(0, 0, 0, 0.2); background: rgba(0, 0, 0, 0.05); color: inherit; padding: 0.6rem 1.2rem; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; min-width: 3rem; }
   .quick-view__nav-button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.35); }
   .quick-view__nav-button[disabled] { opacity: 0.4; cursor: not-allowed; }
 
+  @media (max-width: 900px) {
+    .quick-view__grid { gap: 2.4rem; }
+    .quick-view__media-gallery { max-width: 280px; }
+  }
+
   @media (max-width: 768px) {
     .popup-dialog { width: 95vw; }
     .popup-dialog__content { padding: 1.5rem; gap: 1.25rem; }
-    .quick-view__grid { gap: 2rem; }
-    .quick-view__row--upper { gap: 1.6rem; }
+    .quick-view__grid { flex-direction: column; gap: 1.8rem; }
+    .quick-view__media-gallery { display: none; }
+    .quick-view__header { gap: 1.2rem; }
+    .quick-view__media-single { display: flex; }
     .quick-view__title { font-size: 24px; }
-    .quick-view__variant-button { font-size: 1.2rem; }
+    .quick-view__variant-button { font-size: 1.2rem; min-width: 5.2rem; }
     .quick-view__quantity { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-    .quick-view__row--lower { gap: 1.25rem; }
+    .quick-view__form { gap: 1.25rem; }
     .quick-view__nav { justify-content: center; }
-    .quick-view__image-helper { font-size: 1.1rem; }
   }
 
   @media (max-width: 480px) {
-    .quick-view__grid { gap: 1.6rem; }
-    .quick-view__row--upper { gap: 1.2rem; }
-    .quick-view__image-display { width: 96px; flex: 0 0 96px; }
+    .quick-view__grid { gap: 1.4rem; }
+    .quick-view__header { gap: 1rem; }
+    .quick-view__media-single { width: 82px; }
+    .quick-view__variant-button { padding: 0.45rem 1.2rem; }
     .quick-view__nav-button { padding: 0.5rem 1rem; font-size: 1.3rem; }
   }
 </style>
