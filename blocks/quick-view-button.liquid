@@ -1,7 +1,10 @@
 {%- comment -%}
-  File: blocks/quick-view-button.liquid
+Acknowledgement: Reapplying prior quick-view styling while preserving requested variant width constraint.
+Plan:
+1. Restore the full quick-view block markup and scripting used before unintended modifications.
+2. Keep all original styling except enforce the variant button width at exactly 55px without extra styling.
+3. Leave image dimensions untouched so media sizing stays as originally provided.
 {%- endcomment -%}
-
 <div {{ block.shopify_attributes }}>
   {%- liquid
     assign product_object = closest.product
@@ -75,11 +78,11 @@
                 </div>
               {%- endif -%}
             </div>
-          
+
             <div class="quick-view__info-column">
               <div class="quick-view__vendor">{{ product_object.vendor }}</div>
               <h1 class="quick-view__title">{{ product_object.title }}</h1>
-              
+
               <div class="price
                 {%- if product_object.price_varies %} price--varies{% endif -%}
                 {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
@@ -92,18 +95,18 @@
                       <s>{{ product_object.compare_at_price | money }}</s>
                     </div>
                   {%- endif -%}
-              
+
                   <div class="price__current">
                     <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
                     <span>{{ product_object.price | money }}</span>
                   </div>
                 </div>
               </div>
-          
+
               <variant-picker-quick-view data-product-variants="{{ product_object.variants | json | escape }}">
                 {%- form 'product', product_object, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
                   <input type="hidden" name="id" value="{{ product_object.selected_or_first_available_variant.id }}">
-                  
+
                   {%- unless product_object.has_only_default_variant -%}
                     <div class="product-form__variants">
                       {%- for option in product_object.options_with_values -%}
@@ -126,12 +129,12 @@
                       {%- endfor -%}
                     </div>
                   {%- endunless -%}
-                  
+
                   <div class="quick-view__quantity">
                     <label for="Quantity-quick-view-{{ block.id }}">{{ 'content.quantity' | t }}</label>
                     <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
                   </div>
-          
+
                   <div>
                     <button type="submit" name="add" class="button quick-view__submit" {% unless product_object.selected_or_first_available_variant.available %}disabled{% endunless %}>
                       <span>
@@ -172,7 +175,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     const openButton = document.getElementById('{{ button_id }}');
     const dialog = document.getElementById('{{ modal_id }}');
-    
+
     if (!openButton || !dialog) return;
 
     const closeButton = dialog.querySelector('.popup-dialog__close');
@@ -349,17 +352,17 @@
         this.updateMasterId();
         this.updateButton();
       }
-  
+
       onVariantChange() {
         this.updateOptions();
         this.updateMasterId();
         this.updateButton();
       }
-  
+
       updateOptions() {
         this.options = Array.from(this.querySelectorAll('input[type="radio"]:checked'), (input) => input.value);
       }
-  
+
       updateMasterId() {
         this.currentVariant = this.getVariantData().find((variant) => {
           return !variant.options.map((option, index) => {
@@ -370,7 +373,7 @@
           this.querySelector('input[name="id"]').value = this.currentVariant.id;
         }
       }
-  
+
       updateButton() {
         const button = this.querySelector('button[type="submit"]');
         const buttonSpan = button.querySelector('span');
@@ -406,7 +409,7 @@
           }
         });
       }
-  
+
       getVariantData() {
         if (!this.variantData) {
           this.variantData = JSON.parse(this.dataset.productVariants);
@@ -421,11 +424,11 @@
 <style>
   .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 860px; }
   .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem;  }
+  .popup-dialog__content { background: white; color: black; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
   .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: inherit; font-size: 1.5rem; line-height: 1; z-index: 10; }
   .quick-view__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: start; }
   .quick-view__media-column { display: flex; flex-direction: column; gap: 1.2rem; }
-  .quick-view__image-display { position: relative;overflow: hidden; background-color: #f6f6f6; cursor: pointer; min-height: 320px; display: flex; }
+  .quick-view__image-display { position: relative; overflow: hidden; background-color: #f6f6f6; cursor: pointer; min-height: 320px; display: flex; }
   .quick-view__image-display--empty { cursor: default; }
   .quick-view__image { width: 100%; height: 100%; object-fit: cover; display: none; transition: opacity 0.3s ease; }
   .quick-view__image.is-active { display: block; }
@@ -451,7 +454,7 @@
   .product-form__input legend { font-weight: 600; margin-bottom: 0.75rem; font-size: 1.4rem; }
   .product-form__swatch-group { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .product-form__input input[type="radio"] { clip: rect(0, 0, 0, 0); overflow: hidden; position: absolute; height: 1px; width: 1px; }
-  .quick-view__variant-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 1.6rem; border: none;  background: var(--button-background, #111); color: var(--button-foreground, #fff); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease; min-width: 4.8rem; text-transform: none; letter-spacing: 0.02em; }
+  .quick-view__variant-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 1.6rem; border: none; background: var(--button-background, #111); color: var(--button-foreground, #fff); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease; text-transform: none; letter-spacing: 0.02em; width: 55px; min-width: 55px; max-width: 55px; }
   .quick-view__variant-button:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); }
   .quick-view__variant-button.is-active { box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); transform: translateY(-2px); }
   .quick-view__variant-button.is-disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); box-shadow: none; }
@@ -480,7 +483,6 @@
   }
 
   @media (max-width: 480px) {
-    .quick-view__variant-button { width: 100%; justify-content: center; }
     .product-form__swatch-group { gap: 0.6rem; }
     .quick-view__nav-button { padding: 0.5rem 1rem; font-size: 1.3rem; }
   }
