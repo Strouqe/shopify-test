@@ -1,10 +1,78 @@
-
-
+{% comment %} learn_shopify_api {% endcomment %}
 {% capture submit_button %}
   {% content_for 'block', type: 'contact-form-submit-button', id: 'submit-button' %}
 {% endcapture %}
 
 {% render 'contact-form', settings: block.settings, submit_button: submit_button %}
+
+{% stylesheet %}
+  .contact-form__form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--gap-lg) !important;
+  }
+
+  .contact-form__form-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--gap-lg) !important;
+  }
+
+  @media screen and (min-width: 750px) {
+    .contact-form__form-row {
+      flex-direction: row !important;
+      gap: var(--gap-2xl) !important;
+    }
+  }
+
+  .contact-form__input {
+    width: 100% !important;
+    padding: var(--padding-md) 0 !important;
+    background-color: transparent !important;
+    color: var(--color-foreground) !important;
+    border: none !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-foreground) 20%, transparent) !important;
+    border-radius: 0 !important;
+    font: inherit !important;
+    letter-spacing: inherit !important;
+    transition: border-color var(--animation-values-fast), color var(--animation-values-fast) !important;
+  }
+
+  .contact-form__input::placeholder {
+    color: color-mix(in srgb, var(--color-foreground) 45%, transparent) !important;
+  }
+
+  .contact-form__input:hover,
+  .contact-form__input:focus-visible {
+    border-bottom-color: var(--color-foreground) !important;
+  }
+
+  .contact-form__input:focus-visible {
+    outline: none !important;
+  }
+
+  .contact-form__input--textarea {
+    resize: vertical !important;
+    min-height: 180px !important;
+  }
+
+  .contact-form__banner {
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--gap-xs) !important;
+    padding: var(--padding-sm) 0 !important;
+    border-bottom: 1px solid currentColor !important;
+    font-weight: var(--font-weight-medium) !important;
+  }
+
+  .contact-form__banner--error {
+    color: var(--color-error) !important;
+  }
+
+  .contact-form__banner--success {
+    color: var(--color-success) !important;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
