@@ -43,7 +43,7 @@
           "name": "t:names.button",
           "settings": {
             "label": "Shop now",
-            "link": "shopify://collections/all-products",
+            "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",
@@ -984,7 +984,7 @@
             "width_mobile": "fill",
             "custom_width_mobile": 100,
             "height": "custom",
-            "custom_height": 100,
+            "custom_height": 80,
             "inherit_color_scheme": false,
             "color_scheme": "scheme-4",
             "background_media": "image",
@@ -1086,7 +1086,7 @@
       ],
       "custom_css": [
         ".hero__media-wrapper {display: none;}",
-        ",.hero__container {background: #ffffff !important;}"
+        "@media screen and (min-width: 1400px) {.group-block__media-wrapper .background-image-container img {transform: scale(1); object-position: 50% 25%; }}"
       ],
       "name": "t:names.hero_bottom_aligned",
       "settings": {
@@ -1103,7 +1103,7 @@
         "vertical_alignment_flex_direction_column": "flex-end",
         "gap": 16,
         "section_width": "page-width",
-        "section_height": "medium",
+        "section_height": "large",
         "section_height_custom": 50,
         "color_scheme": "scheme-footer",
         "toggle_overlay": true,
@@ -1346,7 +1346,7 @@
       },
       "name": "Featured collection",
       "settings": {
-        "collection": "white-background",
+        "collection": "all",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,
