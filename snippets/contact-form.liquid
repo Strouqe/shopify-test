@@ -1,3 +1,4 @@
+{% comment %} learn_shopify_api {% endcomment %}
 {%- doc -%}
   Renders a contact form with name, email, phone, and comment fields.
 
@@ -25,12 +26,11 @@
   {%- form 'contact', id: form_id, class: 'contact-form__form' -%}
     {%- if form.errors -%}
       <div
-        class="contact-form__error"
+        class="contact-form__banner contact-form__banner--error"
         tabindex="-1"
         autofocus
       >
         {{- 'icon-error.svg' | inline_asset_content -}}
-
         {{- form.errors.translated_fields.email | capitalize }}
         {{ form.errors.messages.email -}}
       </div>
@@ -38,7 +38,7 @@
 
     {%- if form.posted_successfully? -%}
       <div
-        class="contact-form__success"
+        class="contact-form__banner contact-form__banner--success"
         tabindex="-1"
         autofocus
       >
@@ -130,41 +130,65 @@
   .contact-form__form {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: var(--gap-lg);
   }
 
   .contact-form__form-row {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: var(--gap-lg);
 
     @media screen and (min-width: 750px) {
       flex-direction: row;
-      align-items: center;
+      gap: var(--gap-2xl);
     }
   }
 
   .contact-form__input {
     width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--color-input-text);
-    background-color: var(--color-input-background);
-    padding: var(--padding-lg) var(--padding-xl);
-    border-radius: var(--style-border-radius-inputs);
-    border: var(--style-border-width-inputs) solid var(--color-input-border);
-    -webkit-font-smoothing: antialiased;
+    padding: var(--padding-md) 0;
+    background-color: transparent;
+    color: var(--color-foreground);
+    border: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-foreground) 20%, transparent);
+    border-radius: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    transition: border-color var(--animation-values-fast), color var(--animation-values-fast);
+  }
+
+  .contact-form__input::placeholder {
+    color: color-mix(in srgb, var(--color-foreground) 45%, transparent);
+  }
+
+  .contact-form__input:hover,
+  .contact-form__input:focus-visible {
+    border-bottom-color: var(--color-foreground);
+  }
+
+  .contact-form__input:focus-visible {
+    outline: none;
   }
 
   .contact-form__input--textarea {
     resize: vertical;
-    min-height: var(--input-textarea-min-height);
+    min-height: 180px;
   }
 
-  .contact-form__error,
-  .contact-form__success {
+  .contact-form__banner {
     display: flex;
     align-items: center;
     gap: var(--gap-xs);
+    padding: var(--padding-sm) 0;
+    border-bottom: 1px solid currentColor;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .contact-form__banner--error {
+    color: var(--color-error);
+  }
+
+  .contact-form__banner--success {
+    color: var(--color-success);
   }
 {% endstylesheet %}
