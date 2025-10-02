@@ -12,7 +12,7 @@
     "main": {
       "type": "page",
       "custom_css": [
-        ".shopify-sectio{max-width: 900px;}"
+        "main {max-width: 900px;}"
       ],
       "settings": {}
     }
