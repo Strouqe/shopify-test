@@ -11,9 +11,6 @@
   "sections": {
     "main": {
       "type": "page",
-      "custom_css": [
-        "main {max-width: 900px;}"
-      ],
       "settings": {}
     }
   },
