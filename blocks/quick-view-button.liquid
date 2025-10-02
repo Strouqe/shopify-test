@@ -1,8 +1,5 @@
-{%- comment -%}
-  File: blocks/quick-view-button.liquid
-  Acknowledgement: Focused on rendering a single scaled image beside product info with no mobile gallery.
-  Plan: 1) Limit rendered media to the primary asset only. 2) Keep image, title, and price in a no-wrap row container. 3) Place variant picker, quantity, and add-to-cart in a dedicated lower row.
-{%- endcomment -%}
+
+
 
 <div {{ block.shopify_attributes }}>
   {%- liquid
@@ -26,10 +23,47 @@
       assign button_title = product_object.title
     endif
 
-    assign media_list = product_object.media
-    assign primary_media = product_object.featured_media
-    if primary_media == blank and media_list and media_list.size > 0
-      assign primary_media = media_list.first
+    assign variant_to_link = product_object.selected_or_first_available_variant
+    assign combined_listing_count = product_object.options_with_values | map: 'values' | map: 'product_url' | compact | size
+    assign no_swatch_selected = null
+
+    unless combined_listing_count > 0
+      if product_object.featured_media
+        assign found_variant = false
+
+        for variant in product_object.variants
+          if variant.featured_media.id == product_object.featured_media.id
+            assign variant_to_link = variant
+            assign found_variant = true
+            break
+          endif
+        endfor
+
+        unless found_variant
+          for option in product_object.options_with_values
+            assign swatch_count = option.values | map: 'swatch' | compact | size
+            if swatch_count > 1
+              assign no_swatch_selected = true
+              break
+            endif
+          endfor
+        endunless
+      endif
+    endunless
+
+    assign onboarding = false
+    if product_object.id == empty or product_object == blank
+      assign onboarding = true
+    endif
+
+    assign has_quick_add = false
+    if settings.quick_add and product_object.available
+      assign has_quick_add = true
+    endif
+
+    assign has_mobile_quick_add = false
+    if has_quick_add and settings.mobile_quick_add
+      assign has_mobile_quick_add = true
     endif
   -%}
 
@@ -53,160 +87,63 @@
       </button>
       <div class="popup-dialog__body">
         {%- if has_product -%}
-          <div class="quick-view__grid">
-            {%- if media_list and media_list.size > 0 -%}
-              <div class="quick-view__media-gallery">
-                <div class="quick-view__image-display" data-quick-view-images>
-                  {%- for media in media_list -%}
-                    {%- assign media_alt = media.alt | default: product_object.title -%}
-                    {%- assign image_class = 'quick-view__image' -%}
-                    {%- if forloop.first -%}
-                      {%- assign image_class = image_class | append: ' is-active' -%}
-                    {%- endif -%}
-                    {{ media | image_url: width: 1200 | image_tag: loading: 'lazy', class: image_class, alt: media_alt }}
-                  {%- endfor -%}
-                </div>
+          <product-card
+            class="product-card"
+            data-product-id="{{ product_object.id }}"
+            data-product-variants-size="{{ product_object.variants.size }}"
+            id="product-card-{{ block.id }}"
+            data-product-transition="{{ settings.transition_to_main_product }}"
+            {% if no_swatch_selected %}
+              data-no-swatch-selected="true"
+            {% endif %}
+            {% if onboarding %}
+              data-placeholder="true"
+            {% endif %}
+          >
+            <a
+              {% unless onboarding %}
+                href="{{ variant_to_link.url }}"
+              {% endunless %}
+              class="product-card__link"
+              ref="productCardLink"
+            >
+              <span class="visually-hidden">
+                {{ product_object.title }}
+              </span>
+            </a>
+            <div 
+              class="product-card__content layout-panel-flex layout-panel-flex--column product-grid__card spacing-style border-style gap-style"
+              style="
+                --quick-add-display: {% if has_quick_add %}flex{% else %}none{% endif %};
+                --quick-add-mobile-display: {% if has_mobile_quick_add %}flex{% else %}none{% endif %};
+              "
+<!-- INTEGRATED EXISTING BLOCKS START -->
+<div class="quick-view-image-container">
+  {%- if product_object.featured_media -%}
+    {{ product_object.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
+  {%- endif -%}
+</div>
 
-                {%- if media_list.size > 1 -%}
-                  <div class="quick-view__thumbnails" data-quick-view-thumbnails>
-                    {%- for media in media_list -%}
-                      {%- assign thumb_alt = media.alt | default: product_object.title -%}
-                      <button type="button" class="quick-view__thumbnail{% if forloop.first %} is-active{% endif %}" data-quick-view-thumbnail="{{ forloop.index0 }}">
-                        {{ media | image_url: width: 200 | image_tag: loading: 'lazy', class: 'quick-view__thumbnail-image', alt: thumb_alt }}
-                      </button>
-                    {%- endfor -%}
-                  </div>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
+<div class="quick-view-info-container">
+  {% content_for 'block', type: 'product-title', id: 'qv-title' %}
+  {% content_for 'block', type: 'price', id: 'qv-price' %}
+  
+  {%- if product_object.has_only_default_variant == false -%}
+    {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
+  {%- endif -%}
+  
+  {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
-            <div class="quick-view__content">
-              <div class="quick-view__header">
-                <div class="quick-view__media-single">
-                  {%- if primary_media -%}
-                    {%- assign single_alt = primary_media.alt | default: product_object.title -%}
-                    {{ primary_media | image_url: width: 600 | image_tag: loading: 'lazy', class: 'quick-view__single-image', alt: single_alt }}
-                  {%- else -%}
-                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg quick-view__placeholder' }}
-                  {%- endif -%}
-                </div>
-
-                <div class="quick-view__info-column">
-                  <div class="quick-view__vendor">{{ product_object.vendor }}</div>
-                  <h1 class="quick-view__title">{{ product_object.title }}</h1>
-
-                  <div class="price
-                    {%- if product_object.price_varies %} price--varies{% endif -%}
-                    {%- if product_object.compare_at_price > product_object.price %} price--on-sale{% endif -%}
-                    {%- if product_object.price == 0 %} price--free{% endif -%}">
-
-                    <div class="price__container">
-                      {%- if product_object.compare_at_price > product_object.price -%}
-                        <div class="price__compare-at">
-                          <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                          <s>{{ product_object.compare_at_price | money }}</s>
-                        </div>
-                      {%- endif -%}
-
-                      <div class="price__current">
-                        <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                        <span>{{ product_object.price | money }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="quick-view__form">
-                {%- form 'product', product_object, id: 'quick-view-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-                  <input type="hidden" name="id" value="{{ product_object.selected_or_first_available_variant.id }}">
-
-                  {%- unless product_object.has_only_default_variant -%}
-                    <!-- Loading skeleton for variant picker -->
-                    <div class="variant-picker-loading" data-variant-loading>
-                      <div class="variant-picker-loading__spinner">
-                        <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
-                          <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
-                            <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
-                            <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
-                          </svg>
-                        </div>
-                        <span>Loading options...</span>
-                    </div>
-
-                    <!-- Actual variant picker (initially hidden) -->
-                    <variant-picker
-                      class="variant-picker variant-picker--loading"
-                      data-product-id="{{ product_object.id }}"
-                      data-product-url="{{ product_object.url }}"
-                      style="display: none;"
-                    >
-                      <form class="variant-picker__form">
-                        {%- for product_option in product_object.options_with_values -%}
-                          <fieldset class="variant-option variant-option--buttons">
-                            <legend>{{ product_option.name | escape }}</legend>
-                            {%- for product_option_value in product_option.values -%}
-                              <label class="variant-option__button-label">
-                                <input
-                                  type="radio"
-                                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_object.id }}"
-                                  value="{{ product_option_value | escape }}"
-                                  aria-label="{{ product_option_value.name }}"
-                                  {% if product_option_value.available == false %}
-                                    aria-disabled="true"
-                                  {% endif %}
-                                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
-                                  data-option-value-id="{{ product_option_value.id }}"
-                                  data-option-available="{{ product_option_value.available }}"
-                                  {% if product_option_value.variant.id %}
-                                    data-variant-id="{{ product_option_value.variant.id }}"
-                                  {% endif %}
-                                  {% if product_option_value.selected %}
-                                    checked
-                                  {% endif %}
-                                >
-                                <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
-                              </label>
-                            {%- endfor -%}
-                          </fieldset>
-                        {%- endfor -%}
-
-                        <script type="application/json">
-                          {{ product_object.selected_or_first_available_variant | json }}
-                        </script>
-                      </form>
-                    </variant-picker>
-                  {%- endunless -%}
-
-                  <div class="quick-view__quantity">
-                    <label for="Quantity-quick-view-{{ block.id }}">{{ 'content.quantity' | t }}</label>
-                    <input type="number" name="quantity" id="Quantity-quick-view-{{ block.id }}" value="1" min="1" class="quantity__input">
-                  </div>
-
-                  <div>
-                    <button type="submit" name="add" class="button quick-view__submit" {% unless product_object.selected_or_first_available_variant.available %}disabled{% endunless %}>
-                      <span>
-                        {%- if product_object.selected_or_first_available_variant.available -%}
-                          {{ 'products.product.add_to_cart' | t }}
-                        {%- else -%}
-                          {{ 'products.product.sold_out' | t }}
-                        {%- endif -%}
-                      </span>
-                    </button>
-                  </div>
-                {%- endform -%}
-              </div>
-
-              {%- if product_object.metafields.custom.care_instructions != blank -%}
-                <div class="quick-view__care-instructions">
-                  <h3 class="quick-view__care-instructions-title">{{ 'products.product.care_instructions' | t }}</h3>
-                  <div class="quick-view__care-instructions-content">
-                    {{ product_object.metafields.custom.care_instructions }}
-                  </div>
-                </div>
-              {%- endif -%}
+  {%- if product_object.metafields.custom.care_instructions != blank -%}
+    <div class="care-instructions">
+      <h3>{{ 'products.product.care_instructions' | t }}</h3>
+      <div>{{ product_object.metafields.custom.care_instructions }}</div>
+    </div>
+  {%- endif -%}
+</div>
+<!-- INTEGRATED EXISTING BLOCKS END -->
             </div>
-          </div>
+          </product-card>
         {%- else -%}
           <div class="quick-view__empty-state">
             {{ 'products.product.unavailable' | t }}
@@ -376,44 +313,12 @@
       dialogElement.dataset.quickViewGalleryBound = 'true';
     };
 
-    // Initialize variant picker with smooth transition
-    const initializeVariantPicker = (dialogElement) => {
-      const variantPicker = dialogElement.querySelector('variant-picker');
-      const loadingElement = dialogElement.querySelector('[data-variant-loading]');
-      
-      if (!variantPicker || !loadingElement) return;
-
-      // Show the variant picker immediately with proper styles
-      variantPicker.style.display = '';
-      variantPicker.classList.remove('variant-picker--loading');
-      
-      // Hide loading element
-      loadingElement.style.display = 'none';
-
-      // Force the custom element to connect if it hasn't already
-      if (variantPicker.connectedCallback && !variantPicker.dataset.initialized) {
-        variantPicker.connectedCallback();
-        variantPicker.dataset.initialized = 'true';
-      }
-
-      // Immediately trigger change event for proper initialization
-      const firstCheckedInput = variantPicker.querySelector('input[type="radio"]:checked');
-      if (firstCheckedInput && !variantPicker.dataset.triggerInitialized) {
-        firstCheckedInput.dispatchEvent(new Event('change', { bubbles: true }));
-        variantPicker.dataset.triggerInitialized = 'true';
-      }
-    };
-
     openButton.addEventListener('click', (event) => {
       if (openButton.disabled) return;
 
       event.preventDefault();
       dialog.showModal();
       openButton.setAttribute('aria-expanded', 'true');
-      
-      // Initialize variant picker immediately
-      initializeVariantPicker(dialog);
-      
       bindNavigation(dialog, openButton);
       setupQuickViewGallery(dialog);
     });
@@ -433,88 +338,49 @@
   });
 </script>
 
-<style>
+{% stylesheet %}
   .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 860px; }
   .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
   .popup-dialog__content { background: white; color: inherit; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
   .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: inherit; font-size: 1.5rem; line-height: 1; z-index: 10; }
 
-  .quick-view__grid { display: flex; gap: 3rem; align-items: stretch; }
-  .quick-view__media-gallery { flex: 0 0 auto; display: flex; flex-direction: column; gap: 1.2rem; max-width: 320px; align-items: center; }
-  .quick-view__image-display { position: relative; width: 100%; background-color: transparent; border: 1px solid rgba(0, 0, 0, 0.08); padding: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .quick-view__image-display--empty { cursor: default; }
-  .quick-view__image { width: 100%; height: auto; object-fit: contain; display: none; transition: opacity 0.3s ease; }
-  .quick-view__image.is-active { display: block; }
-  .quick-view__thumbnails { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; }
-  .quick-view__thumbnail { border: 1px solid rgba(0, 0, 0, 0.15); background: white; padding: 0; cursor: pointer; display: flex; overflow: hidden; transition: border-color 0.2s ease, transform 0.2s ease; }
-  .quick-view__thumbnail:hover { border-color: rgba(0, 0, 0, 0.35); transform: translateY(-1px); }
-  .quick-view__thumbnail.is-active,
-  .quick-view__thumbnail[aria-pressed="true"] { border-color: rgba(0, 0, 0, 0.55); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35); }
-  .quick-view__thumbnail-image { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .quick-view__content { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
-  .quick-view__header { display: flex; align-items: flex-start; gap: 1.6rem; flex-wrap: nowrap; }
-  .quick-view__media-single { display: none; flex: 0 0 auto; width: 96px; align-items: center; justify-content: center; }
-  .quick-view__single-image { width: 100%; height: auto; object-fit: contain; display: block; }
-  .quick-view__info-column { display: flex; flex-direction: column; gap: 0.75rem; flex: 1 1 auto; min-width: 0; }
-  .quick-view__vendor { font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 0.15em; }
-  .quick-view__title { font-family: 'Open Sans', sans-serif; font-weight: 500; font-size: 28px; line-height: 1.2; margin: 0; }
-
-  .price { font-size: 18px; }
-  .price--on-sale .price__current { color: #d12727; }
-  .price__compare-at { opacity: 0.6; }
-  .price__container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-  .quick-view__form { display: flex; flex-direction: column; gap: 1.5rem; }
-  .quick-view__quantity { display: flex; align-items: center; gap: 1rem; }
-  .quick-view__quantity label { font-weight: 500; }
-  .quantity__input { width: 90px; }
-  .quick-view__submit { width: 100%; }
-
-  /* Loading styles */
-  .variant-picker-loading {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+  /* Create two-column layout like product page */
+  .popup-dialog .product-card {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+    align-items: start !important;
   }
 
-  .variant-picker-loading__spinner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* Hide the product-card link that's causing layout issues */
+  .popup-dialog .product-card__link {
+    display: none !important;
   }
 
-  .spinner {
-    color: #666;
-    animation: spin 1s linear infinite;
+  /* Make the content area span both columns properly */
+  .popup-dialog .product-card__content {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
   }
 
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  /* Image container on left */
+  .popup-dialog .product-card__content > *:first-child {
+    grid-column: 1 !important;
   }
 
-  .variant-picker-loading span {
-    color: #666;
-    font-size: 14px;
+  /* All other content on right */
+  .popup-dialog .product-card__content > *:not(:first-child) {
+    grid-column: 2 !important;
   }
 
-  /* Instant variant picker styles */
-  .variant-picker {
-    transition: opacity 0.2s ease;
+  /* Limit product image height */
+  .popup-dialog .product-card img {
+    max-height: 350px;
+    width: 100%;
+    object-fit: contain;
   }
-
-  .variant-picker--loading {
-    opacity: 0;
-  }
-
-  .quick-view__care-instructions { margin-top: 1.5rem; }
-  .quick-view__care-instructions-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
-  .quick-view__care-instructions-content { font-size: 0.9rem; }
 
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
   .quick-view__empty-state { padding: 1.5rem; text-align: center; }
@@ -523,32 +389,7 @@
   .quick-view__nav-button { border: 1px solid rgba(0, 0, 0, 0.2); background: rgba(0, 0, 0, 0.05); color: inherit; padding: 0.6rem 1.2rem; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; min-width: 3rem; }
   .quick-view__nav-button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.35); }
   .quick-view__nav-button[disabled] { opacity: 0.4; cursor: not-allowed; }
-
-  @media (max-width: 900px) {
-    .quick-view__grid { gap: 2.4rem; }
-    .quick-view__media-gallery { max-width: 280px; }
-  }
-
-  @media (max-width: 768px) {
-    .popup-dialog { width: 95vw; }
-    .popup-dialog__content { padding: 1.5rem; gap: 1.25rem; }
-    .quick-view__grid { flex-direction: column; gap: 1.8rem; }
-    .quick-view__media-gallery { display: none; }
-    .quick-view__header { gap: 1.2rem; }
-    .quick-view__media-single { display: flex; }
-    .quick-view__title { font-size: 24px; }
-    .quick-view__quantity { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-    .quick-view__form { gap: 1.25rem; }
-    .quick-view__nav { justify-content: center; }
-  }
-
-  @media (max-width: 480px) {
-    .quick-view__grid { gap: 1.4rem; }
-    .quick-view__header { gap: 1rem; }
-    .quick-view__media-single { width: 82px; }
-    .quick-view__nav-button { padding: 0.5rem 1rem; font-size: 1.3rem; }
-  }
-</style>
+{% endstylesheet %}
 
 {% schema %}
 {
