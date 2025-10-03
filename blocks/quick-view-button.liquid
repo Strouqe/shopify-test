@@ -152,14 +152,12 @@
       </div>
 
       <div class="quick-view__nav">
-        <button type="button" class="quick-view__nav-button" data-quick-view-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
-          <span aria-hidden="true">‹</span>
-          <span class="visually-hidden">{{ 'accessibility.slideshow_previous' | t }}</span>
-        </button>
-        <button type="button" class="quick-view__nav-button" data-quick-view-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
-          <span class="visually-hidden">{{ 'accessibility.slideshow_next' | t }}</span>
-          <span aria-hidden="true">›</span>
-        </button>
+        <a href="#" class="quick-view__nav-button" data-quick-view-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+          Previous
+        </a>
+        <a href="#" class="quick-view__nav-button" data-quick-view-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+          Next
+        </a>
       </div>
     </div>
   </dialog>
@@ -190,21 +188,21 @@
       const currentIndex = Number(dialogElement.dataset.quickViewIndex);
 
       if (!handles.length || currentIndex < 0) {
-        prev.setAttribute('disabled', 'disabled');
-        next.setAttribute('disabled', 'disabled');
+        prev.style.visibility = 'hidden';
+        next.style.visibility = 'hidden';
         return;
       }
 
       if (currentIndex <= 0) {
-        prev.setAttribute('disabled', 'disabled');
+        prev.style.visibility = 'hidden';
       } else {
-        prev.removeAttribute('disabled');
+        prev.style.visibility = 'visible';
       }
 
       if (currentIndex >= handles.length - 1) {
-        next.setAttribute('disabled', 'disabled');
+        next.style.visibility = 'hidden';
       } else {
-        next.removeAttribute('disabled');
+        next.style.visibility = 'visible';
       }
     };
 
@@ -339,56 +337,101 @@
 </script>
 
 {% stylesheet %}
-  .popup-dialog { border: none; padding: 0; background: transparent; max-width: 90vw; width: 860px; }
+  .popup-dialog { border: none; padding: 0; background: transparent; max-width: 760px;  position: relative; height:500px;}
   .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  .popup-dialog__content { background: white; color: inherit; padding: 2rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
-  .popup-dialog__close { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem; color: inherit; font-size: 1.5rem; line-height: 1; z-index: 10; }
-
-  /* Create two-column layout like product page */
-  .popup-dialog .product-card {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 2rem !important;
-    align-items: start !important;
-  }
+  .popup-dialog__content { background: white; color: inherit; padding: 40px 30px; position: relative; display: flex; flex-direction: column; gap: 1.5rem; height:fit-content;}
+  
+  /* Move close button outside the content area */
+.popup-dialog__close { 
+  position: absolute; 
+  top: 5px; 
+  right: 5px; 
+  background: none !important; 
+  border: none !important; 
+  cursor: pointer; 
+  padding: 8px; 
+  color: inherit; 
+  font-size: 24px; 
+  line-height: 1; 
+  z-index: 10; 
+}
 
   /* Hide the product-card link that's causing layout issues */
   .popup-dialog .product-card__link {
     display: none !important;
   }
 
-  /* Make the content area span both columns properly */
+  /* Override the existing layout styles and force flexbox side-by-side */
   .popup-dialog .product-card__content {
-    grid-column: 1 / -1 !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    display: flex !important;
+    flex-direction: row !important;
     gap: 2rem !important;
+    align-items: flex-start !important;
   }
 
-  /* Image container on left */
-  .popup-dialog .product-card__content > *:first-child {
-    grid-column: 1 !important;
+  /* Image container - left side, flexible width */
+  .popup-dialog .quick-view-image-container {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    max-height: 350px !important;
+    max-width: 322px  !important;
   }
 
-  /* All other content on right */
-  .popup-dialog .product-card__content > *:not(:first-child) {
-    grid-column: 2 !important;
+  /* Info container - right side, fixed height with spacing */
+  .popup-dialog .quick-view-info-container {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    height: fit-content;
+    overflow-y: auto !important;
+    padding: 1rem !important;
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 4px !important;
   }
 
-  /* Limit product image height */
-  .popup-dialog .product-card img {
-    max-height: 350px;
-    width: 100%;
+  /* Image styling */
+  .popup-dialog .quick-view-image-container img {
+    padding: auto 0;
+    max-height: 415px;
+    max-width: 318px;
     object-fit: contain;
+  }
+
+  /* Care instructions styling */
+  .popup-dialog .care-instructions {
+    margin-top: auto !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid #e5e5e5 !important;
+  }
+
+  .popup-dialog .care-instructions h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
   .quick-view__empty-state { padding: 1.5rem; text-align: center; }
 
+  /* Navigation with proper spacing */
   .quick-view__nav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 1rem; }
-  .quick-view__nav-button { border: 1px solid rgba(0, 0, 0, 0.2); background: rgba(0, 0, 0, 0.05); color: inherit; padding: 0.6rem 1.2rem; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; min-width: 3rem; }
-  .quick-view__nav-button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.35); }
-  .quick-view__nav-button[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .quick-view__nav-button { 
+    color: inherit; 
+    text-decoration: underline;
+    cursor: pointer; 
+    font-size: 0.875rem; 
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .quick-view__nav-button:hover { 
+    text-decoration: none;
+  }
 {% endstylesheet %}
 
 {% schema %}
