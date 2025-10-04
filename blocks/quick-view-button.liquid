@@ -1,6 +1,3 @@
-
-
-
 <div {{ block.shopify_attributes }}>
   {%- liquid
     assign product_object = closest.product
@@ -70,7 +67,7 @@
   <button
     type="button"
     id="{{ button_id }}"
-    class="button"
+    class="button quick-view-button"
     aria-haspopup="dialog"
     aria-controls="{{ modal_id }}"
     aria-expanded="false"
@@ -116,34 +113,64 @@
               style="
                 --quick-add-display: {% if has_quick_add %}flex{% else %}none{% endif %};
                 --quick-add-mobile-display: {% if has_mobile_quick_add %}flex{% else %}none{% endif %};
-              ">
-            <div class="quick-view-mobile-top">
-              <div class="quick-view-image-container">
-                {%- if product_object.featured_media -%}
-                  {{ product_object.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
-                {%- endif -%}
-              </div>
+              "
+            >
+<!-- DESKTOP LAYOUT -->
+<div class="quick-view-desktop-layout">
+  <div class="quick-view-image-container">
+    {%- if product_object.featured_media -%}
+      {{ product_object.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
+    {%- endif -%}
+  </div>
 
-              <div class="quick-view-mobile-title-price">
-                {% content_for 'block', type: 'product-title', id: 'qv-title' %}
-                {% content_for 'block', type: 'price', id: 'qv-price' %}
-              </div>
-            </div>
+  <div class="quick-view-info-container">
+    {% content_for 'block', type: 'product-title', id: 'qv-title' %}
+    {% content_for 'block', type: 'price', id: 'qv-price' %}
+    
+    {%- if product_object.has_only_default_variant == false -%}
+      {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
+    {%- endif -%}
+    
+    {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
-            <div class="quick-view-info-container">
-              {%- if product_object.has_only_default_variant == false -%}
-                {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
-              {%- endif -%}
-              
-              {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
+    {%- if product_object.metafields.custom.care_instructions != blank -%}
+      <div class="care-instructions">
+        <h3>{{ 'products.product.care_instructions' | t }}</h3>
+        <div>{{ product_object.metafields.custom.care_instructions }}</div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
 
-              {%- if product_object.metafields.custom.care_instructions != blank -%}
-                <div class="care-instructions">
-                  <h3>{{ 'products.product.care_instructions' | t }}</h3>
-                  <div>{{ product_object.metafields.custom.care_instructions }}</div>
-                </div>
-              {%- endif -%}
-            </div>
+<!-- MOBILE LAYOUT -->
+<div class="quick-view-mobile-layout">
+  <div class="quick-view-mobile-top">
+    <div class="quick-view-mobile-image">
+      {%- if product_object.featured_media -%}
+        {{ product_object.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
+      {%- endif -%}
+    </div>
+    <div class="quick-view-mobile-title-price">
+      {% content_for 'block', type: 'product-title', id: 'qv-title-mobile' %}
+      {% content_for 'block', type: 'price', id: 'qv-price-mobile' %}
+    </div>
+  </div>
+  
+  <div class="quick-view-mobile-info">
+    {%- if product_object.has_only_default_variant == false -%}
+      {% content_for 'block', type: 'variant-picker', id: 'qv-variants-mobile' %}
+    {%- endif -%}
+    
+    {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons-mobile' %}
+
+    {%- if product_object.metafields.custom.care_instructions != blank -%}
+      <div class="care-instructions">
+        <h3>{{ 'products.product.care_instructions' | t }}</h3>
+        <div>{{ product_object.metafields.custom.care_instructions }}</div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
             </div>
           </product-card>
         {%- else -%}
@@ -339,6 +366,12 @@
 </script>
 
 {% stylesheet %}
+  .quick-view-button {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+
   .popup-dialog { 
     border: none; 
     padding: 0; 
@@ -390,7 +423,6 @@
     flex-direction: row !important;
     gap: 32px !important;
     align-items: flex-start !important;
-    width: 100% !important;
   }
 
   .popup-dialog .product-card:hover {
@@ -410,6 +442,19 @@
     cursor: pointer !important;
   }
 
+  /* DESKTOP LAYOUT */
+  .quick-view-desktop-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .quick-view-mobile-layout {
+    display: none;
+  }
+
   .popup-dialog .quick-view-image-container {
     flex: 1 !important;
     display: flex !important;
@@ -417,7 +462,6 @@
     justify-content: center !important;
     align-self: center;
     height: fit-content!important;
-    width: 100% !important;
   }
 
   .popup-dialog .quick-view-info-container {
@@ -426,26 +470,10 @@
     flex-direction: column !important;
     gap: 16px !important;
     height: fit-content !important;
-    min-height: 300px !important;
     overflow-y: auto !important;
     padding: 16px !important;
     border: 1px solid #e5e5e5 !important;
-    width: 100% !important;
-  }
-
-  .popup-dialog .quick-view-info-container > *,
-  .popup-dialog .quick-view-info-container button,
-  .popup-dialog .quick-view-info-container .button,
-  .popup-dialog .quick-view-info-container input,
-  .popup-dialog .quick-view-info-container select,
-  .popup-dialog .quick-view-info-container fieldset,
-  .popup-dialog .quick-view-info-container .variant-picker,
-  .popup-dialog .quick-view-info-container .product-form,
-  .popup-dialog .quick-view-info-container .quantity-selector {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex-shrink: 0 !important;
-    box-sizing: border-box !important;
+    border-radius: 4px !important;
   }
 
   .popup-dialog .quick-view-image-container img {
@@ -496,13 +524,14 @@
       margin: 0;
       max-width: 100%;
       width: 100%;
-      max-height: 70vh;
+      max-height: 90vh;
+      transform: translateY(0);
     }
 
     .popup-dialog__content {
       padding: 16px;
       gap: 12px;
-      max-height: 70vh;
+      max-height: 90vh;
       overflow-y: auto;
     }
 
@@ -518,21 +547,32 @@
       gap: 12px !important;
     }
 
-    .popup-dialog .quick-view-mobile-top {
+    /* HIDE DESKTOP LAYOUT ON MOBILE */
+    .quick-view-desktop-layout {
+      display: none !important;
+    }
+
+    /* SHOW MOBILE LAYOUT ON MOBILE */
+    .quick-view-mobile-layout {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+    }
+
+    .quick-view-mobile-top {
       display: flex !important;
       flex-direction: row !important;
       gap: 12px !important;
       align-items: flex-start !important;
     }
 
-    .popup-dialog .quick-view-image-container {
+    .quick-view-mobile-image {
       width: 120px !important;
       height: 120px !important;
       flex: none !important;
-      align-self: flex-start !important;
     }
 
-    .popup-dialog .quick-view-image-container img {
+    .quick-view-mobile-image img {
       max-height: 120px;
       min-width: auto;
       width: 120px;
@@ -540,19 +580,17 @@
       object-fit: cover;
     }
 
-    .popup-dialog .quick-view-mobile-title-price {
-      flex: 1 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 8px !important;
+    .quick-view-mobile-title-price {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    .popup-dialog .quick-view-info-container {
-      padding: 0 !important;
-      gap: 8px !important;
-      border: none !important;
-      flex: 1 !important;
-      min-height: 200px !important;
+    .quick-view-mobile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .popup-dialog .care-instructions {
