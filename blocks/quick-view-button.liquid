@@ -67,7 +67,7 @@
   <button
     type="button"
     id="{{ button_id }}"
-    class="button quick-view-button"
+    class="button"
     aria-haspopup="dialog"
     aria-controls="{{ modal_id }}"
     aria-expanded="false"
@@ -366,22 +366,22 @@
 </script>
 
 {% stylesheet %}
-  .quick-view-button {
+    .button[id^="popup-button-"] {
     width: 100%;
-    display: block;
-    text-align: center;
   }
-
   .popup-dialog { 
     border: none; 
     padding: 0; 
     background: transparent; 
-    max-width: 760px; 
-    position: relative; 
+    max-width: 760px;
+    width: 760px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     height: fit-content; 
     z-index: 9999;
   }
-  
   .popup-dialog::backdrop { 
     background: rgba(0, 0, 0, 0.5); 
     z-index: 9998;
@@ -465,7 +465,8 @@
   }
 
   .popup-dialog .quick-view-info-container {
-    flex: 1 !important;
+    width: 345px !important;
+    flex: none !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
@@ -513,12 +514,50 @@
   .quick-view__nav-button:hover { 
     text-decoration: none;
   }
+@media (max-width: 768px) and (min-width: 621px) {
+  .popup-dialog {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    transform: none;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    max-height: 90vh;
+  }
 
-  @media (max-width: 768px) {
+  .popup-dialog__content {
+    padding: 16px;
+    gap: 12px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .popup-dialog__close {
+    top: 8px;
+    right: 12px;
+    font-size: 18px;
+    padding: 6px;
+  }
+
+  .quick-view__nav {
+    gap: 12px;
+  }
+
+  .quick-view__nav-button {
+    font-size: 12px;
+  }
+  .popup-dialog .quick-view-image-container img {
+    max-height: 300px;
+    min-width: 200px;
+  }
+}
+  @media (max-width: 620px) {
     .popup-dialog {
-      position: fixed !important;
-      bottom: 0 !important;
-      top: auto !important;
+      position: fixed;
+      bottom: 0;
       left: 0;
       right: 0;
       margin: 0;
@@ -557,6 +596,7 @@
       display: flex !important;
       flex-direction: column !important;
       gap: 12px !important;
+      margin: 0 auto;
     }
 
     .quick-view-mobile-top {
