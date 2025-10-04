@@ -337,94 +337,127 @@
 </script>
 
 {% stylesheet %}
-  .popup-dialog { border: none; padding: 0; background: transparent; max-width: 760px;  position: relative; height:500px;}
-  .popup-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  .popup-dialog__content { background: white; color: inherit; padding: 40px 30px; position: relative; display: flex; flex-direction: column; gap: 1.5rem; height:fit-content;}
+  .popup-dialog { 
+    border: none; 
+    padding: 0; 
+    background: transparent; 
+    max-width: 760px; 
+    position: relative; 
+    height: fit-content; 
+    z-index: 9999;
+  }
   
-  /* Move close button outside the content area */
-.popup-dialog__close { 
-  position: absolute; 
-  top: 5px; 
-  right: 5px; 
-  background: none !important; 
-  border: none !important; 
-  cursor: pointer; 
-  padding: 8px; 
-  color: inherit; 
-  font-size: 24px; 
-  line-height: 1; 
-  z-index: 10; 
-}
+  .popup-dialog::backdrop { 
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 9998;
+    pointer-events: auto;
+  }
+  
+  .popup-dialog__content { 
+    background: white; 
+    color: inherit; 
+    padding: 40px 40px 30px; 
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 24px; 
+    height: fit-content; 
+    z-index: 10000;
+  }
+  
+  .popup-dialog__close { 
+    position: absolute; 
+    top: 8px; 
+    right: 8px; 
+    background: none; 
+    border: none; 
+    cursor: pointer;
+    padding: 8px; 
+    color: inherit; 
+    font-size: 24px; 
+    line-height: 1; 
+    z-index: 10001; 
+  }
 
-  /* Hide the product-card link that's causing layout issues */
   .popup-dialog .product-card__link {
     display: none !important;
   }
 
-  /* Override the existing layout styles and force flexbox side-by-side */
   .popup-dialog .product-card__content {
     display: flex !important;
     flex-direction: row !important;
-    gap: 2rem !important;
+    gap: 32px !important;
     align-items: flex-start !important;
   }
 
-  /* Image container - left side, flexible width */
+  .popup-dialog .product-card:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .popup-dialog * {
+    cursor: auto !important;
+  }
+
+  .popup-dialog .popup-dialog__close,
+  .popup-dialog .quick-view__nav-button,
+  .popup-dialog button,
+  .popup-dialog input[type="radio"],
+  .popup-dialog input[type="checkbox"] {
+    cursor: pointer !important;
+  }
+
   .popup-dialog .quick-view-image-container {
     flex: 1 !important;
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    max-height: 350px !important;
-    max-width: 322px  !important;
+    align-self: center;
+    height: fit-content!important;
   }
 
-  /* Info container - right side, fixed height with spacing */
   .popup-dialog .quick-view-info-container {
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 1rem !important;
-    height: fit-content;
+    gap: 16px !important;
+    height: fit-content !important;
     overflow-y: auto !important;
-    padding: 1rem !important;
+    padding: 16px !important;
     border: 1px solid #e5e5e5 !important;
     border-radius: 4px !important;
   }
 
-  /* Image styling */
   .popup-dialog .quick-view-image-container img {
-    padding: auto 0;
-    max-height: 415px;
-    max-width: 318px;
+    max-height: 411.5px;
+    width: 100%;
+    min-width: 300px;
     object-fit: contain;
   }
 
-  /* Care instructions styling */
   .popup-dialog .care-instructions {
     margin-top: auto !important;
-    padding-top: 1rem !important;
+    padding-top: 16px !important;
     border-top: 1px solid #e5e5e5 !important;
   }
 
   .popup-dialog .care-instructions h3 {
-    margin: 0 0 0.75rem 0;
-    font-size: 0.875rem;
+    margin: 0 0 12px 0;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.8px;
   }
 
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
-  .quick-view__empty-state { padding: 1.5rem; text-align: center; }
+  .quick-view__empty-state { padding: 24px; text-align: center; }
 
-  /* Navigation with proper spacing */
-  .quick-view__nav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 1rem; }
+  .quick-view__nav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 16px; }
   .quick-view__nav-button { 
     color: inherit; 
     text-decoration: underline;
-    cursor: pointer; 
-    font-size: 0.875rem; 
+    cursor: pointer;
+    font-size: 14px; 
     background: none;
     border: none;
     padding: 0;
