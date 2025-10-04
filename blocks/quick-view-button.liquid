@@ -116,32 +116,34 @@
               style="
                 --quick-add-display: {% if has_quick_add %}flex{% else %}none{% endif %};
                 --quick-add-mobile-display: {% if has_mobile_quick_add %}flex{% else %}none{% endif %};
-              "
-<!-- INTEGRATED EXISTING BLOCKS START -->
-<div class="quick-view-image-container">
-  {%- if product_object.featured_media -%}
-    {{ product_object.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
-  {%- endif -%}
-</div>
+              ">
+            <div class="quick-view-mobile-top">
+              <div class="quick-view-image-container">
+                {%- if product_object.featured_media -%}
+                  {{ product_object.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                {%- endif -%}
+              </div>
 
-<div class="quick-view-info-container">
-  {% content_for 'block', type: 'product-title', id: 'qv-title' %}
-  {% content_for 'block', type: 'price', id: 'qv-price' %}
-  
-  {%- if product_object.has_only_default_variant == false -%}
-    {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
-  {%- endif -%}
-  
-  {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
+              <div class="quick-view-mobile-title-price">
+                {% content_for 'block', type: 'product-title', id: 'qv-title' %}
+                {% content_for 'block', type: 'price', id: 'qv-price' %}
+              </div>
+            </div>
 
-  {%- if product_object.metafields.custom.care_instructions != blank -%}
-    <div class="care-instructions">
-      <h3>{{ 'products.product.care_instructions' | t }}</h3>
-      <div>{{ product_object.metafields.custom.care_instructions }}</div>
-    </div>
-  {%- endif -%}
-</div>
-<!-- INTEGRATED EXISTING BLOCKS END -->
+            <div class="quick-view-info-container">
+              {%- if product_object.has_only_default_variant == false -%}
+                {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
+              {%- endif -%}
+              
+              {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
+
+              {%- if product_object.metafields.custom.care_instructions != blank -%}
+                <div class="care-instructions">
+                  <h3>{{ 'products.product.care_instructions' | t }}</h3>
+                  <div>{{ product_object.metafields.custom.care_instructions }}</div>
+                </div>
+              {%- endif -%}
+            </div>
             </div>
           </product-card>
         {%- else -%}
@@ -388,6 +390,7 @@
     flex-direction: row !important;
     gap: 32px !important;
     align-items: flex-start !important;
+    width: 100% !important;
   }
 
   .popup-dialog .product-card:hover {
@@ -414,6 +417,7 @@
     justify-content: center !important;
     align-self: center;
     height: fit-content!important;
+    width: 100% !important;
   }
 
   .popup-dialog .quick-view-info-container {
@@ -422,10 +426,26 @@
     flex-direction: column !important;
     gap: 16px !important;
     height: fit-content !important;
+    min-height: 300px !important;
     overflow-y: auto !important;
     padding: 16px !important;
     border: 1px solid #e5e5e5 !important;
-    border-radius: 4px !important;
+    width: 100% !important;
+  }
+
+  .popup-dialog .quick-view-info-container > *,
+  .popup-dialog .quick-view-info-container button,
+  .popup-dialog .quick-view-info-container .button,
+  .popup-dialog .quick-view-info-container input,
+  .popup-dialog .quick-view-info-container select,
+  .popup-dialog .quick-view-info-container fieldset,
+  .popup-dialog .quick-view-info-container .variant-picker,
+  .popup-dialog .quick-view-info-container .product-form,
+  .popup-dialog .quick-view-info-container .quantity-selector {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .popup-dialog .quick-view-image-container img {
@@ -464,6 +484,95 @@
   }
   .quick-view__nav-button:hover { 
     text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .popup-dialog {
+      position: fixed !important;
+      bottom: 0 !important;
+      top: auto !important;
+      left: 0;
+      right: 0;
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
+      max-height: 70vh;
+    }
+
+    .popup-dialog__content {
+      padding: 16px;
+      gap: 12px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .popup-dialog__close {
+      top: 8px;
+      right: 12px;
+      font-size: 18px;
+      padding: 6px;
+    }
+
+    .popup-dialog .product-card__content {
+      flex-direction: column !important;
+      gap: 12px !important;
+    }
+
+    .popup-dialog .quick-view-mobile-top {
+      display: flex !important;
+      flex-direction: row !important;
+      gap: 12px !important;
+      align-items: flex-start !important;
+    }
+
+    .popup-dialog .quick-view-image-container {
+      width: 120px !important;
+      height: 120px !important;
+      flex: none !important;
+      align-self: flex-start !important;
+    }
+
+    .popup-dialog .quick-view-image-container img {
+      max-height: 120px;
+      min-width: auto;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .popup-dialog .quick-view-mobile-title-price {
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+    }
+
+    .popup-dialog .quick-view-info-container {
+      padding: 0 !important;
+      gap: 8px !important;
+      border: none !important;
+      flex: 1 !important;
+      min-height: 200px !important;
+    }
+
+    .popup-dialog .care-instructions {
+      padding-top: 8px !important;
+      margin-top: 8px !important;
+    }
+
+    .popup-dialog .care-instructions h3 {
+      font-size: 11px;
+      margin: 0 0 6px 0;
+    }
+
+    .quick-view__nav {
+      gap: 12px;
+      padding: 0 16px 16px;
+    }
+
+    .quick-view__nav-button {
+      font-size: 12px;
+    }
   }
 {% endstylesheet %}
 
