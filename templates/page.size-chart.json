@@ -1,35 +1,82 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "size_chart_main": {
       "type": "size-chart",
-      "settings": {
-        "neck_image": "",
-        "back_image": "",
-        "chest_image": "",
-        "legs_image": ""
-      },
       "blocks": {
         "heading_block": {
           "type": "text",
           "settings": {
             "text": "<h1>Dog Size Chart</h1>",
-            "text_style": "text--title",
-            "alignment": "center"
-          }
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
         "description_block": {
           "type": "text",
           "settings": {
             "text": "<p>Find the perfect fit for your furry friend with our comprehensive size guide.</p>",
-            "text_style": "text--normal",
-            "alignment": "center"
-          }
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "size_chart_table_RpqEP4": {
+          "type": "size-chart-table",
+          "name": "t:names.size_chart_table",
+          "settings": {
+            "table_data": "S,40,50,30,Small Dog\nM,45,55,32,Medium Dog\nL,50,60,35,Large Dog\nXL,55,65,38,Extra Large Dog"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "heading_block",
-        "description_block"
-      ]
+        "description_block",
+        "size_chart_table_RpqEP4"
+      ],
+      "settings": {}
     }
   },
   "order": [
