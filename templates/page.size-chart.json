@@ -61,27 +61,13 @@
             "padding-inline-end": 0
           },
           "blocks": {}
-        },
-        "size_chart_table_RpqEP4": {
-          "type": "size-chart-table",
-          "name": "t:names.size_chart_table",
-          "settings": {
-            "table_data": "S,40,50,30,Small Dog\nM,45,55,32,Medium Dog\nL,50,60,35,Large Dog\nXL,55,65,38,Extra Large Dog"
-          },
-          "blocks": {}
         }
       },
       "block_order": [
         "heading_block",
-        "description_block",
-        "size_chart_table_RpqEP4"
+        "description_block"
       ],
-      "settings": {
-        "neck_image": "shopify://shop_images/90c07f9004c6604ed3848c825cccb26c7e4fc004.png",
-        "back_image": "shopify://shop_images/b0d4ddec817c03069f64dc61edd4490e70b993ad.png",
-        "chest_image": "shopify://shop_images/1f0311364ab664d6cd578515077cb0f447a99ae5.png",
-        "legs_image": "shopify://shop_images/d5b5880fa83d76161e671d3a07e125b1558e4020.png"
-      }
+      "settings": {}
     }
   },
   "order": [
