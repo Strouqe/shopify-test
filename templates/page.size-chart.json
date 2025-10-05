@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "size_chart_main": {
+      "type": "size-chart",
+      "settings": {
+        "neck_image": "",
+        "back_image": "",
+        "chest_image": "",
+        "legs_image": ""
+      },
+      "blocks": {
+        "heading_block": {
+          "type": "text",
+          "settings": {
+            "text": "<h1>Dog Size Chart</h1>",
+            "text_style": "text--title",
+            "alignment": "center"
+          }
+        },
+        "description_block": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Find the perfect fit for your furry friend with our comprehensive size guide.</p>",
+            "text_style": "text--normal",
+            "alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "heading_block",
+        "description_block"
+      ]
+    }
+  },
+  "order": [
+    "size_chart_main"
+  ]
+}
