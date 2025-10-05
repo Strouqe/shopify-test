@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "size_chart_main": {
@@ -7,10 +16,10 @@
     "size_chart_content": {
       "type": "size-chart-page",
       "settings": {
-        "neck_image": "",
-        "back_image": "",
-        "chest_image": "",
-        "legs_image": ""
+        "neck_image": "shopify://shop_images/90c07f9004c6604ed3848c825cccb26c7e4fc004.png",
+        "back_image": "shopify://shop_images/b0d4ddec817c03069f64dc61edd4490e70b993ad.png",
+        "chest_image": "shopify://shop_images/1f0311364ab664d6cd578515077cb0f447a99ae5.png",
+        "legs_image": "shopify://shop_images/d5b5880fa83d76161e671d3a07e125b1558e4020.png"
       }
     }
   },
