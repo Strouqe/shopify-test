@@ -1,0 +1,335 @@
+{% comment %} Extract only the content from popup-body {% endcomment %}
+<div class="size-chart-table">
+  <table>
+    <thead>
+      <tr>
+        <th style="background-color: black;">SIZE</th>
+        <th style="background-color: black;">BACK LENGTH (CM)</th>
+        <th style="background-color: black;">CHEST LENGTH (CM)</th>
+        <th style="background-color: black;">NECK LENGTH (CM)</th>
+        <th style="background-color: black;">BREED</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>S</td>
+        <td>29-33</td>
+        <td>43-48</td>
+        <td>28-31</td>
+        <td>Boston Terrier, Shih Tzu, Pug, Poodle, Chinese Crested, Yorkie, Pekingese Spitz, Maltese, Miniature Pinscher</td>
+      </tr>
+      <tr>
+        <td>M</td>
+        <td>34-36</td>
+        <td>49-54</td>
+        <td>32-34</td>
+        <td>Boston Terrier, Shih Tzu, Pug, Cocker Spaniel, Miniature Schnauzer, Dachshund</td>
+      </tr>
+      <tr>
+        <td>L</td>
+        <td>37-41</td>
+        <td>55-60</td>
+        <td>35-40</td>
+        <td>Cocker Spaniel, Bull Terrier, Fox Terrier, French Bulldog, Beagle, Biewer-Yorkie, Poodle.</td>
+      </tr>
+      <tr>
+        <td>XL</td>
+        <td>42-50</td>
+        <td>61-70</td>
+        <td>46-50</td>
+        <td>Welsh Corgi, French Bulldog, Cocker Spaniel, Bull Terrier, Beagle</td>
+      </tr>
+      <tr>
+        <td>2XL</td>
+        <td>51-55</td>
+        <td>71-80</td>
+        <td>46-50</td>
+        <td>Labrador, Golden Retriever, German Shepherd, Husky.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="size-chart-subheading">To get the right size for your dog you need to have a tape and measure across following parts:</div>
+
+<div class="measurement-images">
+  <div class="measurement-item">
+    {% if section.settings.neck_image %}
+      {{ section.settings.neck_image | image_url: width: 200 | image_tag: alt: 'Around the Neck' }}
+    {% else %}
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMDAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+    {% endif %}
+    <p>AROUND THE NECK</p>
+  </div>
+  <div class="measurement-item">
+    {% if section.settings.back_image %}
+      {{ section.settings.back_image | image_url: width: 200 | image_tag: alt: 'The Back' }}
+    {% else %}
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMDAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+    {% endif %}
+    <p>THE BACK</p>
+  </div>
+  <div class="measurement-item">
+    {% if section.settings.chest_image %}
+      {{ section.settings.chest_image | image_url: width: 200 | image_tag: alt: 'The Chest' }}
+    {% else %}
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMDAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+    {% endif %}
+    <p>THE CHEST</p>
+  </div>
+  <div class="measurement-item">
+    {% if section.settings.legs_image %}
+      {{ section.settings.legs_image | image_url: width: 200 | image_tag: alt: 'The Legs' }}
+    {% else %}
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMDAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBJbWFnZTwvdGV4dD4KPHN2Zz4=" alt="No image selected">
+    {% endif %}
+    <p>THE LEGS</p>
+  </div>
+</div>
+
+{% stylesheet %}
+.size-chart-table {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.size-chart-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  table-layout: fixed;
+}
+
+.size-chart-table thead {
+  background-color: black;
+}
+
+.size-chart-table th,
+.size-chart-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  white-space: normal;
+}
+
+.size-chart-table th:not(:last-child),
+.size-chart-table td:not(:last-child) {
+  text-align: center;
+}
+
+.size-chart-table th {
+  color: white;
+  font-weight: 600;
+}
+
+.size-chart-table th:nth-child(1),
+.size-chart-table th:nth-child(2),
+.size-chart-table th:nth-child(3),
+.size-chart-table th:nth-child(4),
+.size-chart-table td:nth-child(1),
+.size-chart-table td:nth-child(2),
+.size-chart-table td:nth-child(3),
+.size-chart-table td:nth-child(4) {
+  width: 140px;
+}
+
+.size-chart-table th:nth-child(5),
+.size-chart-table td:nth-child(5) {
+  width: 450px;
+}
+
+.size-chart-table td:first-child {
+  font-weight: bold;
+}
+
+.size-chart-table tbody tr:nth-child(even) {
+  background-color: #f0f0f0;
+}
+
+.size-chart-subheading {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 32px auto;
+  max-width: 400px;
+  height: 40px;
+}
+
+.measurement-images {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(1, auto);
+  gap: 10px;
+  place-items: center;
+  margin: 1.2rem auto;
+  max-width: 400px;
+}
+
+.measurement-item {
+  width: 165px;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.measurement-item img {
+  width: 100%;
+  height: auto;
+}
+
+.measurement-item p {
+  margin-top: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0%;
+  text-align: center;
+  color: var(--color-foreground);
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 749px) {
+  .size-chart-table {
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  .size-chart-table table {
+    width: 100%;
+    font-size: 0.75rem;
+    border-collapse: separate;
+    border-spacing: 0 94px;
+    table-layout: fixed;
+  }
+
+  .size-chart-table thead th {
+    background-color: black;
+  }
+
+  .size-chart-table th:nth-child(5) {
+    display: none;
+  }
+
+  .size-chart-table th,
+  .size-chart-table td {
+    padding: 0;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    white-space: normal;
+  }
+
+  .size-chart-table th:not(:last-child),
+  .size-chart-table td:not(:last-child) {
+    text-align: center;
+  }
+
+  .size-chart-table th:nth-child(1),
+  .size-chart-table th:nth-child(2),
+  .size-chart-table th:nth-child(3),
+  .size-chart-table th:nth-child(4) {
+    width: 25%;
+    height: 94px;
+    box-sizing: border-box;
+  }
+
+  .size-chart-table td:nth-child(1),
+  .size-chart-table td:nth-child(2),
+  .size-chart-table td:nth-child(3),
+  .size-chart-table td:nth-child(4) {
+    width: 25%;
+    height: 94px;
+    box-sizing: border-box;
+    background-color: white;
+  }
+
+  .size-chart-table tbody tr {
+    position: relative;
+  }
+
+  .size-chart-table td:nth-child(5) {
+    position: absolute;
+    top: -94px;
+    left: 0;
+    width: 100%;
+    height: 94px;
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0%;
+    text-align: left;
+    z-index: 1;
+    overflow: auto;
+  }
+
+  .size-chart-subheading {
+    font-size: 12px;
+    line-height: 16px;
+    margin: 1rem auto;
+    max-width: 300px;
+    height: auto;
+  }
+
+  .measurement-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    margin: 1rem auto;
+    place-items: center;
+  }
+}
+
+@media (min-width: 750px) and (max-width: 1130px) {
+  .size-chart-table th:nth-child(1),
+  .size-chart-table th:nth-child(2),
+  .size-chart-table th:nth-child(3),
+  .size-chart-table th:nth-child(4),
+  .size-chart-table td:nth-child(1),
+  .size-chart-table td:nth-child(2),
+  .size-chart-table td:nth-child(3),
+  .size-chart-table td:nth-child(4) {
+    width: 18%;
+  }
+
+  .size-chart-table th:nth-child(5),
+  .size-chart-table td:nth-child(5) {
+    width: 28%;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Size Chart Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "neck_image",
+      "label": "Neck Measurement Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Back Measurement Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "chest_image",
+      "label": "Chest Measurement Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "legs_image",
+      "label": "Legs Measurement Image"
+    }
+  ]
+}
+{% endschema %}
