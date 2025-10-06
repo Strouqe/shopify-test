@@ -462,7 +462,8 @@
       "custom_css": [
         "@media (max-width: 745px) {.background-image-container img {object-position: center 15% !important; }}",
         "@media (max-width: 620px) {.background-image-container img {object-position: center 30% !important; }}",
-        "@media (min-width: 1450px) {.background-image-container img {object-position: center 30% !important; }}"
+        "@media (min-width: 1450px) {.background-image-container img {object-position: center 30% !important; }}",
+        "@media screen and (max-width: 750px) {.layout-panel-flex--row {flex-direction: column-reverse !important; }}"
       ],
       "name": "t:names.split_showcase",
       "settings": {
