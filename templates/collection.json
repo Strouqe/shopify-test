@@ -495,8 +495,8 @@
                       "type": "_accordion-row",
                       "name": "t:names.accordion_row",
                       "settings": {
-                        "heading": "When will I get my order?",
-                        "open_by_default": false,
+                        "heading": "Care Instructions",
+                        "open_by_default": true,
                         "icon": "none",
                         "width": 20
                       },
