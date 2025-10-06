@@ -354,15 +354,23 @@
                   },
                   "block_order": []
                 },
-                "qv-accordion": {
-                  "type": "accordion",
+                "qv-details": {
+                  "type": "_product-details",
                   "static": true,
                   "settings": {
-                    "icon": "caret",
-                    "dividers": true,
-                    "type_preset": "h6",
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "details_position": "flex-start",
+                    "gap": 12,
+                    "sticky_details_desktop": false,
                     "inherit_color_scheme": true,
                     "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
                     "border": "none",
                     "border_width": 1,
                     "border_opacity": 100,
@@ -372,7 +380,154 @@
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "accordion_yrFjnD": {
+                      "type": "accordion",
+                      "name": "t:names.accordion",
+                      "settings": {
+                        "icon": "caret",
+                        "dividers": true,
+                        "type_preset": "h6",
+                        "inherit_color_scheme": true,
+                        "color_scheme": "",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {
+                        "accordion_row_QTgzRa": {
+                          "type": "_accordion-row",
+                          "settings": {
+                            "heading": "Material",
+                            "open_by_default": true,
+                            "icon": "none",
+                            "width": 20
+                          },
+                          "blocks": {
+                            "text_hmdWL6": {
+                              "type": "text",
+                              "settings": {
+                                "text": "{{ closest.product.metafields.shopify.fabric | metafield_tag: field: 'label' }}",
+                                "width": "100%",
+                                "max_width": "normal",
+                                "alignment": "left",
+                                "type_preset": "rte",
+                                "font": "var(--font-body--family)",
+                                "font_size": "1rem",
+                                "line_height": "normal",
+                                "letter_spacing": "normal",
+                                "case": "none",
+                                "wrap": "pretty",
+                                "color": "var(--color-foreground)",
+                                "background": false,
+                                "background_color": "#00000026",
+                                "corner_radius": 0,
+                                "padding-block-start": 0,
+                                "padding-block-end": 0,
+                                "padding-inline-start": 0,
+                                "padding-inline-end": 0
+                              },
+                              "blocks": {}
+                            }
+                          },
+                          "block_order": [
+                            "text_hmdWL6"
+                          ]
+                        },
+                        "accordion_row_YQwAGF": {
+                          "type": "_accordion-row",
+                          "settings": {
+                            "heading": "Care Instructions",
+                            "open_by_default": false,
+                            "icon": "none",
+                            "width": 20
+                          },
+                          "blocks": {
+                            "text_nDQUHV": {
+                              "type": "text",
+                              "settings": {
+                                "text": "{{ closest.product.metafields.shopify[\"care-instructions\"] | metafield_tag: field: 'label' }}",
+                                "width": "100%",
+                                "max_width": "normal",
+                                "alignment": "left",
+                                "type_preset": "rte",
+                                "font": "var(--font-body--family)",
+                                "font_size": "1rem",
+                                "line_height": "normal",
+                                "letter_spacing": "normal",
+                                "case": "none",
+                                "wrap": "pretty",
+                                "color": "var(--color-foreground)",
+                                "background": false,
+                                "background_color": "#00000026",
+                                "corner_radius": 0,
+                                "padding-block-start": 0,
+                                "padding-block-end": 0,
+                                "padding-inline-start": 0,
+                                "padding-inline-end": 0
+                              },
+                              "blocks": {}
+                            }
+                          },
+                          "block_order": [
+                            "text_nDQUHV"
+                          ]
+                        },
+                        "accordion_row_zgxDHQ": {
+                          "type": "_accordion-row",
+                          "settings": {
+                            "heading": "Manufacturing",
+                            "open_by_default": false,
+                            "icon": "none",
+                            "width": 20
+                          },
+                          "blocks": {
+                            "text_LDCR8J": {
+                              "type": "text",
+                              "settings": {
+                                "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>",
+                                "width": "100%",
+                                "max_width": "normal",
+                                "alignment": "left",
+                                "type_preset": "rte",
+                                "font": "var(--font-body--family)",
+                                "font_size": "1rem",
+                                "line_height": "normal",
+                                "letter_spacing": "normal",
+                                "case": "none",
+                                "wrap": "pretty",
+                                "color": "var(--color-foreground)",
+                                "background": false,
+                                "background_color": "#00000026",
+                                "corner_radius": 0,
+                                "padding-block-start": 0,
+                                "padding-block-end": 0,
+                                "padding-inline-start": 0,
+                                "padding-inline-end": 0
+                              },
+                              "blocks": {}
+                            }
+                          },
+                          "block_order": [
+                            "text_LDCR8J"
+                          ]
+                        }
+                      },
+                      "block_order": [
+                        "accordion_row_QTgzRa",
+                        "accordion_row_YQwAGF",
+                        "accordion_row_zgxDHQ"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "accordion_yrFjnD"
+                  ]
                 },
                 "qv-title-mobile": {
                   "type": "product-title",
