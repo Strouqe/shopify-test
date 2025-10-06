@@ -133,24 +133,8 @@
     
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
-    <!-- Added: Product details accordion for desktop -->
-    <div class="accordion">
-      <details class="accordion__row">
-        <summary class="accordion__summary">Care Instructions</summary>
-        <div class="accordion__content">
-          {{ product_object.metafields.custom.care_instructions | metafield_text | default: '<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>' }}
-        </div>
-      </details>
-      <details class="accordion__row">
-        <summary class="accordion__summary">Shipping & Returns</summary>
-        <div class="accordion__content">
-          {{ product_object.metafields.custom.shipping_returns | metafield_text | default: '<p>We strive to process and ship all orders in a timely manner, working diligently to ensure that your items are on their way to you as soon as possible. Need to return something? Just let us know.</p>' }}
-        </div>
-      </details>
-    </div>
-
-    {% content_for 'block', type: 'accordion', id: 'qv-accordion' %}
-  </div>
+    {% content_for 'block', type: '_product-details', id: 'qv-details', product: product_object %}
+     </div>
 </div>
 
 <!-- MOBILE LAYOUT -->
@@ -174,21 +158,6 @@
     
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons-mobile' %}
 
-    <!-- Added: Product details accordion for mobile -->
-    <div class="accordion">
-      <details class="accordion__row">
-        <summary class="accordion__summary">Care Instructions</summary>
-        <div class="accordion__content">
-          {{ product_object.metafields.custom.care_instructions | metafield_text | default: '<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>' }}
-        </div>
-      </details>
-      <details class="accordion__row">
-        <summary class="accordion__summary">Shipping & Returns</summary>
-        <div class="accordion__content">
-          {{ product_object.metafields.custom.shipping_returns | metafield_text | default: '<p>We strive to process and ship all orders in a timely manner, working diligently to ensure that your items are on their way to you as soon as possible. Need to return something? Just let us know.</p>' }}
-        </div>
-      </details>
-    </div>
 
     {% content_for 'block', type: 'accordion', id: 'qv-accordion-mobile' %}
   </div>
