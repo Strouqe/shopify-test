@@ -279,6 +279,9 @@
         "group_3zGfVJ",
         "group_iTEMcA"
       ],
+      "custom_css": [
+        "@media (max-width: 620px) {.background-image-container img {object-position: center 15% !important; }}"
+      ],
       "name": "t:names.split_showcase",
       "settings": {
         "content_direction": "row",
