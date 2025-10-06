@@ -281,7 +281,7 @@
       ],
       "custom_css": [
         "@media (max-width: 620px) {.background-image-container img {object-position: center 15% !important; }}",
-        "@media (max-width: 745px) {.background-image-container {height:360px}}"
+        "@media (max-width: 745px) {.background-image-container {height: 0px; }}"
       ],
       "name": "t:names.split_showcase",
       "settings": {
