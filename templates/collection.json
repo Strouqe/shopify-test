@@ -491,6 +491,46 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {
+                    "accordion_row_kgLjFk": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Fabric",
+                        "open_by_default": true,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_cW3E9U": {
+                          "type": "text",
+                          "settings": {
+                            "text": "{{ closest.product.metafields.shopify.fabric | metafield_tag: field: 'label' }}",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_cW3E9U"
+                      ]
+                    },
                     "accordion_row_Y8bQ87": {
                       "type": "_accordion-row",
                       "name": "t:names.accordion_row",
@@ -533,6 +573,7 @@
                     }
                   },
                   "block_order": [
+                    "accordion_row_kgLjFk",
                     "accordion_row_Y8bQ87"
                   ]
                 }
