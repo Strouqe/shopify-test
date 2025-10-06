@@ -273,7 +273,7 @@
                   "type": "product-description",
                   "name": "Product description",
                   "settings": {
-                    "text": "<p>{{ closest.product.description }}</p>",
+                    "text": "{{ closest.product.description }}",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -374,7 +374,7 @@
                         "text_UfENHV": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>",
+                            "text": "{{ closest.product.metafields.shopify[\"care-instructions\"] | metafield_tag: field: 'label' }}",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
@@ -404,7 +404,7 @@
                     "accordion_row_xktep7": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "SHIPPING & RETURNS",
+                        "heading": "Materials",
                         "open_by_default": false,
                         "icon": "none",
                         "width": 20
@@ -413,7 +413,7 @@
                         "text_6rQYtf": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>We strive to process and ship all orders in a timely manner, working diligently to ensure that your items are on their way to you as soon as possible. Need to return something? Just let us know. </p>",
+                            "text": "{{ closest.product.metafields.shopify.fabric | metafield_tag: field: 'label' }}",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "left",
