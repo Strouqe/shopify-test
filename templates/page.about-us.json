@@ -12,6 +12,31 @@
     "hero_MTXEzc": {
       "type": "hero",
       "blocks": {
+        "text_A3yccV": {
+          "type": "text",
+          "settings": {
+            "text": "<h1>poezen</h1>",
+            "width": "100%",
+            "max_width": "narrow",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "9.5rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 20,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "text_8AjJKc": {
           "type": "text",
           "name": "t:names.text",
@@ -31,8 +56,8 @@
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
+            "padding-block-start": 30,
+            "padding-block-end": 30,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -56,32 +81,7 @@
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 32,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "text_A3yccV": {
-          "type": "text",
-          "settings": {
-            "text": "<h1>poezen</h1>",
-            "width": "100%",
-            "max_width": "narrow",
-            "alignment": "center",
-            "type_preset": "custom",
-            "font": "var(--font-heading--family)",
-            "font_size": "9.5rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground-heading)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
+            "padding-block-start": 40,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
@@ -90,9 +90,9 @@
         }
       },
       "block_order": [
+        "text_A3yccV",
         "text_8AjJKc",
-        "text_zP3jxt",
-        "text_A3yccV"
+        "text_zP3jxt"
       ],
       "name": "t:names.hero",
       "settings": {
