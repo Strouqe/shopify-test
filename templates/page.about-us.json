@@ -148,7 +148,7 @@
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "space-between",
-            "gap": 32,
+            "gap": 0,
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -280,8 +280,8 @@
         "group_iTEMcA"
       ],
       "custom_css": [
-        "@media (max-width: 620px) {.background-image-container img {object-position: center 15% !important; }}",
-        "@media (max-width: 745px) {section {height: 1000px; } .background-image-container {height: 600px; } .background-image-container img {object-position: center 15% !important; height: 600px; }}"
+        "@media (max-width: 745px) {.background-image-container img {object-position: center 15% !important; }}",
+        "@media (max-width: 620px) {.background-image-container img {object-position: center 7.5% !important; }}"
       ],
       "name": "t:names.split_showcase",
       "settings": {
