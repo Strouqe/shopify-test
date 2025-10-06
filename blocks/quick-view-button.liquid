@@ -133,12 +133,23 @@
     
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
-    {%- if product_object.metafields.custom.care_instructions != blank -%}
-      <div class="care-instructions">
-        <h3>{{ 'products.product.care_instructions' | t }}</h3>
-        <div>{{ product_object.metafields.custom.care_instructions }}</div>
-      </div>
-    {%- endif -%}
+    <!-- Added: Product details accordion for desktop -->
+    <div class="accordion">
+      <details class="accordion__row">
+        <summary class="accordion__summary">Care Instructions</summary>
+        <div class="accordion__content">
+          {{ product_object.metafields.custom.care_instructions | metafield_text | default: '<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>' }}
+        </div>
+      </details>
+      <details class="accordion__row">
+        <summary class="accordion__summary">Shipping & Returns</summary>
+        <div class="accordion__content">
+          {{ product_object.metafields.custom.shipping_returns | metafield_text | default: '<p>We strive to process and ship all orders in a timely manner, working diligently to ensure that your items are on their way to you as soon as possible. Need to return something? Just let us know.</p>' }}
+        </div>
+      </details>
+    </div>
+
+    {% content_for 'block', type: 'accordion', id: 'qv-accordion' %}
   </div>
 </div>
 
@@ -163,12 +174,23 @@
     
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons-mobile' %}
 
-    {%- if product_object.metafields.custom.care_instructions != blank -%}
-      <div class="care-instructions">
-        <h3>{{ 'products.product.care_instructions' | t }}</h3>
-        <div>{{ product_object.metafields.custom.care_instructions }}</div>
-      </div>
-    {%- endif -%}
+    <!-- Added: Product details accordion for mobile -->
+    <div class="accordion">
+      <details class="accordion__row">
+        <summary class="accordion__summary">Care Instructions</summary>
+        <div class="accordion__content">
+          {{ product_object.metafields.custom.care_instructions | metafield_text | default: '<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>' }}
+        </div>
+      </details>
+      <details class="accordion__row">
+        <summary class="accordion__summary">Shipping & Returns</summary>
+        <div class="accordion__content">
+          {{ product_object.metafields.custom.shipping_returns | metafield_text | default: '<p>We strive to process and ship all orders in a timely manner, working diligently to ensure that your items are on their way to you as soon as possible. Need to return something? Just let us know.</p>' }}
+        </div>
+      </details>
+    </div>
+
+    {% content_for 'block', type: 'accordion', id: 'qv-accordion-mobile' %}
   </div>
 </div>
             </div>
@@ -373,15 +395,23 @@
     border: none; 
     padding: 0; 
     background: transparent; 
-    max-width: 760px;
+
     width: 760px;
     position: fixed;
-    top: 50%;
+    top: 5vh; 
     left: 50%;
-    transform: translate(-50%, -50%);
-    height: fit-content; 
+    transform: translate(-50%, 0);  
+    height: auto;  
+
+    overflow-y: auto; 
     z-index: 9999;
   }
+  @media (min-width: 1450px) {
+  .popup-dialog {
+    width: 1000px;  /* Increase width for larger screens */
+    top: 8vh;  /* Adjust top position if needed */
+  }
+}
   .popup-dialog::backdrop { 
     background: rgba(0, 0, 0, 0.5); 
     z-index: 9998;
@@ -478,24 +508,10 @@
   }
 
   .popup-dialog .quick-view-image-container img {
-    max-height: 411.5px;
+    max-height: 550px;
     width: 100%;
     min-width: 300px;
     object-fit: contain;
-  }
-
-  .popup-dialog .care-instructions {
-    margin-top: auto !important;
-    padding-top: 16px !important;
-    border-top: 1px solid #e5e5e5 !important;
-  }
-
-  .popup-dialog .care-instructions h3 {
-    margin: 0 0 12px 0;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
   }
 
   .visually-hidden { position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
@@ -555,12 +571,14 @@
   }
 }
   @media (max-width: 620px) {
-    .popup-dialog {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: 0;
+  .popup-dialog {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    transform: none;
+    margin: 0;
       max-width: 100%;
       width: 100%;
       max-height: 90vh;
@@ -633,16 +651,6 @@
       gap: 8px;
     }
 
-    .popup-dialog .care-instructions {
-      padding-top: 8px !important;
-      margin-top: 8px !important;
-    }
-
-    .popup-dialog .care-instructions h3 {
-      font-size: 11px;
-      margin: 0 0 6px 0;
-    }
-
     .quick-view__nav {
       gap: 12px;
       padding: 0 16px 16px;
@@ -652,18 +660,103 @@
       font-size: 12px;
     }
   }
+
+  /* Added: Accordion styles */
+  .accordion__row {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .accordion__summary {
+    cursor: pointer;
+    padding: 1rem 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .accordion__summary::after {
+    content: '+';
+    transition: transform 0.2s;
+  }
+
+  .accordion__row[open] .accordion__summary::after {
+    transform: rotate(45deg);
+  }
+
+  .accordion__content {
+    padding-bottom: 1rem;
+  }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "Quick View Button",
-  "blocks": [],
+  "blocks": [
+    {
+      "type": "accordion"
+    },
+    {
+      "type": "_accordion-row"
+    },
+    {
+      "type": "@theme"
+    }
+  ],
   "settings": [
     {
       "type": "text",
       "id": "label",
       "label": "Button Label",
       "default": "Quick View"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick View Button",
+      "blocks": {
+        "accordion": {
+          "type": "accordion",
+          "settings": {
+            "icon": "plus",
+            "dividers": true
+          },
+          "blocks": {
+            "care-instructions-row": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "CARE INSTRUCTION"
+              },
+              "blocks": {
+                "care-text": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Wash no higher than 40 degrees. Do not use bleaches, chlorine-containing powders, or conditioners. Should be washed on a delicate mode. Dry on hangers.</p>"
+                  }
+                }
+              },
+              "block_order": ["care-text"]
+            },
+            "shipping-returns-row": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "SHIPPING & RETURNS"
+              },
+              "blocks": {
+                "shipping-text": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We strive to process and ship all orders in a timely manner, working diligently to ensure that your items are on their way to you as soon as possible. Need to return something? Just let us know.</p>"
+                  }
+                }
+              },
+              "block_order": ["shipping-text"]
+            }
+          },
+          "block_order": ["care-instructions-row", "shipping-returns-row"]
+        }
+      },
+      "block_order": ["accordion"]
     }
   ]
 }
