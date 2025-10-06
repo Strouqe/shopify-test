@@ -871,7 +871,7 @@
           "name": "t:names.button",
           "settings": {
             "label": "DISCOVER MORE",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/all-products",
             "open_in_new_tab": false,
             "style_class": "link",
             "width": "fit-content",
@@ -1018,7 +1018,7 @@
               "name": "t:names.button",
               "settings": {
                 "label": "SHOP NOW",
-                "link": "shopify://collections/all",
+                "link": "shopify://collections/all-products",
                 "open_in_new_tab": false,
                 "style_class": "button",
                 "width": "custom",
