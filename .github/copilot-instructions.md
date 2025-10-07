@@ -1,9 +1,13 @@
 🚨 MANDATORY: YOU MUST CALL "learn_shopify_api" ONCE WHEN WORKING WITH LIQUID THEMES.
 ## Restrictions
+- Do not use translation keys anywhere, this project is in english only and the translation is not in the loop of data supply.
 - Do not edit the code directly, only reply with complete code blocks
 - Reply with code only, do not converse.
 - Check that the reply fulfills the task.
 - Never make changes that were not asked.
+- Do not add any borders or border radius if not asked in prompt.
+- Always plan, explain your answer before giving the code block, never start the reply with a code block
+
 ## Theme Architecture
 
 **Key principles: focus on generating snippets, blocks, and sections; users may create templates using the theme editor**
