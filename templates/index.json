@@ -1323,64 +1323,17 @@
     "size_chart_popup": {
       "type": "size-chart",
       "blocks": {
-        "text_tVdAbz": {
-          "type": "text",
-          "name": "t:names.text",
-          "settings": {
-            "text": "<p>SIZE CHART</p>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 19,
-            "padding-block-end": 20,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "text_7zFmfP": {
-          "type": "text",
-          "name": "t:names.heading",
-          "settings": {
-            "text": "<p>Designed to Fit You Right</p>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
-            "type_preset": "h3",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+        "size_chart_table_8LffH6": {
+          "type": "size-chart-table",
+          "settings": {}
         }
       },
       "block_order": [
-        "text_tVdAbz",
-        "text_7zFmfP"
+        "size_chart_table_8LffH6"
       ],
       "settings": {
+        "heading": "Size Chart",
+        "subheading": "To get the right size for your dog you need to have a tape and measure across following parts:",
         "neck_image": "shopify://shop_images/90c07f9004c6604ed3848c825cccb26c7e4fc004.png",
         "back_image": "shopify://shop_images/b0d4ddec817c03069f64dc61edd4490e70b993ad.png",
         "chest_image": "shopify://shop_images/1f0311364ab664d6cd578515077cb0f447a99ae5.png",
