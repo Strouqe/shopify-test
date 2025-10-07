@@ -818,6 +818,9 @@
         "text_jBFmeA",
         "button_WwPgTn"
       ],
+      "custom_css": [
+        "@media (min-width: 1450px) {.background-image-container img {object-position: center 0% !important; }}"
+      ],
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
