@@ -15,6 +15,7 @@
 
     assign button_id = 'popup-button-' | append: block.id
     assign modal_id = 'popup-modal-' | append: block.id
+    assign size_chart_modal_id = 'size-chart-modal-' | append: block.id
     assign button_title = block.settings.label | default: 'Quick View'
     if has_product and product_object.title != blank
       assign button_title = product_object.title
@@ -79,7 +80,7 @@
 
   <dialog id="{{ modal_id }}" class="popup-dialog">
     <div class="popup-dialog__content">
-      <button type="button" class="popup-dialog__close" aria-label="{{ 'accessibility.close' | t }}">
+      <button type="button" class="popup-dialog__close" aria-label="Close">
         &#x2715;
       </button>
       <div class="popup-dialog__body">
@@ -131,6 +132,15 @@
       {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
     {%- endif -%}
     
+    <!-- Size Chart Button -->
+    <button 
+      type="button" 
+      class="size-chart-trigger button-secondary"
+      data-action="open-size-chart"
+    >
+      Size Chart
+    </button>
+    
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
     {% content_for 'block', type: '_product-details', id: 'qv-details', product: product_object %}
@@ -156,8 +166,16 @@
       {% content_for 'block', type: 'variant-picker', id: 'qv-variants-mobile' %}
     {%- endif -%}
     
-    {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons-mobile' %}
-
+    <!-- Size Chart Button Mobile -->
+    <button 
+      type="button" 
+      class="size-chart-trigger button-secondary"
+      data-action="open-size-chart"
+    >
+      Size Chart
+    </button>
+    
+    {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
     {% content_for 'block', type: 'accordion', id: 'qv-accordion-mobile' %}
   </div>
@@ -166,16 +184,16 @@
           </product-card>
         {%- else -%}
           <div class="quick-view__empty-state">
-            {{ 'products.product.unavailable' | t }}
+            Unavailable
           </div>
         {%- endif -%}
       </div>
 
       <div class="quick-view__nav">
-        <a href="#" class="quick-view__nav-button" data-quick-view-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+        <a href="#" class="quick-view__nav-button" data-quick-view-prev aria-label="Previous">
           Previous
         </a>
-        <a href="#" class="quick-view__nav-button" data-quick-view-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+        <a href="#" class="quick-view__nav-button" data-quick-view-next aria-label="Next">
           Next
         </a>
       </div>
@@ -191,8 +209,10 @@
     if (!openButton || !dialog) return;
 
     const closeButton = dialog.querySelector('.popup-dialog__close');
+
     if (!closeButton) return;
 
+    // Existing functionality...
     const getQuickViewHandles = () => {
       return Array.from(document.querySelectorAll('[data-quick-view-handle]'))
         .map((button) => button.dataset.quickViewHandle)
@@ -357,7 +377,7 @@
 </script>
 
 {% stylesheet %}
-    .button[id^="popup-button-"] {
+  .button[id^="popup-button-"] {
     width: 100%;
   }
   .popup-dialog { 
@@ -376,11 +396,11 @@
     z-index: 9999;
   }
   @media (min-width: 1450px) {
-  .popup-dialog {
-    width: 1000px;  /* Increase width for larger screens */
-    top: 8vh;  /* Adjust top position if needed */
+    .popup-dialog {
+      width: 1000px;  /* Increase width for larger screens */
+      top: 8vh;  /* Adjust top position if needed */
+    }
   }
-}
   .popup-dialog::backdrop { 
     background: rgba(0, 0, 0, 0.5); 
     z-index: 9998;
@@ -441,6 +461,14 @@
     cursor: pointer !important;
   }
 
+  /* Size Chart Button */
+  .size-chart-trigger {
+    width: 100%;
+    margin: 8px 0;
+    text-align: center;
+    font-size: 0.875rem;
+  }
+
   /* DESKTOP LAYOUT */
   .quick-view-desktop-layout {
     display: flex;
@@ -499,55 +527,57 @@
   .quick-view__nav-button:hover { 
     text-decoration: none;
   }
-@media (max-width: 768px) and (min-width: 621px) {
-  .popup-dialog {
-    position: fixed;
-    bottom: 0;
-    top: auto;
-    left: 0;
-    right: 0;
-    transform: none;
-    margin: 0;
-    max-width: 100%;
-    width: 100%;
-    max-height: 90vh;
+
+  @media (max-width: 768px) and (min-width: 621px) {
+    .popup-dialog {
+      position: fixed;
+      bottom: 0;
+      top: auto;
+      left: 0;
+      right: 0;
+      transform: none;
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
+      max-height: 90vh;
+    }
+
+    .popup-dialog__content {
+      padding: 16px;
+      gap: 12px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .popup-dialog__close {
+      top: 8px;
+      right: 12px;
+      font-size: 18px;
+      padding: 6px;
+    }
+
+    .quick-view__nav {
+      gap: 12px;
+    }
+
+    .quick-view__nav-button {
+      font-size: 12px;
+    }
+    .popup-dialog .quick-view-image-container img {
+      max-height: 300px;
+      min-width: 200px;
+    }
   }
 
-  .popup-dialog__content {
-    padding: 16px;
-    gap: 12px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .popup-dialog__close {
-    top: 8px;
-    right: 12px;
-    font-size: 18px;
-    padding: 6px;
-  }
-
-  .quick-view__nav {
-    gap: 12px;
-  }
-
-  .quick-view__nav-button {
-    font-size: 12px;
-  }
-  .popup-dialog .quick-view-image-container img {
-    max-height: 300px;
-    min-width: 200px;
-  }
-}
   @media (max-width: 620px) {
-  .popup-dialog {
-    position: fixed;
-    bottom: 0;
-    top: auto;
-    left: 0;
-    right: 0;
-    transform: none;
-    margin: 0;
+    .popup-dialog {
+      position: fixed;
+      bottom: 0;
+      top: auto;
+      left: 0;
+      right: 0;
+      transform: none;
+      margin: 0;
       max-width: 100%;
       width: 100%;
       max-height: 90vh;
@@ -679,6 +709,12 @@
       "type": "_accordion-row"
     },
     {
+      "type": "text"
+    },
+    {
+      "type": "size-chart-table"
+    },
+    {
       "type": "@theme"
     }
   ],
@@ -694,6 +730,30 @@
     {
       "name": "Quick View Button",
       "blocks": {
+        "size_chart_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>SIZE CHART</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "h2",
+            "font": "var(--font-secondary--family)",
+            "font_size": "1.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
         "accordion": {
           "type": "accordion",
           "settings": {
@@ -735,7 +795,7 @@
           "block_order": ["care-instructions-row", "shipping-returns-row"]
         }
       },
-      "block_order": ["accordion"]
+      "block_order": ["size_chart_text", "accordion"]
     }
   ]
 }
