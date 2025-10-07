@@ -819,7 +819,7 @@
         "button_WwPgTn"
       ],
       "custom_css": [
-        "@media (min-width: 1450px) {.hero__image, .hero__video, .hero__video-poster {top: 400px; }}"
+        "@media (min-width: 1450px) {.hero__image, .hero__video, .hero__video-poster {top: 300px; }}"
       ],
       "name": "t:names.hero",
       "settings": {
@@ -840,7 +840,7 @@
         "section_height": "large",
         "section_height_custom": 50,
         "color_scheme": "scheme-footer",
-        "toggle_overlay": true,
+        "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "gradient",
         "gradient_direction": "to top",
