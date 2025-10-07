@@ -819,7 +819,7 @@
         "button_WwPgTn"
       ],
       "custom_css": [
-        "@media (min-width: 1450px) {.hero__image, .hero__video, .hero__video-poster {top: 1px; }}"
+        "@media (min-width: 1450px) {.hero__image, .hero__video, .hero__video-poster {top: 400px; }}"
       ],
       "name": "t:names.hero",
       "settings": {
