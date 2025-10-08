@@ -480,7 +480,7 @@
           "type": "faq-item",
           "settings": {
             "heading": "Top-Quality Rain Coats for Dogs: Stylish and Durable",
-            "content": "Our rain coats combine fashion and function, keeping your dog dry and comfortable in any weather. Designed for durability and style, they’re perfect for daily walks and outdoor adventures."
+            "content": "Our rain coats combine fashion and function, keeping your dog dry and comfortable in any weather. Designed for durability and style, they're perfect for daily walks and outdoor adventures."
           }
         },
         "accordion_row_2": {
@@ -494,7 +494,7 @@
           "type": "faq-item",
           "settings": {
             "heading": "The PoezenStudio Advantage: Rain or Shine, Your Pup Stays Comfortable",
-            "content": "Our unique materials and thoughtful design ensure your dog stays dry, cozy, and happy, whether it’s a light drizzle or a heavy downpour."
+            "content": "Our unique materials and thoughtful design ensure your dog stays dry, cozy, and happy, whether it's a light drizzle or a heavy downpour."
           }
         },
         "accordion_row_4": {
@@ -732,11 +732,32 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "size_chart_popup": {
+      "type": "size-chart",
+      "blocks": {
+        "size_chart_table_8LffH6": {
+          "type": "size-chart-table",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "size_chart_table_8LffH6"
+      ],
+      "settings": {
+        "heading": "Size Chart",
+        "subheading": "To get the right size for your dog you need to have a tape and measure across following parts:",
+        "neck_image": "shopify://shop_images/90c07f9004c6604ed3848c825cccb26c7e4fc004.png",
+        "back_image": "shopify://shop_images/b0d4ddec817c03069f64dc61edd4490e70b993ad.png",
+        "chest_image": "shopify://shop_images/1f0311364ab664d6cd578515077cb0f447a99ae5.png",
+        "legs_image": "shopify://shop_images/d5b5880fa83d76161e671d3a07e125b1558e4020.png"
+      }
     }
   },
   "order": [
     "main",
     "faq",
-    "product-recommendations"
+    "product-recommendations",
+    "size_chart_popup"
   ]
 }

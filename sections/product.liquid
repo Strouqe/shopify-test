@@ -41,12 +41,37 @@
   {% endform %}
 </div>
 
+<div class="product-size-chart">
+  {% content_for 'blocks' %}
+</div>
+
 {% schema %}
 {
   "name": "t:general.product",
+  "blocks": [
+    {
+      "type": "size-chart-table"
+    },
+    {
+      "type": "@theme"
+    }
+  ],
   "settings": [],
   "disabled_on": {
     "groups": ["header", "footer"]
-  }
+  },
+  "presets": [
+    {
+      "name": "t:general.product",
+      "blocks": [
+        {
+          "type": "size-chart-table",
+          "settings": {
+            "table_data": "S,40,50,30,Small Dog\nM,45,55,32,Medium Dog\nL,50,60,35,Large Dog\nXL,55,65,38,Extra Large Dog"
+          }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
