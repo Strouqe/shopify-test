@@ -132,15 +132,6 @@
       {% content_for 'block', type: 'variant-picker', id: 'qv-variants' %}
     {%- endif -%}
     
-    <!-- Size Chart Button -->
-    <button 
-      type="button" 
-      class="size-chart-trigger button-secondary"
-      data-action="open-size-chart"
-    >
-      Size Chart
-    </button>
-    
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 
     {% content_for 'block', type: '_product-details', id: 'qv-details', product: product_object %}
@@ -165,15 +156,6 @@
     {%- if product_object.has_only_default_variant == false -%}
       {% content_for 'block', type: 'variant-picker', id: 'qv-variants-mobile' %}
     {%- endif -%}
-    
-    <!-- Size Chart Button Mobile -->
-    <button 
-      type="button" 
-      class="size-chart-trigger button-secondary"
-      data-action="open-size-chart"
-    >
-      Size Chart
-    </button>
     
     {% content_for 'block', type: 'buy-buttons', id: 'qv-buy-buttons' %}
 

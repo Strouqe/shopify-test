@@ -34,89 +34,105 @@
   >
     <form class="variant-picker__form">
       {%- for product_option in product_resource.options_with_values -%}
+        
+        
         {%- liquid
-          assign swatch_count = product_option.values | map: 'swatch' | compact | size
-          assign variant_style = block_settings.variant_style
-
-          if swatch_count > 0 and block_settings.show_swatches
-            if block_settings.variant_style == 'dropdown'
-              assign variant_style = 'swatch_dropdown'
-            else
-              assign variant_style = 'swatch'
-            endif
-          endif
-
-          if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons'
-            assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
-            assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
-            assign longest_value = 0
-          endif
+        assign swatch_count = product_option.values | map: 'swatch' | compact | size
+        assign variant_style = block_settings.variant_style
+        
+        if swatch_count > 0 and block_settings.show_swatches
+        if block_settings.variant_style == 'dropdown'
+        assign variant_style = 'swatch_dropdown'
+        else
+        assign variant_style = 'swatch'
+        endif
+        endif
+        
+        if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons'
+        assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
+        assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
+        assign longest_value = 0
+        endif
         -%}
-
+        
         {%- if variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
           <fieldset
-            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
-            {{ option_id_attribute }}
-          >
-            <legend>
-              {{ product_option.name | escape -}}
-              {%- if variant_style == 'swatch' -%}
-                <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
-              {%- endif %}
+        class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
+        {{ option_id_attribute }}
+        >
+        <div class="variant-main-picker__legend-container">
+          <legend>
+            {{ product_option.name | escape -}}
+            {%- if variant_style == 'swatch' -%}
+              <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
+            {%- endif %}:
             </legend>
-            {%- for product_option_value in product_option.values -%}
-              {% if product_option_value.size > longest_value and option_id_attribute %}
-                {% assign longest_value = product_option_value.size %}
-              {% endif %}
-              <label class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}">
-                <input
-                  type="radio"
-                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
-                  value="{{ product_option_value | escape }}"
-                  aria-label="{{ product_option_value.name }}"
-                  {% if product_option_value.available == false %}
-                    aria-disabled="true"
-                  {% endif %}
-                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
-                  data-option-value-id="{{ product_option_value.id }}"
-                  data-option-available="{{ product_option_value.available }}"
-                  data-connected-product-url="{{ product_option_value.product_url }}"
-                  {% if product_option_value.variant.id %}
-                    data-variant-id="{{ product_option_value.variant.id }}"
-                  {% endif %}
-                  {% if product_option_value.selected %}
-                    checked
-                  {% endif %}
-                >
-                {% if variant_style == 'swatch' %}
-                  {% liquid
-                    assign featured_media = product_option_value.variant.featured_media
+            <button
+            type="button"
+            class="size-chart-trigger link"
+            data-action="open-size-chart"
+            >
+            Size Chart
+            </button>
+            </div>
 
-                    # If the variant has no featured media, and we have a combined listing product, then fall back to
-                    # using the featured media of the child product that is linked to this option value.
-                    if featured_media == blank and product_option_value.product_url
-                      assign featured_media = product_option_value.variant.product.featured_media
-                    endif
-                  %}
+           <div class="variant-option-sizes">
+             {%- for product_option_value in product_option.values -%}
+               {% if product_option_value.size > longest_value and option_id_attribute %}
+                 {% assign longest_value = product_option_value.size %}
+               {% endif %}
+               <label class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}">
+                 <input
+                   type="radio"
+                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                   value="{{ product_option_value | escape }}"
+                   aria-label="{{ product_option_value.name }}"
+                   {% if product_option_value.available == false %}
+                     aria-disabled="true"
+                   {% endif %}
+                   data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                   data-option-value-id="{{ product_option_value.id }}"
+                   data-option-available="{{ product_option_value.available }}"
+                   data-connected-product-url="{{ product_option_value.product_url }}"
+                   {% if product_option_value.variant.id %}
+                     data-variant-id="{{ product_option_value.variant.id }}"
+                   {% endif %}
+                   {% if product_option_value.selected %}
+                     checked
+                   {% endif %}
+                 >
+                 {% if variant_style == 'swatch' %}
+                   {% liquid
+                     assign featured_media = product_option_value.variant.featured_media
+ 
+                     # If the variant has no featured media, and we have a combined listing product, then fall back to
+                     # using the featured media of the child product that is linked to this option value.
+                     if featured_media == blank and product_option_value.product_url
+                       assign featured_media = product_option_value.variant.product.featured_media
+                     endif
+                   %}
+ 
+                   {% render 'swatch',
+                     swatch: product_option_value.swatch,
+                     variant_image: featured_media,
+                     mode: 'unscaled'
+                   %}
+                 {% else %}
+                   <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
+                 {% endif %}
+                 {% render 'strikethrough-variant', product_option: product_option_value %}
+               </label>
+             {%- endfor -%}
+           </div>
 
-                  {% render 'swatch',
-                    swatch: product_option_value.swatch,
-                    variant_image: featured_media,
-                    mode: 'unscaled'
-                  %}
-                {% else %}
-                  <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
-                {% endif %}
-                {% render 'strikethrough-variant', product_option: product_option_value %}
-              </label>
-            {%- endfor -%}
             {% if option_id_attribute %}
               {% style %}
                 [data-option-id="{{ fieldset_id }}"] {
                   --variant-ch: {{ longest_value }}ch;
                 }
-              {% endstyle %}
+                {% endstyle %}
             {% endif %}
+
           </fieldset>
         {%- elsif block_settings.variant_style == 'dropdowns' -%}
           {%
@@ -192,9 +208,34 @@
     width: 100%;
   }
 
+  .variant-main-picker__legend-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-bottom: 0; /* Added to align legend/button directly with variant options */
+  }
+
+  .size-chart-trigger {
+    width: fit-content;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .size-chart-trigger.link {
+    text-decoration: underline;
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    color: var(--color-link, #000);
+    cursor: pointer;
+    padding: 0;
+  }
+
   .variant-picker__form {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: var(--padding-lg);
     width: 100%;
   }
@@ -204,7 +245,19 @@
     padding-inline-start: max(4px, var(--padding-inline-start));
   }
 
+  .variant-option-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-sm);
+    width: 100%;
+    justify-content: flex-start; /* Changed from space-between to allow buttons to stretch naturally */
+  }
+
   .variant-option {
+    display: flex !important;
+    flex-flow: column;
+    align-items: center;
+    height: fit-content;
     --options-border-radius: var(--variant-picker-button-radius);
     --options-border-width: var(--variant-picker-button-border-width);
     --variant-option-padding-inline: var(--padding-md);
@@ -212,7 +265,6 @@
 
   .variant-option--swatches {
     --options-border-radius: var(--variant-picker-swatch-radius);
-
     width: 100%;
   }
 
@@ -231,16 +283,18 @@
 
   .variant-option--buttons {
     display: flex;
-    flex-wrap: wrap;
     gap: var(--gap-sm);
     margin: 0;
     padding: 0;
     border: none;
   }
 
-  .variant-option--buttons legend {
+  .variant-main-picker__legend-container legend {
+    display: flex;
+    align-items: flex-end;
     padding: 0;
-    margin-block-end: var(--margin-xs);
+    margin: 0;
+    line-height: 1.1;
   }
 
   .variant-option__swatch-value {
@@ -250,9 +304,8 @@
 
   .variant-option__button-label {
     --variant-picker-stroke-color: var(--color-variant-border);
-
     display: flex;
-    flex: 0 0 calc(3ch + 1.3em);
+    flex: 1; /* Changed from fixed width to allow stretching and filling available space */
     align-items: center;
     position: relative;
     padding-block: var(--padding-sm);
@@ -288,7 +341,6 @@
 
   .variant-option--equal-width-buttons {
     --variant-min-width: clamp(44px, calc(var(--variant-option-padding-inline) * 2 + var(--variant-ch)), 100%);
-
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(var(--variant-min-width), 1fr));
 
@@ -304,7 +356,6 @@
 
   .variant-option__button-label:has(:focus-visible) {
     --variant-picker-stroke-color: var(--color-foreground);
-
     border-color: var(--color-foreground);
     outline: var(--focus-outline-width) solid var(--color-foreground);
     outline-offset: var(--focus-outline-offset);
@@ -312,7 +363,6 @@
 
   .variant-option__button-label--has-swatch {
     --focus-outline-radius: var(--variant-picker-swatch-radius);
-
     padding: 0;
     border: none;
     display: block;
@@ -340,14 +390,12 @@
 
   .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:hover .swatch {
     --focus-outline: var(--focus-outline-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-35-55));
-
     outline: var(--focus-outline);
     outline-offset: var(--focus-outline-offset);
   }
 
   .facets__inputs-list--swatches-grid .variant-option__button-label:has(:focus-visible) .swatch {
     --focus-outline: var(--focus-outline-width) solid currentcolor;
-
     outline: var(--focus-outline);
     outline-offset: var(--focus-outline-offset);
   }
@@ -376,24 +424,14 @@
 
   .variant-option__button-label--has-swatch:has(:checked) {
     --focus-outline: var(--focus-outline-width) solid var(--color-foreground);
-
     outline: var(--focus-outline);
     outline-offset: var(--focus-outline-offset);
   }
 
   /* This triggers iOS < 16.4. The outline bug is not recognized as a lack of @supports */
   @supports not (background-color: rgb(from red 150 g b / alpha)) {
-    /** There is a bug in safari < 16.4 that causes the outline to not follow the elements border radius. This is a workaround. **/
     .variant-option__button-label--has-swatch:has(:checked),
     .variant-option__button-label:has(:focus-visible) .swatch,
-    .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:hover .swatch {
-      outline: none;
-      position: relative;
-      overflow: visible;
-    }
-
-    .variant-option__button-label--has-swatch:has(:checked)::after,
-    .variant-option__button-label:has(:focus-visible) .swatch::after,
     .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:hover .swatch::after {
       content: '';
       position: absolute;
@@ -407,7 +445,6 @@
 
   .variant-option__button-label:has([data-option-available='false']):has(:checked) {
     --variant-picker-stroke-color: rgb(var(--color-variant-text-rgb) / var(--opacity-60));
-
     background-color: inherit;
     color: rgb(var(--color-variant-text-rgb) / var(--opacity-60));
     border-color: var(--color-selected-variant-border);
@@ -415,13 +452,8 @@
 
   .variant-option__button-label input,
   .variant-option--images input {
-    /* remove the checkbox from the page flow */
     position: absolute;
-
-    /* set the dimensions to match those of the label */
     inset: 0;
-
-    /* hide it */
     opacity: 0;
     margin: 0;
     cursor: pointer;
