@@ -43,6 +43,7 @@
 {% endif %}
 
 {% stylesheet %}
+
 .size-chart-table {
   width: 100%;
   max-width: 1200px;
@@ -70,6 +71,12 @@
   .size-chart-table tbody tr:hover {
     background-color: var(--color-background-hover);
   }
+  @media screen and (max-width: 749px) {
+  .size-chart-table table {
+    height: fit-content !important;
+  }
+}
+
 {% endstylesheet %}
 
 {% schema %}

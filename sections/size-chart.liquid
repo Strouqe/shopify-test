@@ -417,6 +417,22 @@
     max-width: none !important;
   }
 }
+@media screen and (max-width: 749px) {
+  .size-chart-table {
+    margin-bottom: -94px !important;
+  }
+  .size-chart-table table {
+    border-collapse: separate !important;
+    border-spacing: 0 94px !important;
+    table-layout: fixed !important;
+  }
+  .size-chart-table tbody tr:last-child::after {
+    content: "";
+    display: block;
+    height: 0;
+    margin-bottom: -94px;
+  }
+}
 {% endstylesheet %}
 
 {% javascript %}
