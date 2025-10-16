@@ -168,26 +168,37 @@ File: blocks/product-card.liquid
   :not(product-card-link) product-card {
     width: 100%;
   }
-  
 
   .product-card__placeholder-image svg {
     height: 100%;
+  }
+
+  @media screen and (max-width: 475px) {
+    .product-card__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; 
+      min-height: 360px;
+    }
+  }
+
+  @media screen and (min-width: 476px) and (max-width: 749px) {
+    .product-card__content {
+      min-height: 395px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
   }
 
   @media screen and (max-width: 749px) {
     .product-card slideshow-arrows .slideshow-control {
       display: none;
     }
-    
-    .product-card__content {
-      min-height: 305px; 
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
   }
-  @media screen and (min-width: 1395px) {
-      .product-card__content {
+
+  @media screen and (min-width: 1125px) {
+    .product-card__content {
       display: flex;
       flex-direction: column;
       justify-content: space-between; 
@@ -246,6 +257,7 @@ File: blocks/product-card.liquid
     display: block;
   }
 {% endstylesheet %}
+
 
 {% schema %}
 {
