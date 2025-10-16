@@ -168,6 +168,7 @@ File: blocks/product-card.liquid
   :not(product-card-link) product-card {
     width: 100%;
   }
+  
 
   .product-card__placeholder-image svg {
     height: 100%;
@@ -177,7 +178,7 @@ File: blocks/product-card.liquid
     .product-card slideshow-arrows .slideshow-control {
       display: none;
     }
-
+    
     .product-card__content {
       min-height: 305px; 
       display: flex;
@@ -185,25 +186,33 @@ File: blocks/product-card.liquid
       justify-content: space-between;
     }
   }
-
+  @media screen and (min-width: 1395px) {
+      .product-card__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; 
+      min-height: 380px;
+    }
+  }
+  
   :is(.product-card):has(swatches-variant-picker-component) .quick-add .variant-option--swatches {
     display: none;
   }
-
+  
   :is(.product-card:not([data-no-swatch-selected])):has(.quick-add__product-form-component--single-option):has(
-      swatches-variant-picker-component
+    swatches-variant-picker-component
     )
     .quick-add__button--choose {
-    display: none;
-  }
-
-  :is(.product-card[data-no-swatch-selected]):has(.quick-add__product-form-component--single-option):has(
+      display: none;
+    }
+    
+    :is(.product-card[data-no-swatch-selected]):has(.quick-add__product-form-component--single-option):has(
       swatches-variant-picker-component
-    )
-    add-to-cart-component {
-    display: none;
-  }
-
+      )
+      add-to-cart-component {
+        display: none;
+      }
+      
   :is(.product-card):has(.quick-add__product-form-component--multi-variant):not(:has(swatches-variant-picker-component))
     .quick-add__button--add {
     display: none;
