@@ -59,7 +59,7 @@
         "button_zNFgFh"
       ],
       "custom_css": [
-        "@media screen and (max-width: 700px) {.hero {display: none; }}"
+        "@media screen and (max-width: 699px) {.hero {display: none; }}"
       ],
       "name": "Hero",
       "settings": {
