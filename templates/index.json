@@ -59,14 +59,8 @@
         "button_zNFgFh"
       ],
       "custom_css": [
-
         "@media screen and (max-width: 699px) {.hero {display: none; }}",
-        "@media screen and (min-width: 1440px) {.hero {min-height: 750px; }}",
-        "@media screen and (min-width: 1780px) {.hero {min-height: 800px; }}",
-        "@media screen and (min-width: 1900px) {.hero {min-height: 850px; }}",
-        "@media screen and (min-width: 2000px) {.hero {min-height: 900px; }}",
-        "@media screen and (min-width: 2150px) {.hero {min-height: 950px; }}",
-        "@media screen and (min-width: 2300px) {.hero {min-height: 1000px; }}",
+        "@media screen and (min-width: 1440px) {.hero {min-height: 750px; }}"
       ],
       "name": "Hero",
       "settings": {
@@ -1347,7 +1341,7 @@
                     "background": false,
                     "background_color": "#00000026",
                     "corner_radius": 0,
-                    "padding-block-start": 0,
+                    "padding-block-start": 10,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
@@ -1390,6 +1384,9 @@
           ]
         }
       },
+      "custom_css": [
+        ".product-card__content {min-height: unset;}"
+      ],
       "name": "Featured collection",
       "settings": {
         "collection": "all-products",
