@@ -59,8 +59,14 @@
         "button_zNFgFh"
       ],
       "custom_css": [
+
         "@media screen and (max-width: 699px) {.hero {display: none; }}",
-        "@media screen and (min-width: 1440px) {.hero {min-height: 750px; }}"
+        "@media screen and (min-width: 1440px) {.hero {min-height: 750px; }}",
+        "@media screen and (min-width: 1780px) {.hero {min-height: 800px; }}",
+        "@media screen and (min-width: 1900px) {.hero {min-height: 850px; }}",
+        "@media screen and (min-width: 2000px) {.hero {min-height: 900px; }}",
+        "@media screen and (min-width: 2150px) {.hero {min-height: 950px; }}",
+        "@media screen and (min-width: 2300px) {.hero {min-height: 1000px; }}",
       ],
       "name": "Hero",
       "settings": {
