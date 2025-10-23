@@ -87,9 +87,40 @@
         "enable_transparent_header_collection": false,
         "collection_color_scheme": "default"
       }
+    },
+    "header_announcements_jdYpQt": {
+      "type": "header-announcements",
+      "blocks": {
+        "announcement_Ax7kXR": {
+          "type": "_announcement",
+          "settings": {
+            "text": "<strong>Halloween Promo: Free EU Shipping on All Products</strong>",
+            "link": "shopify://collections/all-products",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "announcement_Ax7kXR"
+      ],
+      "name": "t:names.announcement_bar",
+      "settings": {
+        "speed": 5,
+        "section_width": "full-width",
+        "color_scheme": "scheme-2",
+        "divider_width": 0,
+        "padding-block-start": 15,
+        "padding-block-end": 15
+      }
     }
   },
   "order": [
+    "header_announcements_jdYpQt",
     "header_section"
   ]
 }
