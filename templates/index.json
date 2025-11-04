@@ -146,8 +146,9 @@
       ],
       "name": "Hero",
       "settings": {
-        "media_type_1": "image",
+        "media_type_1": "video",
         "image_1": "shopify://shop_images/IMAGE_2025-10-20_20_35_04.jpg",
+        "video_1": "shopify://files/videos/VID_20251103_120219_169.mp4",
         "media_type_2": "image",
         "link": "shopify://collections/all-products",
         "open_in_new_tab": false,
