@@ -573,7 +573,7 @@
       },
       "name": "Featured collection",
       "settings": {
-        "collection": "sweaters-smart",
+        "collection": "raincoats-на-главную",
         "layout_type": "carousel",
         "carousel_on_mobile": false,
         "max_products": 8,
