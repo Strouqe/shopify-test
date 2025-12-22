@@ -1432,7 +1432,7 @@
       ],
       "name": "Featured collection",
       "settings": {
-        "collection": "all-products",
+        "collection": "sweaters",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,
