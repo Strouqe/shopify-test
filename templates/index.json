@@ -437,7 +437,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Beyond the Rain: A World of Style Awaits</p>",
+                "text": "",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
