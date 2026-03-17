@@ -1299,8 +1299,8 @@
           "static": true,
           "settings": {
             "product_card_gap": 20,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-1",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
@@ -1308,7 +1308,7 @@
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 61
           },
           "blocks": {
             "product_card_gallery_FntBtk": {
@@ -1432,7 +1432,7 @@
       ],
       "name": "Featured collection",
       "settings": {
-        "collection": "sweaters",
+        "collection": "white-background",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,
