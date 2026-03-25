@@ -495,7 +495,7 @@
         "padding-block-end": 0
       }
     },
-    "product_list_nPaWPL": {
+    "product_list_nQbyNK": {
       "type": "product-list",
       "blocks": {
         "static-header": {
@@ -531,11 +531,11 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_list_text_NapfRq": {
+            "product_list_text_3FXyz8": {
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<p>OUR BESTSELLERS</p>",
+                "text": "<p>Through your lens</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -557,11 +557,11 @@
               },
               "blocks": {}
             },
-            "text_c7J77c": {
+            "text_mM986T": {
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Beyond the Rain: A World of Style Awaits</p>",
+                "text": "<p>Where everyday moments meet quiet elegance</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -585,8 +585,8 @@
             }
           },
           "block_order": [
-            "product_list_text_NapfRq",
-            "text_c7J77c"
+            "product_list_text_3FXyz8",
+            "text_mM986T"
           ]
         },
         "static-product-card": {
@@ -595,8 +595,8 @@
           "static": true,
           "settings": {
             "product_card_gap": 20,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-1",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
@@ -604,11 +604,11 @@
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 61
           },
           "blocks": {
-            "product_card_gallery_tgxMVQ": {
-              "type": "_product-card-gallery",
+            "product_card_gallery_FntBtk": {
+              "type": "product-card-gallery",
               "name": "t:names.product_card_media",
               "settings": {
                 "image_ratio": "portrait",
@@ -623,7 +623,7 @@
               },
               "blocks": {}
             },
-            "product_card_group_LmGE97": {
+            "group_pVBb3Q": {
               "type": "_product-card-group",
               "name": "t:names.group",
               "settings": {
@@ -662,7 +662,7 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "product_title_6aNGAW": {
+                "product_title_AWMHkm": {
                   "type": "product-title",
                   "name": "t:names.product_title",
                   "settings": {
@@ -680,14 +680,14 @@
                     "background": false,
                     "background_color": "#00000026",
                     "corner_radius": 0,
-                    "padding-block-start": 0,
+                    "padding-block-start": 10,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
                   "blocks": {}
                 },
-                "price_b7apAK": {
+                "price_tcappF": {
                   "type": "price",
                   "name": "t:names.product_price",
                   "settings": {
@@ -712,20 +712,23 @@
                 }
               },
               "block_order": [
-                "product_title_6aNGAW",
-                "price_b7apAK"
+                "product_title_AWMHkm",
+                "price_tcappF"
               ]
             }
           },
           "block_order": [
-            "product_card_gallery_tgxMVQ",
-            "product_card_group_LmGE97"
+            "product_card_gallery_FntBtk",
+            "group_pVBb3Q"
           ]
         }
       },
+      "custom_css": [
+        ".product-card__content {min-height: unset;}"
+      ],
       "name": "Featured collection",
       "settings": {
-        "collection": "all-products",
+        "collection": "white-background",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,
@@ -856,7 +859,7 @@
     "main",
     "section_6DGgQT",
     "section_cf3Uth",
-    "product_list_nPaWPL",
+    "product_list_nQbyNK",
     "hero_Th34FN"
   ]
 }
