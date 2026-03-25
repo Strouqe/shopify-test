@@ -1,0 +1,40 @@
+{% doc %}
+  Renders a home button text link that navigates to the store root URL.
+  Used as a static block in the header section.
+
+  @example
+  {% content_for 'block', type: '_header-home-button', id: 'header-home-button' %}
+{% enddoc %}
+
+<a
+  href="{{ routes.root_url }}"
+  class="header-home-button"
+  {{ block.shopify_attributes }}
+>
+  Home
+</a>
+
+{% stylesheet %}
+  .header-home-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-family: var(--font-secondary--family);
+    font-weight: var(--font-secondary--weight);
+    font-style: var(--font-secondary--style);
+    font-size: 1rem;
+  }
+
+  .header-home-button:hover {
+    opacity: 0.7;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Home button",
+  "settings": []
+}
+{% endschema %}
