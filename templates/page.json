@@ -11,6 +11,9 @@
   "sections": {
     "main": {
       "type": "page",
+      "custom_css": [
+        "h2 {margin-bottom: 5px;}"
+      ],
       "settings": {}
     }
   },
