@@ -12,7 +12,8 @@
     "main": {
       "type": "page",
       "custom_css": [
-        "h2 {margin-bottom: 5px;}"
+        "h2 {margin-bottom: 5px;}",
+        ",.wixui-rich-text__text {margin-top: 0}"
       ],
       "settings": {}
     }
