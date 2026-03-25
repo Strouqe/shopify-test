@@ -385,7 +385,7 @@
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 20,
+            "gap": 5,
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -402,7 +402,7 @@
             "border_opacity": 100,
             "border_radius": 0,
             "padding-block-start": 0,
-            "padding-block-end": 0,
+            "padding-block-end": 10,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -586,9 +586,9 @@
         "icons_shape": "none",
         "section_width": "page-width",
         "horizontal_alignment": "center",
-        "gap": 28,
+        "gap": 5,
         "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
-        "padding-block-start": 100,
+        "padding-block-start": 25,
         "padding-block-end": 40
       }
     },
