@@ -52,13 +52,41 @@
             "custom_width_mobile": 100
           },
           "blocks": {}
+        },
+        "text_YdgQwp": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>SALE</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "2.5rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 13
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "text_CXHmij",
-        "button_zNFgFh"
+        "button_zNFgFh",
+        "text_YdgQwp"
       ],
       "custom_css": [
+        ".text-block--AbU0vaC9nYThzN0RaV__text_YdgQwp {--font-family: \"Playfair Display\" !important;}",
         "@media screen and (max-width: 699px) {.hero {display: none; }}",
         "@media screen and (min-width: 1440px) {.hero {min-height: 750px; }}"
       ],
