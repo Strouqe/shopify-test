@@ -7,20 +7,64 @@
 ></script>
 
 {% javascript %}
+document.addEventListener('DOMContentLoaded', () => {
+  // --- EXISTING LOGIC: URL Hash Scroll ---
   const url = new URL(window.location.href);
   if (url.hash) {
-    document.addEventListener(
-      'DOMContentLoaded',
-      () => {
-        const card = document.getElementById(url.hash.slice(1));
-        if (card) {
-          card.scrollIntoView({ behavior: 'instant' });
-        }
-      },
-      { once: true }
-    );
+    const card = document.getElementById(url.hash.slice(1));
+    if (card) card.scrollIntoView({ behavior: 'instant' });
   }
+
+  // --- NEW LOGIC: Discount Function ---
+  const applyDiscounts = () => {
+    const priceContainers = document.querySelectorAll('[ref="priceContainer"]:not([data-discounted="true"])');
+
+    priceContainers.forEach((container) => {
+      const priceEl = container.querySelector('.price');
+      if (!priceEl) return;
+
+      const originalStr = priceEl.textContent.trim();
+      const match = originalStr.match(/^([^\d\s]+)?\s*([\d.,]+)$/);
+      
+      if (match) {
+        const currency = match[1] || '';
+        const priceNum = parseFloat(match[2].replace(',', '.'));
+
+        if (!isNaN(priceNum)) {
+          const discountedPrice = Math.ceil((priceNum * 0.8) * 100) / 100;
+          const newPriceStr = `${currency} ${discountedPrice.toFixed(2).replace('.', ',')}`;
+          
+          priceEl.textContent = newPriceStr;
+          
+          const compareAt = document.createElement('span');
+          compareAt.className = 'compare-at-price';
+          compareAt.style.cssText = 'margin-left: 0.5em; text-decoration: line-through; opacity: 0.6;';
+          compareAt.textContent = originalStr;
+          priceEl.insertAdjacentElement('afterend', compareAt);
+
+          container.setAttribute('data-discounted', 'true');
+        }
+      }
+    });
+  };
+
+  applyDiscounts();
+
+  const observer = new MutationObserver((mutations) => {
+    const nodesAdded = mutations.some(m => m.addedNodes.length > 0);
+    if (nodesAdded) {
+      applyDiscounts();
+    }
+  });
+
+  observer.observe(document.body, { 
+    childList: true, 
+    subtree: true 
+  });
+
+}, { once: true });
 {% endjavascript %}
+
 
 {% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
