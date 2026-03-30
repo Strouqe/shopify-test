@@ -75,3 +75,66 @@
   </slideshow-container>
   {{ controls }}
 </slideshow-component>
+{% javascript %}
+  const applyDiscounts = () => {
+    const priceContainers = document.querySelectorAll('[ref="priceContainer"]:not([data-discounted="true"])');
+
+    priceContainers.forEach((container) => {
+      try {
+        const priceEl = container.querySelector('.price');
+        if (!priceEl) return;
+
+        const originalStr = priceEl.textContent.trim();
+        const match = originalStr.match(/^([^\d\s]+)?\s*([\d.,]+)$/);
+
+        if (match) {
+          const currency = match[1] || '';
+          const priceNum = parseFloat(match[2].replace(',', '.'));
+
+          if (!isNaN(priceNum)) {
+            const discountedPrice = Math.ceil((priceNum * 0.8) * 100) / 100;
+            const newPriceStr = `${currency} ${discountedPrice.toFixed(2).replace('.', ',')}`;
+
+            priceEl.textContent = newPriceStr;
+
+            const compareAt = document.createElement('span');
+            compareAt.className = 'compare-at-price';
+            compareAt.style.cssText = 'margin-left: 0.5em; text-decoration: line-through; opacity: 0.6;';
+            compareAt.textContent = originalStr;
+            priceEl.insertAdjacentElement('afterend', compareAt);
+
+            container.setAttribute('data-discounted', 'true');
+          }
+        }
+      } catch (error) {
+        console.error('Error processing container:', container, error);
+      }
+    });
+  };
+
+  const observeAndApplyDiscounts = () => {
+    // Apply discounts initially
+    applyDiscounts();
+
+    // Observe changes in the DOM
+    const observer = new MutationObserver((mutations) => {
+      const nodesAdded = mutations.some(m => m.addedNodes.length > 0);
+      if (nodesAdded) {
+        applyDiscounts();
+      }
+    });
+
+    // Observe the entire body for changes
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
+  };
+
+  // Ensure the script runs after the DOM is fully loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', observeAndApplyDiscounts);
+  } else {
+    observeAndApplyDiscounts();
+  }
+{% endjavascript %}

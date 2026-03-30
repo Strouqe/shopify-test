@@ -77,29 +77,4 @@
     {% render 'unit-price', price: unit_price, measurement: selected_variant.unit_price_measurement %}
   {%- endif -%}
 </div>
-{% javascript %}
-document.addEventListener('DOMContentLoaded', function() {
-  var priceEl = document.querySelector('.price');
-  if (!priceEl) return;
 
-  var original = priceEl.textContent.trim();
-  var match = original.match(/^([^\d]+)?([\d.,]+)$/);
-  if (!match) return;
-
-  var currency = match[1] ? match[1].trim() : '';
-  var priceNum = parseFloat(match[2].replace(',', '.'));
-
-  if (isNaN(priceNum)) return;
-
-  var discountedPrice = Math.ceil((priceNum * 0.8) * 100) / 100;
-  var newPriceStr = currency + ' ' + discountedPrice.toFixed(2).replace('.', ',');
-
-  priceEl.textContent = newPriceStr;
-
-  var compareAt = document.createElement('span');
-  compareAt.className = 'compare-at-price';
-  compareAt.style.marginLeft = '0.5em';
-  compareAt.textContent = original;
-  priceEl.insertAdjacentElement('afterend', compareAt);
-});
-{% endjavascript %}
